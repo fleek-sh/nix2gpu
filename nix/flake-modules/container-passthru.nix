@@ -5,6 +5,7 @@
       pkgs,
       system,
       lib,
+      self',
       ...
     }:
     let
@@ -14,6 +15,7 @@
           pkgs
           inputs
           system
+          self'
           ;
       };
 

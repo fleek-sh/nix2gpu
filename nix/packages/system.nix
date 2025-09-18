@@ -34,7 +34,7 @@ in
         mkdir -p $out/etc
 
         cp $passwdContentsPath $out/etc/passwd
-        cp $groupContentsPath $out/etc/group  
+        cp $groupContentsPath $out/etc/group
         cp $shadowContentsPath $out/etc/shadow
 
         mkdir -p $out/etc/nix

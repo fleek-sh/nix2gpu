@@ -3,6 +3,7 @@
   pkgs,
   system,
   lib,
+  self',
   ...
 }:
 let
@@ -39,7 +40,15 @@ let
     nixStoreProfile
     ;
 
-  allPkgs = corePkgs ++ shellPkgs ++ networkPkgs ++ devPkgs ++ [ cudaEnv ];
+  allPkgs =
+    corePkgs
+    ++ shellPkgs
+    ++ networkPkgs
+    ++ devPkgs
+    ++ [
+      self'.packages.container-services
+      cudaEnv
+    ];
 
   profile = pkgs.buildEnv {
     name = "nix2vast-profile";
@@ -92,6 +101,7 @@ nix2containerPkgs.nix2container.buildImage {
       "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
       "TERM=xterm-256color"
       "USER=root"
+      "RUN_SERVICES=1"
     ];
 
     WorkingDir = "/root";
