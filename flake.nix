@@ -32,6 +32,19 @@
       ];
     };
 
+  nixConfig = {
+    extra-substituters = [
+      "https://cache.nixos.org"
+      "https://cache.garnix.io"
+      "https://huggingface.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+      "huggingface.cachix.org-1:ynTPbLS0W8ofXd9fDjk1KvoFky9K2jhxe6r4nXAkc/o="
+    ];
+  };
+
   inputs = {
     hf-nix.url = "github:huggingface/hf-nix";
     nixpkgs.follows = "hf-nix/nixpkgs";
