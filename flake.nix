@@ -19,10 +19,15 @@
               rocmSupport = false; # the controlled opposition
             };
           };
+
+          process-compose.container-services = {
+            imports = [ inputs.services-flake.processComposeModules.default ];
+          };
         };
 
       imports = [
         inputs.treefmt-nix.flakeModule
+        inputs.process-compose-flake.flakeModule
         ./nix/flake-modules
       ];
     };
@@ -34,15 +39,22 @@
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    agenix.url = "github:ryantm/agenix";
-    agenix.inputs.nixpkgs.follows = "nixpkgs";
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nix2container = {
       url = "github:nlewo/nix2container";
       inputs.nixpkgs.follows = "hf-nix/nixpkgs";
     };
 
-    treefmt-nix.url = "github:numtide/treefmt-nix";
-    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+    services-flake.url = "github:juspay/services-flake";
+    process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
+
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }
