@@ -24,15 +24,15 @@ clean separation of concerns. the flake stays minimal, modules do the work.
 
 ```bash
 # build
-nix build .#default
+nix build .#container
 
 # push to registry
-nix run .#login
-nix run .#push
+nix run .#loginToGithub
+nix run .#copyToGIthub
 
 # run locally
-nix run .#load
-docker run --rm -it --gpus all nix2vast:latest
+nix run .#copyToDockerDaemon
+nix run .#dockerShell
 ```
 
 ## // manifest // what's inside

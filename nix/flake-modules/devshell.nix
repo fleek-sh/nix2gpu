@@ -12,6 +12,7 @@
           skopeo
           dive
           docker
+          podman
           gh
         ];
       };
