@@ -1,5 +1,3 @@
-echo "\n\nUsing custom .bashrc\n\n"
-
 export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 export NIXPKGS_ALLOW_UNFREE=1
 export TERM=xterm-256color
@@ -35,7 +33,7 @@ fi
 
 if [[ -z "$TMUX" ]]; then
   echo -e "\033[1;34m╔════════════════════════════════════╗\033[0m"
-  echo -e "\033[1;34m║\033[0m  Welcome to \033[1;36mnix2vast\033[0m GPU runtime  \033[1;34m║\033[0m"
+  echo -e "\033[1;34m║\033[0m  Welcome to \033[1;36mnix2vast\033[0m GPU runtime   \033[1;34m║\033[0m"
   echo -e "\033[1;34m╚════════════════════════════════════╝\033[0m"
   echo ""
   if [ -e /usr/bin/nvidia-smi ]; then
