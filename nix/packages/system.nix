@@ -7,9 +7,6 @@
   sshdConfig,
   ...
 }:
-let
-  inherit (import ../lib/config.nix { inherit pkgs; }) tmuxConf startupScript;
-in
 {
   baseSystem =
     pkgs.runCommand "base-system"
@@ -139,42 +136,6 @@ in
         LC_ALL=en_US.UTF-8
         EOF
       '';
-
-  rootHome = pkgs.runCommand "root-home" { } ''
-    mkdir -p $out/root/.config/tmux
-    cp ${tmuxConf} $out/root/.config/tmux/tmux.conf
-
-    mkdir -p $out/root/.config
-    cat > $out/root/.config/starship.toml <<'EOF'
-    format = """
-    $username\
-    $hostname\
-    $directory\
-    $git_branch\
-    $git_status\
-    $character"""
-
-    [character]
-    success_symbol = "[❯](bold green)"
-    error_symbol = "[❯](bold red)"
-
-    [directory]
-    truncation_length = 3
-    truncate_to_repo = false
-    style = "bold cyan"
-    EOF
-
-    cat > $out/root/.bashrc <<'EOF'
-    ${builtins.readFile ./bashrc}
-    EOF
-
-    cat > $out/root/.profile <<'EOF'
-    [ -f ~/.bashrc ] && . ~/.bashrc
-    EOF
-
-    cp ${startupScript} $out/root/startup.sh
-    chmod +x $out/root/startup.sh
-  '';
 
   nixStoreProfile = pkgs.runCommand "nix-store-profile" { } ''
     mkdir -p $out/root

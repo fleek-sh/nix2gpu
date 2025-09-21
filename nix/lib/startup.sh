@@ -1,6 +1,3 @@
-#!/bin/bash
-set -euo pipefail
-
 echo "[nix2vast] Container initialization starting..."
 
 # // critical // runtime directories
@@ -72,7 +69,7 @@ if [ -e /usr/bin/nvidia-smi ]; then
 
     # Find the correct interpreter
     INTERP=$(find /nix/store -name "ld-linux-x86-64.so.2" -type f | head -1)
-    [ -n "$INTERP" ] && patchelf --set-interpreter "$INTERP" /usr/bin/nvidia-smi 2>/dev/null || true
+    ([ -n "$INTERP" ] && patchelf --set-interpreter "$INTERP" /usr/bin/nvidia-smi 2>/dev/null) || true
 
     # Set rpath to include the ACTUAL library locations
     patchelf --set-rpath "/lib/x86_64-linux-gnu:/usr/lib64:/usr/lib" /usr/bin/nvidia-smi 2>/dev/null || true
@@ -86,7 +83,7 @@ if [ -e /usr/bin/nvidia-smi ]; then
     echo "[nix2vast] Library dependencies:"
     ldd /usr/bin/nvidia-smi 2>&1 | head -10 || true
     echo "[nix2vast] Available NVIDIA libraries:"
-    ls -la /lib/x86_64-linux-gnu/libnvidia* 2>/dev/null | head -5 || true
+    printf '%s\n' /lib/x86_64-linux-gnu/libnvidia* 2>/dev/null | head -5
   fi
 fi
 
@@ -102,10 +99,13 @@ tailscaled --tun=userspace-networking --socket=/var/run/tailscale/tailscaled.soc
 if [ -n "${TAILSCALE_AUTHKEY:-}" ]; then
   echo "[nix2vast] authenticating tailscale..."
   sleep 3
-  tailscale up --authkey=$TAILSCALE_AUTHKEY --ssh &
+  tailscale up --authkey="$TAILSCALE_AUTHKEY" --ssh &
 else
   echo "[nix2vast] Tailscale running (no authkey provided)"
 fi
+
+echo "[nix2vast] activating home-manager..."
+home-manager-generation
 
 # // ssh // daemon
 echo "[nix2vast] starting ssh daemon..."
