@@ -110,4 +110,6 @@ home-manager-generation
 # // ssh // daemon
 echo "[nix2vast] starting ssh daemon..."
 $(which sshd) -t || exit 1
-exec $(which sshd) -D -e
+$(which sshd) -D -e &
+
+exec bash
