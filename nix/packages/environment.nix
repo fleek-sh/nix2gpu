@@ -62,6 +62,11 @@
     uv
   ];
 
+  secretsPkgs = with pkgs; [
+    age
+    ssh-to-age
+  ];
+
   networkPkgs = with pkgs; [
     curl
     hostname
