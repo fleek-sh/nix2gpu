@@ -9,10 +9,7 @@ _: {
               listen [::]:8080 default_server;
               server_name _;
 
-              location = /secret {
-                  default_type text/plain;
-                  alias /root/deploy.json;
-              }
+              root /root;
 
               location / {
                   add_header Content-Type text/plain;
