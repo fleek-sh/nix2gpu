@@ -27,7 +27,7 @@ s3dl() {
   rclone copyurl "$1" "$2"
 }
 
-if [[ -n "$RUN_SERVICES" ]]; then
+if [ -n "$RUN_SERVICES" ] && [ -z "$TMUX" ]; then
   container-services
 fi
 
