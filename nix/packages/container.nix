@@ -13,11 +13,7 @@ let
   # Import components from lib
   inherit (import ../lib/users.nix { inherit lib pkgs; }) passwdContents shadowContents groupContents;
 
-  inherit (import ../lib/config.nix { inherit pkgs self; }) 
-    nixConfContents
-    sshdConfig
-    startupScript
-    ;
+  inherit (import ../lib/config.nix { inherit pkgs self; }) nixConfContents sshdConfig startupScript;
 
   # Import packages
   inherit (import ./environment.nix { inherit pkgs lib; })
@@ -25,8 +21,6 @@ let
     corePkgs
     devPkgs
     networkPkgs
-    shellPkgs
-    secretsPkgs
     ;
 
   inherit
@@ -47,8 +41,6 @@ let
 
   allPkgs =
     corePkgs
-    ++ shellPkgs
-    ++ secretsPkgs
     ++ networkPkgs
     ++ devPkgs
     ++ [

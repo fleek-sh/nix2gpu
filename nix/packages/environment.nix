@@ -1,4 +1,4 @@
-{ pkgs, lib }:
+{ pkgs, ... }:
 {
   cudaEnv = pkgs.symlinkJoin {
     name = "cuda-env";
@@ -62,11 +62,6 @@
     uv
   ];
 
-  secretsPkgs = with pkgs; [
-    age
-    ssh-to-age
-  ];
-
   networkPkgs = with pkgs; [
     curl
     hostname
@@ -78,28 +73,5 @@
     rclone
     tailscale
     wget
-  ];
-
-  shellPkgs = with pkgs; [
-    atuin
-    bat
-    btop
-    direnv
-    eza
-    fd
-    file
-    fzf
-    htop
-    jq
-    lsof
-    ltrace
-    nix-direnv
-    ripgrep
-    starship
-    strace
-    tmux
-    tree
-    yq
-    zoxide
   ];
 }

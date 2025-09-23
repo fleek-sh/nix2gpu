@@ -1,11 +1,8 @@
 { pkgs, self }:
 let
-  inherit ( pkgs ) lib;
+  inherit (pkgs) lib;
 
-  inherit (import ../packages/environment.nix { inherit pkgs lib; })
-    corePkgs
-    networkPkgs
-    ;
+  inherit (import ../packages/environment.nix { inherit pkgs lib; }) corePkgs networkPkgs;
 in
 {
   nixConfContents = ''
@@ -44,8 +41,6 @@ in
     name = "startup.sh";
     text = builtins.readFile ./startup.sh;
 
-    runtimeInputs = corePkgs ++ networkPkgs ++ [
-      self.homeConfigurations.default.activationPackage
-    ];
+    runtimeInputs = corePkgs ++ networkPkgs ++ [ self.homeConfigurations.default.activationPackage ];
   };
 }

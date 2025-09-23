@@ -28,7 +28,7 @@
       flake = {
         homeConfigurations.default = inputs.home-manager.lib.homeManagerConfiguration {
           pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
-          extraSpecialArgs = { 
+          extraSpecialArgs = {
             inherit inputs;
             nix2vast = self.packages.x86_64-linux;
           };
@@ -38,15 +38,15 @@
           ];
         };
 
-        homeModules.default = { ... }: {
-          imports = [
-            ./nix/home
-          ];
+        homeModules.default =
+          { ... }:
+          {
+            imports = [ ./nix/home ];
 
-          home.stateVersion = "25.11";
-          home.username = "root";
-          home.homeDirectory = "/root";
-        };
+            home.stateVersion = "25.11";
+            home.username = "root";
+            home.homeDirectory = "/root";
+          };
       };
 
       imports = [

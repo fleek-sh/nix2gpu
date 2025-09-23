@@ -105,7 +105,6 @@ else
 fi
 
 echo "[nix2vast] activating home-manager..."
-groupadd -r nogroup
 home-manager-generation
 
 # // ssh // daemon
