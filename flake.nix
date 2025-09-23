@@ -47,12 +47,14 @@
             home.username = "root";
             home.homeDirectory = "/root";
           };
+
       };
 
       imports = [
         inputs.treefmt-nix.flakeModule
         inputs.process-compose-flake.flakeModule
         inputs.home-manager.flakeModules.home-manager
+        inputs.flake-parts.flakeModules.flakeModules
         ./nix/flake-modules
       ];
 
