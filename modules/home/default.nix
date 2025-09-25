@@ -27,14 +27,12 @@ in
         inherit pkgs;
         extraSpecialArgs = {
           inherit inputs;
-          nix2vast = config.packages.${pkgs.system};
         };
         modules = [
-          inputs.agenix.homeManagerModules.default
-          ./tmux
-          ./starship
-          ./bash
-          ./agenix
+          ./_tmux
+          ./_starship
+          ./_bash
+          ./_agenix
         ];
       };
     };

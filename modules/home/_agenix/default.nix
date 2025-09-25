@@ -1,5 +1,9 @@
-{ config, ... }:
+{ inputs, config, ... }:
 {
+  imports = [
+    inputs.agenix.homeManagerModules.default
+  ];
+
   age = {
     identityPaths = [ "/root/.ssh/id_ed25519" ];
 
