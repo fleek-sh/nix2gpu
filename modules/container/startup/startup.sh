@@ -112,4 +112,5 @@ echo "[nix2vast] starting ssh daemon..."
 $(which sshd) -t || exit 1
 $(which sshd) -D -e &
 
-exec bash
+# // config // extra startup script
+echo "[nix2vast] running extra startup script..."

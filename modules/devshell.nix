@@ -1,9 +1,13 @@
-{ inputs, ... }:
+{
+  config,
+  inputs,
+  ...
+}:
 {
   perSystem =
     { pkgs, system, ... }:
     let
-      nix2containerPkgs = inputs.nix2container.packages.${system};
+      nix2containerPkgs = config.perSystem.nix2containerPkgs;
     in
     {
       devShells.default = pkgs.mkShell {
