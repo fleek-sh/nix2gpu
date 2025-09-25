@@ -1,6 +1,7 @@
 {
   flake.modules.scripts.perSystem =
-    { pkgs, ... }: {
+    { pkgs, ... }:
+    {
       loginToGithub = pkgs.writeShellApplication {
         name = "login-to-github-registry";
         runtimeInputs = with pkgs; [

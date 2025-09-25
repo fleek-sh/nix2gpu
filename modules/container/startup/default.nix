@@ -14,7 +14,7 @@ in
       };
     };
 
-  flake.modules.nix2vast.perSystem =
+  config.flake.modules.nix2vast.perSystem =
     { pkgs, system, ... }:
     let
       scriptText =

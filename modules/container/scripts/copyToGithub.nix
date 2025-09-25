@@ -10,8 +10,9 @@ in
     type = types.str;
   };
 
-  flake.modules.scripts.perSystem =
-    { pkgs, system, ... }: {
+  config.flake.modules.scripts.perSystem =
+    { pkgs, system, ... }:
+    {
       copyToGithub = pkgs.writeShellApplication {
         name = "copy-to-github-registry";
         runtimeInputs = with pkgs; [
