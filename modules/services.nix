@@ -12,25 +12,21 @@ in
 {
   imports = [ servicesFlakeModule ];
 
-  options.nix2vast.perSystem =
-    { lib, ... }:
-    {
-      services = lib.mkOption {
-        description = ''
-          the [`services-flake`](https://github.com/juspay/services-flake)
-          configuration to use inside your `nix2vast` container.
+  options.nix2vast.services = lib.mkOption {
+    description = ''
+      the [`services-flake`](https://github.com/juspay/services-flake)
+      configuration to use inside your `nix2vast` container.
 
-          when your container is launched it boots into a
-          [process-compose](https://github.com/F1bonacc1/process-compose]
-          interface running all services specificed. 
+      when your container is launched it boots into a
+      [process-compose](https://github.com/F1bonacc1/process-compose]
+      interface running all services specificed. 
 
-          this can be useful for running your own web servers or things
-          like nginx.
-        '';
-        type = types.attrsOf servicesFlakeModule.options.type;
-        default = { };
-      };
-    };
+      this can be useful for running your own web servers or things
+      like nginx.
+    '';
+    type = types.attrsOf servicesFlakeModule.options.type;
+    default = { };
+  };
 
   config.nix2vast.perSystem.services = {
     nginx."nginx-hello-world" = {

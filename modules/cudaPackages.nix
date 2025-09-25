@@ -1,17 +1,16 @@
-{ config, ... }:
+{ flake-parts-lib, ... }:
 {
-  options.nix2vast.perSystem =
-    { pkgs, ... }:
+  options.nix2vast.cudaPackages = flake-parts-lib.mkPerSystemOption (
+    { pkgs, config, ... }:
     {
-      cudaPackages = pkgs.mkOption {
-        description = ''
-          the cuda packages source to use.
+      description = ''
+        the cuda packages source to use.
 
-          this is useful for selecting a specific version
-          on which your container relies.
-        '';
-        type = config.types.cudaPackageSet;
-        default = pkgs.cudaPackages_12_8;
-      };
-    };
+        this is useful for selecting a specific version
+        on which your container relies.
+      '';
+      type = config.types.cudaPackageSet;
+      default = pkgs.cudaPackages_12_8;
+    }
+  );
 }

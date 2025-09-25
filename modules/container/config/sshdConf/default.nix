@@ -1,6 +1,6 @@
-{ config, ... }:
+{ config, flake-parts-lib, ... }:
 {
-  options.nix2vast.perSystem =
+  options.nix2vast.sshdConfig = flake-parts-lib.mkPerSystemOption (
     { pkgs, ... }:
     let
       sshdConf = pkgs.replaceVars ./sshd_config {
@@ -8,12 +8,11 @@
       };
     in
     {
-      sshdConfig = pkgs.mkOption {
-        description = ''
-          a replacement sshd configuration to use.
-        '';
-        type = config.types.textFilePackage;
-        default = sshdConf;
-      };
-    };
+      description = ''
+        a replacement sshd configuration to use.
+      '';
+      type = config.types.textFilePackage;
+      default = sshdConf;
+    }
+  );
 }

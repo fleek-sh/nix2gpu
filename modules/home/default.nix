@@ -9,7 +9,7 @@ let
   homeManagerModule = home-manager.flakeModules.default;
 in
 {
-  options.nix2vast.perSystem.home = lib.mkOption {
+  options.nix2vast.home = lib.mkOption {
     description = ''
       the [`home-manager`](https://github.com/nix-community/home-manager)
       configuration to use inside your `nix2vast` container.

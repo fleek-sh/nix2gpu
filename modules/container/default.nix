@@ -1,28 +1,33 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  flake-parts-lib,
+  ...
+}:
 let
   inherit (lib) types mkOption;
 in
 {
-  options.nix2vast.perSystem =
-    { pkgs, system, ... }:
-    {
-      name = mkOption {
-        description = ''
-          the name of your container
-        '';
-        type = types.str;
-        default = "nix2vast";
-      };
+  options.nix2vast = {
+    name = mkOption {
+      description = ''
+        the name of your container
+      '';
+      type = types.str;
+      default = "nix2vast";
+    };
 
-      tag = mkOption {
-        description = ''
-          the tag to use for your container
-        '';
-        type = types.str;
-        default = "latest";
-      };
+    tag = mkOption {
+      description = ''
+        the tag to use for your container
+      '';
+      type = types.str;
+      default = "latest";
+    };
 
-      copyToRoot = mkOption {
+    copyToRoot = flake-parts-lib.mkPerSystemOption (
+      { config, ... }:
+      {
         description = ''
           packages to copy to the root of your container.
 
@@ -31,21 +36,24 @@ in
         '';
         type = types.listOf types.package;
         default = [
-          config.${system}.packages.baseSystem
-          config.${system}.packages.nixStoreProfile
-          config.${system}.packages.profile
+          config.baseSystem
+          config.nixStoreProfile
+          config.profile
         ];
-      };
+      }
+    );
 
-      extraCopyToRoot = mkOption {
-        description = ''
-          extra packages to copy to the root of your container.
-        '';
-        type = types.listOf types.package;
-        default = [ ];
-      };
+    extraCopyToRoot = mkOption {
+      description = ''
+        extra packages to copy to the root of your container.
+      '';
+      type = types.listOf types.package;
+      default = [ ];
+    };
 
-      env = mkOption {
+    env = flake-parts-lib.mkPerSystemOption (
+      { pkgs, ... }:
+      {
         description = ''
           environment variables to set inside your container.
 
@@ -74,76 +82,77 @@ in
           "USER=root"
           "RUN_SERVICES=1"
         ];
-      };
+      }
+    );
 
-      extraEnv = mkOption {
-        description = ''
-          extra environment variables to set inside your container.
-        '';
-        type = types.listOf types.str;
-        default = [ ];
-      };
+    extraEnv = mkOption {
+      description = ''
+        extra environment variables to set inside your container.
+      '';
+      type = types.listOf types.str;
+      default = [ ];
+    };
 
-      workingDir = mkOption {
-        description = ''
-          the working directory for your container to start in.
-        '';
-        type = types.str;
-        default = "/root";
-      };
+    workingDir = mkOption {
+      description = ''
+        the working directory for your container to start in.
+      '';
+      type = types.str;
+      default = "/root";
+    };
 
-      user = mkOption {
-        description = ''
-          the default user for your container.
-        '';
-        type = types.str;
-        default = "root";
-      };
+    user = mkOption {
+      description = ''
+        the default user for your container.
+      '';
+      type = types.str;
+      default = "root";
+    };
 
-      exposedPorts = mkOption {
-        description = ''
-          exposed ports for your container.
-        '';
-        type = types.attrsOf types.anything;
-        default = {
-          "22/tcp" = { };
-        };
-      };
-
-      labels = mkOption {
-        description = ''
-          container labels to set.
-
-          looking to add labels without effecting the
-          default set? see `extraLabels`.
-        '';
-        type = types.attrsOf types.str;
-        default = {
-          "ai.vast.gpu" = "required";
-          "ai.vast.runtime" = "nix2vast";
-          "com.nvidia.volumes.needed" = "nvidia_driver";
-          "com.nvidia.cuda.version" = config.cudaPackages.cudatoolkit.version;
-          "org.opencontainers.image.source" = "https://github.com/fleek-platform/nix2vast";
-          "org.opencontainers.image.description" = "Nix-based GPU container with Tailscale mesh";
-        };
-      };
-
-      extraLabels = mkOption {
-        description = ''
-          extra container labels to set.
-        '';
-        type = types.attrsOf types.str;
-        default = { };
-      };
-
-      maxLayers = mkOption {
-        description = ''
-          the maximum amount of layers to use when creating your container.
-        '';
-        type = types.int;
-        default = 50;
+    exposedPorts = mkOption {
+      description = ''
+        exposed ports for your container.
+      '';
+      type = types.attrsOf types.anything;
+      default = {
+        "22/tcp" = { };
       };
     };
+
+    labels = mkOption {
+      description = ''
+        container labels to set.
+
+        looking to add labels without effecting the
+        default set? see `extraLabels`.
+      '';
+      type = types.attrsOf types.str;
+      default = {
+        "ai.vast.gpu" = "required";
+        "ai.vast.runtime" = "nix2vast";
+        "com.nvidia.volumes.needed" = "nvidia_driver";
+        "com.nvidia.cuda.version" = config.cudaPackages.cudatoolkit.version;
+        "org.opencontainers.image.source" = "https://github.com/fleek-platform/nix2vast";
+        "org.opencontainers.image.description" = "Nix-based GPU container with Tailscale mesh";
+      };
+    };
+
+    extraLabels = mkOption {
+      description = ''
+        extra container labels to set.
+      '';
+      type = types.attrsOf types.str;
+      default = { };
+    };
+
+    maxLayers = mkOption {
+      description = ''
+        the maximum amount of layers to use when creating your container.
+      '';
+      type = types.int;
+      default = 50;
+    };
+  };
 
   config.perSystem =
     { pkgs, system, ... }:

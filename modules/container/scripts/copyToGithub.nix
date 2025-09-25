@@ -3,7 +3,7 @@ let
   inherit (lib) types;
 in
 {
-  options.nix2vast.perSystem.registry = lib.mkOption {
+  options.nix2vast.registry = lib.mkOption {
     description = ''
       the container registry to push your images to.
     '';

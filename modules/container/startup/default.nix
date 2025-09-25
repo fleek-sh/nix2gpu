@@ -1,18 +1,19 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  flake-parts-lib,
+  ...
+}:
 let
   inherit (lib) types;
 in
 {
-  options.nix2vast.perSystem =
-    { pkgs, ... }:
-    {
-      extraStartupScript = pkgs.mkOption {
-        description = ''
-          extra commands to run on container startup.
-        '';
-        type = types.str;
-      };
-    };
+  options.nix2vast.extraStartupScript = lib.mkOption {
+    description = ''
+      extra commands to run on container startup.
+    '';
+    type = types.str;
+  };
 
   config.flake.modules.nix2vast.perSystem =
     { pkgs, system, ... }:
