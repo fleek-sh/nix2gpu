@@ -3,24 +3,26 @@ let
   inherit (config.nix2vast) cudaPackages;
 in
 {
-  flake.packages.cudaEnv =
+  perSystem =
     { pkgs, ... }:
-    pkgs.symlinkJoin {
-      name = "cuda-env";
-      paths = with pkgs; [
-        cudaPackages.cudatoolkit
-        cudaPackages.cudnn
-        cudaPackages.cusparselt
-        cudaPackages.libcublas
-        cudaPackages.libcufile
-        cudaPackages.libcusparse
-        cudaPackages.nccl
-        nvtopPackages.nvidia
-      ];
+    {
+      packages.cudaEnv = pkgs.symlinkJoin {
+        name = "cuda-env";
+        paths = with cudaPackages; [
+          cudatoolkit
+          cudnn
+          cusparselt
+          libcublas
+          libcufile
+          libcusparse
+          nccl
+          pkgs.nvtopPackages.nvidia
+        ];
 
-      postBuild = ''
-        rm -f $out/LICENSE
-        rm -f $out/version.txt
-      '';
+        postBuild = ''
+          rm -f $out/LICENSE
+          rm -f $out/version.txt
+        '';
+      };
     };
 }

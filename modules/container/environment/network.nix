@@ -1,19 +1,21 @@
 {
-  flake.packages.networkPkgs =
+  perSystem =
     { pkgs, ... }:
-    pkgs.symlinkJoin {
-      name = "network-pkgs";
-      paths = with pkgs; [
-        curl
-        hostname
-        inetutils
-        iproute2
-        iputils
-        netcat-gnu
-        openssh
-        rclone
-        tailscale
-        wget
-      ];
+    {
+      packages.networkPkgs = pkgs.symlinkJoin {
+        name = "network-pkgs";
+        paths = with pkgs; [
+          curl
+          hostname
+          inetutils
+          iproute2
+          iputils
+          netcat-gnu
+          openssh
+          rclone
+          tailscale
+          wget
+        ];
+      };
     };
 }

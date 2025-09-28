@@ -10,24 +10,28 @@ in
     type = types.str;
   };
 
-  config.flake.packages.startupScript =
+  config.perSystem =
     { pkgs, system, ... }:
-    let
-      scriptText =
-        (builtins.readFile ./startup.sh)
-        ++ config.nix2vast.${system}.extraStartupScript
-        ++ ''
-          echo "[nix2vast] entering interactive terminal..."
-          exec bash
-        '';
-    in
-    pkgs.writeShellApplication {
-      name = "startup.sh";
-      text = scriptText;
+    {
+      packages.startupScript =
+        let
+          scriptText =
+            (builtins.readFile ./startup.sh)
+            ++ config.nix2vast.${system}.extraStartupScript
+            ++ ''
+              echo "[nix2vast] entering interactive terminal..."
+              exec bash
+            '';
+        in
+        pkgs.writeShellApplication {
+          name = "startup.sh";
+          text = scriptText;
 
-      runtimeInputs =
-        config.${system}.corePkgs
-        ++ config.${system}.networkPkgs
-        ++ [ config.${system}.homeConfigurations.default.activationPackage ];
+          runtimeInputs =
+            config.${system}.corePkgs
+            ++ config.${system}.networkPkgs
+            ++ [ config.${system}.homeConfigurations.default.activationPackage ];
+        };
     };
+
 }
