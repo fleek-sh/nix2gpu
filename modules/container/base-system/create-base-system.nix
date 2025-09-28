@@ -1,19 +1,15 @@
 {
   perSystem =
-    { pkgs, self', ... }:
+    { pkgs, config, ... }:
     {
       packages.createBaseSystem = pkgs.replaceVarsWith {
         src = ./create-system.sh;
         dir = "bin";
         isExecutable = true;
         replacements = {
-          inherit (self'.packages)
-            passwdConf
-            groupConf
-            shadowConf
-            nixConf
-            sshdConf
-            ;
+          inherit (config.nix2vast) sshdConfig nixConfig;
+
+          inherit (config) passwdContents groupContents shadowContents;
 
           inherit (pkgs)
             bashInteractive

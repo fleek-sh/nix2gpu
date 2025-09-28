@@ -1,11 +1,11 @@
 mkdir -p $out/etc
 
-cp @passwdConf@ $out/etc/passwd
-cp @groupConf@ $out/etc/group
-cp @shadowConf@ $out/etc/shadow
+cp @passwdContents@ $out/etc/passwd
+cp @groupContents@ $out/etc/group
+cp @shadowContents@ $out/etc/shadow
 
 mkdir -p $out/etc/nix
-cp @nixConf@ $out/etc/nix/nix.conf
+cp @nixConfig@ $out/etc/nix/nix.conf
 
 # Nixpkgs config for unfree packages
 mkdir -p $out/root/.config/nixpkgs
@@ -17,7 +17,7 @@ cat >$out/root/.config/nixpkgs/config.nix <<'EOF'
 EOF
 
 mkdir -p $out/etc/ssh
-cp @sshdConf@ $out/etc/ssh/sshd_config
+cp @sshdConfig@ $out/etc/ssh/sshd_config
 
 # // nvidia-container-toolkit // paths
 mkdir -p \

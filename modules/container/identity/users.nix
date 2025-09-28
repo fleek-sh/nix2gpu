@@ -13,6 +13,7 @@ in
       users to place inside the generated nix2vast container.
     '';
     type = types.attrsOf config.types.userDef;
+    internal = true;
   };
 
   config.users =

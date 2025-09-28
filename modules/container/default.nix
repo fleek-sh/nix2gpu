@@ -162,7 +162,7 @@ in
       ...
     }:
     let
-      nix2vast = config.nix2vast.${system};
+      inherit (config) nix2vast;
     in
     {
       packages.container = inputs'.nix2container.packages.nix2container.buildImage {

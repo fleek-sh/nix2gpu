@@ -8,6 +8,7 @@ in
       nix2vast's custom types for use in describing it's config.
     '';
     type = types.attrsOf types.optionType;
+    internal = true;
   };
 
   config.types = {

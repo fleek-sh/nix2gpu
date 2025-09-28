@@ -13,6 +13,7 @@ in
       contents of /etc/group.
     '';
     type = types.str;
+    internal = true;
   };
 
   config.groupContents =

@@ -1,11 +1,10 @@
-{ config, ... }:
 {
   perSystem =
-    { pkgs, ... }@perSystemArgs:
+    { pkgs, self', ... }:
     {
       packages.profile = pkgs.buildEnv {
         name = "nix2vast-profile";
-        paths = config.allPkgs perSystemArgs;
+        paths = [ self'.packages.allPkgs ];
         pathsToLink = [
           "/bin"
           "/sbin"

@@ -11,7 +11,12 @@ in
   };
 
   config.perSystem =
-    { pkgs, system, ... }:
+    {
+      pkgs,
+      self',
+      system,
+      ...
+    }:
     {
       packages.startupScript =
         let
@@ -27,10 +32,11 @@ in
           name = "startup.sh";
           text = scriptText;
 
-          runtimeInputs =
-            config.${system}.corePkgs
-            ++ config.${system}.networkPkgs
-            ++ [ config.${system}.homeConfigurations.default.activationPackage ];
+          runtimeInputs = [
+            self'.packages.corePkgs
+            self'.packages.networkPkgs
+            config.${system}.homeConfigurations.default.activationPackage
+          ];
         };
     };
 

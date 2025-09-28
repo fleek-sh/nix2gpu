@@ -1,7 +1,6 @@
-{ config, ... }:
 {
   perSystem =
-    { pkgs, system, ... }:
+    { pkgs, self', ... }:
     {
       packages.baseSystem =
         pkgs.runCommand "base-system"
@@ -10,7 +9,7 @@
             preferLocalBuild = true;
           }
           ''
-            exec ${config.packages.${system}.createBaseSystem}/bin/create-system.sh
+            exec ${self'.packages.createBaseSystem}/bin/create-system.sh
           '';
     };
 }

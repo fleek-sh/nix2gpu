@@ -10,10 +10,15 @@ in
     type = types.str;
   };
 
-  config.perSystem = {
-    packages.copyToGithub =
-      { pkgs, system, ... }:
-      pkgs.writeShellApplication {
+  config.perSystem =
+    {
+      pkgs,
+      system,
+      inputs',
+      ...
+    }:
+    {
+      packages.copyToGithub = pkgs.writeShellApplication {
         name = "copy-to-github-registry";
         runtimeInputs = with pkgs; [
           gh
@@ -72,5 +77,6 @@ in
           echo "Pull with: docker pull $REPO/$IMAGE"
         '';
       };
-  };
+
+    };
 }

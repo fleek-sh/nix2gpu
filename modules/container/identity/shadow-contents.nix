@@ -15,6 +15,7 @@ in
       contents of /etc/shadow.
     '';
     type = types.str;
+    internal = true;
   };
 
   config.shadowContents =

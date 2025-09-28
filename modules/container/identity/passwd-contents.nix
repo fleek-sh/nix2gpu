@@ -25,6 +25,7 @@ in
       contents of /etc/passwd.
     '';
     type = types.str;
+    internal = true;
   };
 
   config.passwdContents =

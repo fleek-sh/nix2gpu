@@ -8,6 +8,7 @@ in
       groups to place inside the generated nix2vast container.
     '';
     type = types.attrsOf config.types.groupDef;
+    internal = true;
   };
 
   config.groups = {
