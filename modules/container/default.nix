@@ -26,7 +26,7 @@ in
     };
 
     copyToRoot = flake-parts-lib.mkPerSystemOption (
-      { config, ... }:
+      { self', ... }:
       {
         description = ''
           packages to copy to the root of your container.
@@ -35,10 +35,10 @@ in
           default set? see `extraCopyToRoot`.
         '';
         type = types.listOf types.package;
-        default = [
-          config.baseSystem
-          config.nixStoreProfile
-          config.profile
+        default = with self'.packages; [
+          baseSystem
+          nixStoreProfile
+          profile
         ];
       }
     );
