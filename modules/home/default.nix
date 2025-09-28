@@ -2,6 +2,7 @@
   config,
   lib,
   inputs,
+  flake-parts-lib,
   ...
 }:
 let
@@ -9,21 +10,18 @@ let
   homeManagerModule = home-manager.flakeModules.default;
 in
 {
-  options.nix2vast.home = lib.mkOption {
-    description = ''
-      the [`home-manager`](https://github.com/nix-community/home-manager)
-      configuration to use inside your `nix2vast` container.
-
-      by default a minimal set of useful modern shell packages and
-      agenix integration is included for hacking on your machines.
-    '';
-    type = homeManagerModule.options.flake.homeConfigurations.type;
-  };
-
-  config.nix2vast.perSystem =
+  options.nix2vast.home = flake-parts-lib.mkPerSystemOption (
     { pkgs, ... }:
     {
-      home = home-manager.lib.homeManagerConfiguration {
+      description = ''
+        the [`home-manager`](https://github.com/nix-community/home-manager)
+        configuration to use inside your `nix2vast` container.
+
+        by default a minimal set of useful modern shell packages and
+        agenix integration is included for hacking on your machines.
+      '';
+      type = homeManagerModule.options.flake.homeConfigurations.type;
+      default = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = {
           inherit inputs;
@@ -35,5 +33,5 @@ in
           ./_agenix
         ];
       };
-    };
+  });
 }

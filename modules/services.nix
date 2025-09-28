@@ -4,13 +4,16 @@
   ...
 }:
 let
-  inherit (inputs) services-flake;
+  inherit (inputs) services-flake process-compose-flake;
   inherit (lib) types;
 
-  servicesFlakeModule = services-flake.processComposeModules.default;
+  processComposeFlakeModule = process-compose-flake.flakeModule;
+  servicesProcessComposeModule = services-flake.processComposeModules.default;
 in
 {
-  imports = [ servicesFlakeModule ];
+  imports = [
+     processComposeFlakeModule
+  ];
 
   options.nix2vast.services = lib.mkOption {
     description = ''
@@ -24,27 +27,37 @@ in
       this can be useful for running your own web servers or things
       like nginx.
     '';
-    type = types.attrsOf servicesFlakeModule.options.type;
+    type = types.attrsOf servicesProcessComposeModule.options.type;
     default = { };
   };
 
-  config.nix2vast.perSystem.services = {
-    nginx."nginx-hello-world" = {
-      enable = true;
-      httpConfig = ''
-        server {
-            listen 8080 default_server;
-            listen [::]:8080 default_server;
-            server_name _;
+  config = {
+    perSystem = { ... }: {
+      process-compose."container-services" = {
+        imports = [
+           servicesProcessComposeModule
+        ];
+      };
+    };
 
-            root /root;
+    nix2vast.services = {
+      nginx."nginx-hello-world" = {
+        enable = true;
+        httpConfig = ''
+          server {
+              listen 8080 default_server;
+              listen [::]:8080 default_server;
+              server_name _;
 
-            location / {
-                add_header Content-Type text/plain;
-                return 200 "hello world";
-            }
-        }
-      '';
+              root /root;
+
+              location / {
+                  add_header Content-Type text/plain;
+                  return 200 "hello world";
+              }
+          }
+        '';
+      };
     };
   };
 }
