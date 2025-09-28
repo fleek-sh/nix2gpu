@@ -155,12 +155,12 @@ in
   };
 
   config.perSystem =
-    { pkgs, system, ... }:
+    { pkgs, system, inputs', ... }:
     let
       nix2vast = config.nix2vast.${system};
     in
     {
-      packages.container = config.nix2containerPkgs.nix2container.buildImage {
+      packages.container = inputs'.nix2container.packages.nix2container.buildImage {
         inherit (nix2vast) name tag maxLayers;
 
         copyToRoot = nix2vast.copyToRoot ++ nix2vast.extraCopyToRoot;

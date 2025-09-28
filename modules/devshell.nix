@@ -1,10 +1,6 @@
-{ config, inputs, ... }:
 {
   perSystem =
-    { pkgs, system, ... }:
-    let
-      inherit (config.perSystem) nix2containerPkgs;
-    in
+    { pkgs, inputs', ... }:
     {
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
@@ -13,12 +9,12 @@
 
           gh
 
-          nix2containerPkgs.skopeo-nix2container
+          inputs'.nix2container.packages.skopeo-nix2container
 
           dive
 
           age
-          inputs.agenix.packages.${system}.default
+          inputs'.agenix.packages.default
         ];
       };
     };

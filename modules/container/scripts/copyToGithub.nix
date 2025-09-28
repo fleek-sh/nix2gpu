@@ -16,7 +16,7 @@ in
       name = "copy-to-github-registry";
       runtimeInputs = with pkgs; [
         gh
-        config.nix2containerPkgs.skopeo-nix2container
+        inputs'.nix2container.packages.skopeo-nix2container
       ];
       text = ''
         # Ensure containers policy exists
