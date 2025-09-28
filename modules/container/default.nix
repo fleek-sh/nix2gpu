@@ -155,7 +155,12 @@ in
   };
 
   config.perSystem =
-    { pkgs, system, inputs', ... }:
+    {
+      pkgs,
+      system,
+      inputs',
+      ...
+    }:
     let
       nix2vast = config.nix2vast.${system};
     in
