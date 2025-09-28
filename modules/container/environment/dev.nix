@@ -1,5 +1,5 @@
 {
-  flake.modules.devPkgs.perSystem =
+  flake.modules.devPkgs =
     { pkgs, ... }:
     with pkgs;
     [

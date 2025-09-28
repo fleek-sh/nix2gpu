@@ -12,7 +12,7 @@ let
 in
 {
   imports = [
-     processComposeFlakeModule
+    processComposeFlakeModule
   ];
 
   options.nix2vast.services = lib.mkOption {
@@ -32,13 +32,15 @@ in
   };
 
   config = {
-    perSystem = { ... }: {
-      process-compose."container-services" = {
-        imports = [
-           servicesProcessComposeModule
-        ];
+    perSystem =
+      { ... }:
+      {
+        process-compose."container-services" = {
+          imports = [
+            servicesProcessComposeModule
+          ];
+        };
       };
-    };
 
     nix2vast.services = {
       nginx."nginx-hello-world" = {

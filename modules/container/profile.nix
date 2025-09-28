@@ -1,10 +1,10 @@
 { config, ... }:
 {
-  flake.modules.profile.perSystem =
-    { pkgs, system, ... }:
+  flake.modules.profile =
+    { pkgs, ... }@perSystemArgs:
     pkgs.buildEnv {
       name = "nix2vast-profile";
-      paths = config.${system}.allPkgs;
+      paths = config.allPkgs perSystemArgs;
       pathsToLink = [
         "/bin"
         "/sbin"

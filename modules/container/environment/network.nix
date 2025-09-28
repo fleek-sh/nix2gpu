@@ -1,5 +1,5 @@
 {
-  flake.modules.networkPkgs.perSystem =
+  flake.modules.networkPkgs =
     { pkgs, ... }:
     with pkgs;
     [

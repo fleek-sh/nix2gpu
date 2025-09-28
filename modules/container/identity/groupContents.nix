@@ -1,6 +1,6 @@
 { config, lib, ... }:
 {
-  flake.modules.perSystem =
+  flake.modules.groupContents =
     { system, ... }:
     let
       users = config.${system}.users;
@@ -24,10 +24,8 @@
           members = groupMemberMap.${k} or [ ];
         in
         "${k}:x:${toString gid}:${lib.concatStringsSep "," members}";
+
+      groups = (lib.attrValues (lib.mapAttrs groupToGroup config.groups));
     in
-    {
-      groupContents = lib.concatStringsSep "\n" (
-        lib.attrValues (lib.mapAttrs groupToGroup config.groups)
-      );
-    };
+    lib.concatStringsSep "\n" groups;
 }

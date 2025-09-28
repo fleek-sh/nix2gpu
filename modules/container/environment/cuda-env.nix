@@ -6,7 +6,7 @@ let
   cudaPackages = config.nix2vast.cudaPackages;
 in
 {
-  flake.modules.cudaEnv.perSystem =
+  flake.modules.cudaEnv =
     { pkgs, ... }:
     pkgs.symlinkJoin {
       name = "cuda-env";

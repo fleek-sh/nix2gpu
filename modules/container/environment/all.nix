@@ -1,12 +1,19 @@
 { config, ... }:
-{
-  flake.modules.allPkgs.perSystem =
-    with config.perSystem;
+let
+  pkgSet = with config; [
     corePkgs
-    ++ networkPkgs
-    ++ devPkgs
+    networkPkgs
+    devPkgs
+    cudaEnv
+  ];
+
+  pkgSetPerSystem = { system, ... }: builtins.map (pkg: pkg system) pkgSet;
+in
+{
+  flake.modules.allPkgs =
+    { system, ... }@perSystemArgs:
+    (pkgSetPerSystem perSystemArgs)
     ++ [
-      flake.packages.container-services
-      cudaEnv
+      config.packages.${system}.container-services
     ];
 }

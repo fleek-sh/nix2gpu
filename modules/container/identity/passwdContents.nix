@@ -13,11 +13,10 @@ let
     "${k}:x:${toString uid}:${toString gid}:${description}:${home}:${shell}";
 in
 {
-  flake.modules.perSystem =
+  flake.modules.passwdContents =
     { system, ... }:
-    {
-      passwdContents = lib.concatStringsSep "\n" (
-        lib.attrValues (lib.mapAttrs userToPasswd config.${system}.users)
-      );
-    };
+    let
+      users = lib.attrValues (lib.mapAttrs userToPasswd config.${system}.users);
+    in
+    lib.concatStringsSep "\n" users;
 }

@@ -15,7 +15,7 @@ in
     type = types.str;
   };
 
-  config.flake.modules.nix2vast.perSystem =
+  config.flake.modules.nix2vast.startupScript =
     { pkgs, system, ... }:
     let
       scriptText =
@@ -26,17 +26,15 @@ in
           exec bash
         '';
     in
-    {
-      startupScript = pkgs.writeShellApplication {
-        name = "startup.sh";
-        text = scriptText;
+    pkgs.writeShellApplication {
+      name = "startup.sh";
+      text = scriptText;
 
-        runtimeInputs =
-          config.${system}.corePkgs
-          ++ config.${system}.networkPkgs
-          ++ [
-            config.${system}.homeConfigurations.default.activationPackage
-          ];
-      };
+      runtimeInputs =
+        config.${system}.corePkgs
+        ++ config.${system}.networkPkgs
+        ++ [
+          config.${system}.homeConfigurations.default.activationPackage
+        ];
     };
 }
