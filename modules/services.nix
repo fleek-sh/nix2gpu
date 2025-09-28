@@ -1,8 +1,4 @@
-{
-  inputs,
-  lib,
-  ...
-}:
+{ inputs, lib, ... }:
 let
   inherit (inputs) services-flake process-compose-flake;
   inherit (lib) types;
@@ -11,9 +7,7 @@ let
   servicesProcessComposeModule = services-flake.processComposeModules.default;
 in
 {
-  imports = [
-    processComposeFlakeModule
-  ];
+  imports = [ processComposeFlakeModule ];
 
   options.nix2vast.services = lib.mkOption {
     description = ''
@@ -33,12 +27,10 @@ in
 
   config = {
     perSystem =
-      { ... }:
+      _:
       {
         process-compose."container-services" = {
-          imports = [
-            servicesProcessComposeModule
-          ];
+          imports = [ servicesProcessComposeModule ];
         };
       };
 

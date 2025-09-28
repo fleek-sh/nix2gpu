@@ -1,13 +1,13 @@
-{ config, ... }:
+_:
 {
   flake.packages.createBaseSystem =
-    { pkgs, system, ... }:
+    { pkgs, self', ... }:
     pkgs.replaceVarsWith {
       src = ./create-system.sh;
       dir = "bin";
       isExecutable = true;
       replacements = {
-        inherit (config.${system}.packages)
+        inherit (self'.packages)
           passwdConf
           groupConf
           shadowConf
@@ -19,6 +19,7 @@
           bashInteractive
           coreutils-full
           glibc
+          cacert
           ;
 
         glibcBin = pkgs.glibc.bin;

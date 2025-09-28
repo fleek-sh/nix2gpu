@@ -1,9 +1,6 @@
-{
-  config,
-  ...
-}:
+{ config, ... }:
 let
-  cudaPackages = config.nix2vast.cudaPackages;
+  inherit (config.nix2vast) cudaPackages;
 in
 {
   flake.packages.cudaEnv =

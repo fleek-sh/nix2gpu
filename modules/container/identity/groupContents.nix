@@ -41,7 +41,7 @@ in
         in
         "${k}:x:${toString gid}:${lib.concatStringsSep "," members}";
 
-      groups = (lib.attrValues (lib.mapAttrs groupToGroup groupCfg));
+      groups = lib.attrValues (lib.mapAttrs groupToGroup groupCfg);
     in
     lib.concatStringsSep "\n" groups;
 }

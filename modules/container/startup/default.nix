@@ -1,8 +1,4 @@
-{
-  config,
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 let
   inherit (lib) types;
 in
@@ -32,8 +28,6 @@ in
       runtimeInputs =
         config.${system}.corePkgs
         ++ config.${system}.networkPkgs
-        ++ [
-          config.${system}.homeConfigurations.default.activationPackage
-        ];
+        ++ [ config.${system}.homeConfigurations.default.activationPackage ];
     };
 }

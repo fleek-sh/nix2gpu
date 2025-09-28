@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   inputs,
   flake-parts-lib,
@@ -20,12 +19,10 @@ in
         by default a minimal set of useful modern shell packages and
         agenix integration is included for hacking on your machines.
       '';
-      type = homeManagerModule.options.flake.homeConfigurations.type;
+      inherit (homeManagerModule.options.flake.homeConfigurations) type;
       default = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = {
-          inherit inputs;
-        };
+        extraSpecialArgs = { inherit inputs; };
         modules = [
           ./_tmux
           ./_starship
