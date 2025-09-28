@@ -1,6 +1,21 @@
-{ lib, ... }:
 {
-  flake.modules.users =
+  config,
+  lib,
+  flake-parts-lib,
+  ...
+}:
+let
+  inherit (lib) types;
+in
+{
+  options.users = flake-parts-lib.mkPerSystemOption {
+    description = ''
+      users to place inside the generated nix2vast container.
+    '';
+    type = types.attrsOf config.types.userDef;
+  };
+
+  config.users =
     { pkgs, ... }:
     {
       root = {

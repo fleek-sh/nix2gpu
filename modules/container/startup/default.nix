@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  flake-parts-lib,
   ...
 }:
 let
@@ -15,7 +14,7 @@ in
     type = types.str;
   };
 
-  config.flake.modules.nix2vast.startupScript =
+  config.flake.packages.startupScript =
     { pkgs, system, ... }:
     let
       scriptText =

@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  flake.modules.createBaseSystem =
+  flake.packages.createBaseSystem =
     { pkgs, system, ... }:
     pkgs.replaceVarsWith {
       src = ./create-system.sh;

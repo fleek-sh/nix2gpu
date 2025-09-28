@@ -1,5 +1,5 @@
 {
-  flake.modules.nixStoreProfile =
+  flake.packages.nixStoreProfile =
     { pkgs, ... }:
     pkgs.runCommand "nix-store-profile" { } ''
       mkdir -p $out/root

@@ -1,19 +1,35 @@
-{ config, lib, ... }:
 {
-  flake.modules.groupContents =
-    { system, ... }:
+  config,
+  lib,
+  flake-parts-lib,
+  ...
+}:
+let
+  inherit (lib) types;
+in
+{
+  options.groupContents = flake-parts-lib.mkPerSystemOption {
+    description = ''
+      contents of /etc/group.
+    '';
+    type = types.str;
+  };
+
+  config.groupContents =
+    perSystemArgs:
     let
-      users = config.${system}.users;
+      userCfg = config.users perSystemArgs;
+      groupCfg = config.groups;
 
       groupMemberMap =
         let
           mappings = builtins.foldl' (
             acc: user:
             let
-              userGroups = users.${user}.groups or [ ];
+              userGroups = userCfg.${user}.groups or [ ];
             in
             acc ++ map (group: { inherit user group; }) userGroups
-          ) [ ] (lib.attrNames users);
+          ) [ ] (lib.attrNames userCfg);
         in
         builtins.foldl' (acc: v: acc // { ${v.group} = acc.${v.group} or [ ] ++ [ v.user ]; }) { } mappings;
 
@@ -25,7 +41,7 @@
         in
         "${k}:x:${toString gid}:${lib.concatStringsSep "," members}";
 
-      groups = (lib.attrValues (lib.mapAttrs groupToGroup config.groups));
+      groups = (lib.attrValues (lib.mapAttrs groupToGroup groupCfg));
     in
     lib.concatStringsSep "\n" groups;
 }

@@ -10,7 +10,7 @@ in
     type = types.str;
   };
 
-  config.flake.modules.scripts.copyToGithub =
+  config.flake.packages.copyToGithub =
     { pkgs, system, ... }:
     pkgs.writeShellApplication {
       name = "copy-to-github-registry";

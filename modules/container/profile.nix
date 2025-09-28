@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  flake.modules.profile =
+  flake.packages.profile =
     { pkgs, ... }@perSystemArgs:
     pkgs.buildEnv {
       name = "nix2vast-profile";

@@ -1,17 +1,20 @@
 {
-  flake.modules.devPkgs =
+  flake.packages.devPkgs =
     { pkgs, ... }:
-    with pkgs;
-    [
-      binutils
-      elfutils
-      file
-      gcc
-      glibc.bin
-      gnumake
-      patchelf
-      pkg-config
-      python312
-      uv
-    ];
+
+    pkgs.symlinkJoin {
+      name = "network-pkgs";
+      paths = with pkgs; [
+        binutils
+        elfutils
+        file
+        gcc
+        glibc.bin
+        gnumake
+        patchelf
+        pkg-config
+        python312
+        uv
+      ];
+    };
 }

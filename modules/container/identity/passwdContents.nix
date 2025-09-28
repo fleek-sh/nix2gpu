@@ -1,5 +1,12 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  flake-parts-lib,
+  ...
+}:
 let
+  inherit (lib) types;
+
   userToPasswd =
     k:
     {
@@ -13,10 +20,18 @@ let
     "${k}:x:${toString uid}:${toString gid}:${description}:${home}:${shell}";
 in
 {
-  flake.modules.passwdContents =
-    { system, ... }:
+  options.passwdContents = flake-parts-lib.mkPerSystemOption {
+    description = ''
+      contents of /etc/passwd.
+    '';
+    type = types.str;
+  };
+
+  config.passwdContents =
+    perSystemArgs:
     let
-      users = lib.attrValues (lib.mapAttrs userToPasswd config.${system}.users);
+      userCfg = config.users perSystemArgs;
+      users = lib.attrValues (lib.mapAttrs userToPasswd userCfg);
     in
     lib.concatStringsSep "\n" users;
 }

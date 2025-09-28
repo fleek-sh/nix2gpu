@@ -1,5 +1,5 @@
 {
-  flake.modules.scripts.loginToGithub =
+  flake.packages.loginToGithub =
     { pkgs, ... }:
     pkgs.writeShellApplication {
       name = "login-to-github-registry";

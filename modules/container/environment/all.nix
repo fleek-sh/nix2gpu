@@ -1,19 +1,14 @@
-{ config, ... }:
-let
-  pkgSet = with config; [
-    corePkgs
-    networkPkgs
-    devPkgs
-    cudaEnv
-  ];
-
-  pkgSetPerSystem = { system, ... }: builtins.map (pkg: pkg system) pkgSet;
-in
 {
-  flake.modules.allPkgs =
-    { system, ... }@perSystemArgs:
-    (pkgSetPerSystem perSystemArgs)
-    ++ [
-      config.packages.${system}.container-services
-    ];
+  flake.packages.allPkgs =
+    { self', pkgs, ... }:
+    pkgs.symlinkJoin {
+      name = "all-pkgs";
+      paths = with self'.packages; [
+        corePkgs
+        networkPkgs
+        devPkgs
+        cudaEnv
+        container-services
+      ];
+    };
 }

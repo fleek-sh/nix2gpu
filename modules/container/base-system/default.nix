@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  flake.modules.baseSystem =
+  flake.packages.baseSystem =
     { pkgs, system, ... }:
     pkgs.runCommand "base-system"
       {
