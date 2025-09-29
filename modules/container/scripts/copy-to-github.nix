@@ -10,7 +10,7 @@ in
     type = types.str;
   };
 
-  config.perSystem =
+  config.scripts =
     {
       pkgs,
       system,
@@ -18,7 +18,7 @@ in
       ...
     }:
     {
-      packages.copyToGithub = pkgs.writeShellApplication {
+      copyToGithub = pkgs.writeShellApplication {
         name = "copy-to-github-registry";
         runtimeInputs = with pkgs; [
           gh

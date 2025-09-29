@@ -1,8 +1,8 @@
 {
-  perSystem =
+  scripts =
     { pkgs, ... }:
     {
-      packages.loginToGithub = pkgs.writeShellApplication {
+      loginToGithub = pkgs.writeShellApplication {
         name = "login-to-github-registry";
         runtimeInputs = with pkgs; [
           gh

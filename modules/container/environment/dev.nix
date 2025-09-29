@@ -1,8 +1,8 @@
 {
-  perSystem =
+  environment =
     { pkgs, ... }:
     {
-      packages.devPkgs = pkgs.symlinkJoin {
+      devPkgs = pkgs.symlinkJoin {
         name = "network-pkgs";
         paths = with pkgs; [
           binutils

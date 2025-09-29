@@ -3,10 +3,10 @@ let
   inherit (config.nix2vast) cudaPackages;
 in
 {
-  perSystem =
+  environment =
     { pkgs, ... }:
     {
-      packages.cudaEnv = pkgs.symlinkJoin {
+      cudaEnv = pkgs.symlinkJoin {
         name = "cuda-env";
         paths = with cudaPackages; [
           cudatoolkit

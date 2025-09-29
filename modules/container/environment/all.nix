@@ -1,8 +1,8 @@
 {
-  perSystem =
+  environment =
     { pkgs, self', ... }:
     {
-      packages.allPkgs = pkgs.symlinkJoin {
+      allPkgs = pkgs.symlinkJoin {
         name = "all-pkgs";
         paths = with self'.packages; [
           corePkgs

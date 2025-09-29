@@ -1,8 +1,8 @@
 {
-  perSystem =
+  environment =
     { pkgs, ... }:
     {
-      packages.corePkgs = pkgs.symlinkJoin {
+      corePkgs = pkgs.symlinkJoin {
         name = "core-pkgs";
         paths = with pkgs; [
           bashInteractive

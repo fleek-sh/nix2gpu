@@ -1,15 +1,24 @@
+{ lib, flake-parts-lib, ... }:
+let
+  inherit (lib) types;
+in
 {
-  perSystem =
+  options.baseSystem = flake-parts-lib.mkPerSystemOption {
+    description = ''
+      nix2vast generated baseSystem.
+    '';
+    type = types.package;
+    internal = true;
+  };
+
+  config.baseSystem =
     { pkgs, self', ... }:
-    {
-      packages.baseSystem =
-        pkgs.runCommand "base-system"
-          {
-            allowSubstitutes = false;
-            preferLocalBuild = true;
-          }
-          ''
-            exec ${self'.packages.createBaseSystem}/bin/create-system.sh
-          '';
-    };
+    pkgs.runCommand "base-system"
+      {
+        allowSubstitutes = false;
+        preferLocalBuild = true;
+      }
+      ''
+        exec ${self'.packages.createBaseSystem}/bin/create-system.sh
+      '';
 }

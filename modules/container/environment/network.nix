@@ -1,8 +1,8 @@
 {
-  perSystem =
+  environment =
     { pkgs, ... }:
     {
-      packages.networkPkgs = pkgs.symlinkJoin {
+      networkPkgs = pkgs.symlinkJoin {
         name = "network-pkgs";
         paths = with pkgs; [
           curl
