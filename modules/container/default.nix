@@ -1,6 +1,6 @@
 {
   perContainer =
-    { name, nix2vastConfig }:
+    { name, nix2vastConfig, ... }:
     {
       perSystem =
         {

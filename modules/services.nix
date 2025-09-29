@@ -7,7 +7,7 @@ let
 in
 {
   perContainer =
-    { name, nix2vastConfig }:
+    { name, nix2vastConfig, ... }:
     {
       imports = [ processComposeFlakeModule ];
 
