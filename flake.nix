@@ -46,5 +46,16 @@
     ];
   };
 
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
+  outputs =
+    inputs:
+    let
+      modules = inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
+      examplesInputs = inputs // {
+        nix2vast = modules;
+      };
+      examples = inputs.flake-parts.lib.mkFlake { inputs = examplesInputs; } (
+        inputs.import-tree ./examples
+      );
+    in
+    modules // { inherit (examples) packages; };
 }
