@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  flake-parts-lib,
+  ...
+}:
 let
   inherit (lib) mkOption types;
 
@@ -100,7 +105,7 @@ in
             "perContainer"
             container.name
           ];
-          specialArgs = { inherit container; };
+          specialArgs = { inherit container flake-parts-lib; };
           class = "perContainer";
         }).config;
     };
