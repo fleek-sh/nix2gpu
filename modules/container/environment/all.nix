@@ -1,16 +1,25 @@
 {
-  environment =
-    { pkgs, self', ... }:
+  perSystem =
     {
-      allPkgs = pkgs.symlinkJoin {
+      config,
+      self',
+      pkgs,
+      ...
+    }:
+    let
+      includedEnv = with config.environment; [
+        corePkgs
+        networkPkgs
+        devPkgs
+        cudaEnv
+      ];
+
+      includedPkgs = with self'.packages; [ container-services ];
+    in
+    {
+      environment.allPkgs = pkgs.symlinkJoin {
         name = "all-pkgs";
-        paths = with self'.packages; [
-          corePkgs
-          networkPkgs
-          devPkgs
-          cudaEnv
-          container-services
-        ];
+        paths = includedEnv ++ includedPkgs;
       };
     };
 }
