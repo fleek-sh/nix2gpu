@@ -64,6 +64,42 @@ in
         }
       );
 
+      extraStartupScript = lib.mkOption {
+        description = ''
+          extra commands to run on container startup.
+        '';
+        type = types.str;
+      };
+
+      nixConfig = lib.mkOption {
+        description = ''
+          a replacement nix.conf to use.
+        '';
+        type = config.types.textFilePackage;
+        default = ./config/nix.conf;
+      };
+
+      sshdConfig = flake-parts-lib.mkPerSystemOption (
+        { pkgs, ... }:
+        let
+          sshdConf = pkgs.replaceVars ./config/sshd_config { inherit (pkgs) openssh; };
+        in
+        {
+          description = ''
+            a replacement sshd configuration to use.
+          '';
+          type = config.types.textFilePackage;
+          default = sshdConf;
+        }
+      );
+
+      registry = lib.mkOption {
+        description = ''
+          the container registry to push your images to.
+        '';
+        type = types.str;
+      };
+
       cudaPackages = mkPerSystemOption (
         { pkgs, config, ... }:
         {
