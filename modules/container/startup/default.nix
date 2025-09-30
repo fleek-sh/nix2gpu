@@ -8,44 +8,49 @@ let
   inherit (lib) types;
 in
 {
-  perContainer =
-    { name, nix2vastConfig, ... }:
-    {
-      options = {
-        "${name}-startupScript" = flake-parts-lib.mkPerSystemOption {
-          description = ''
-            nix2vast container ${name} startup script.
-          '';
-          type = types.package;
-          internal = true;
-        };
+  options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
+    options.perContainer = config.flake.lib.mkPerContainerOption (container: {
+      options."${container.name}-startupScript" = flake-parts-lib.mkPerSystemOption {
+        description = ''
+          nix2vast container ${container.name} startup script.
+        '';
+        type = types.package;
+        internal = true;
       };
+    });
+  });
 
-      config."${name}-startupScript" =
+  config.perSystem =
+    {
+      pkgs,
+      self',
+      system,
+      ...
+    }:
+    {
+      perContainer =
+        { container, ... }:
         {
-          pkgs,
-          self',
-          system,
-          ...
-        }:
-        let
-          scriptText =
-            (builtins.readFile ./startup.sh)
-            ++ nix2vastConfig.extraStartupScript
-            ++ ''
-              echo "[nix2vast] entering interactive terminal..."
-              exec bash
-            '';
-        in
-        pkgs.writeShellApplication {
-          name = "${name}-startup.sh";
-          text = scriptText;
+          "${container.name}-startupScript" =
+            let
+              scriptText =
+                (builtins.readFile ./startup.sh)
+                ++ container.options.extraStartupScript
+                ++ ''
+                  echo "[nix2vast] entering interactive terminal..."
+                  exec bash
+                '';
+            in
+            pkgs.writeShellApplication {
+              name = "${container.name}-startup.sh";
+              text = scriptText;
 
-          runtimeInputs = [
-            self'.packages.corePkgs
-            self'.packages.networkPkgs
-            config.${system}.homeConfigurations.default.activationPackage
-          ];
+              runtimeInputs = [
+                self'.packages.corePkgs
+                self'.packages.networkPkgs
+                config.${system}.homeConfigurations.default.activationPackage
+              ];
+            };
         };
     };
 }

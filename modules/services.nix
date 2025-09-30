@@ -7,14 +7,14 @@ let
 in
 {
   perContainer =
-    { name, nix2vastConfig, ... }:
+    { container, ... }:
     {
       imports = [ processComposeFlakeModule ];
 
-      process-compose."${name}-services" = {
+      process-compose."${container.name}-services" = {
         imports = [ servicesProcessComposeModule ];
 
-        inherit (nix2vastConfig) services;
+        inherit (container.options) services;
       };
     };
 }

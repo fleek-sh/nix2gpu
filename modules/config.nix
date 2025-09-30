@@ -14,7 +14,7 @@ let
   servicesProcessComposeModule = services-flake.processComposeModules.default;
 in
 {
-  types.nix2vast = types.attrsOf (
+  config.types.nix2vast = types.attrsOf (
     types.submodule {
       tag = mkOption {
         description = ''
@@ -244,7 +244,48 @@ in
     }
   );
 
-  flake.flakeModule = {
+  options.nix2vast = mkOption {
+    description = ''
+      nix2vast config top level.
+
+      TODO: probably put an example here for docs
+    '';
+    type = config.types.nix2vast;
+    default = { };
+  };
+
+  config.nix2vast = {
+    basic = {
+      services.clickhouse."clickhouse-example" = {
+        enable = true;
+        extraConfig = {
+          http_port = 9050;
+        };
+      };
+
+      exposedPorts = {
+        "9050/tcp" = { };
+      };
+
+      registry = "ghcr.io/fleek-platform";
+    };
+    second = {
+      services.clickhouse."clickhouse-example" = {
+        enable = true;
+        extraConfig = {
+          http_port = 9050;
+        };
+      };
+
+      exposedPorts = {
+        "9050/tcp" = { };
+      };
+
+      registry = "ghcr.io/fleek-platform";
+    };
+  };
+
+  config.flake.flakeModule = {
     options.nix2vast = mkOption {
       description = ''
         nix2vast config top level.

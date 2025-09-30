@@ -1,19 +1,22 @@
 {
-  perContainer =
-    { name, nix2vastConfig, ... }:
+  perSystem =
     {
-      perSystem =
-        {
-          pkgs,
-          inputs',
-          self',
-          ...
-        }:
+      pkgs,
+      inputs',
+      self',
+      ...
+    }:
+    {
+      perContainer =
+        { container, ... }:
+        let
+          inherit (container) name options;
+        in
         {
           packages."${name}-container" = inputs'.nix2container.packages.nix2container.buildImage {
-            inherit (nix2vastConfig) name tag maxLayers;
+            inherit (options) name tag maxLayers;
 
-            copyToRoot = nix2vastConfig.copyToRoot ++ nix2vastConfig.extraCopyToRoot;
+            copyToRoot = options.copyToRoot ++ options.extraCopyToRoot;
             initializeNixDatabase = true;
 
             config = {
@@ -23,14 +26,14 @@
                 "${self'.packages.startupScript}/bin/startup.sh"
               ];
 
-              Env = nix2vastConfig.env ++ nix2vastConfig.extraEnv;
+              Env = options.env ++ options.extraEnv;
 
-              WorkingDir = nix2vastConfig.workingDir;
-              User = nix2vastConfig.user;
+              WorkingDir = options.workingDir;
+              User = options.user;
 
-              ExposedPorts = nix2vastConfig.exposedPorts;
+              ExposedPorts = options.exposedPorts;
 
-              Labels = nix2vastConfig.labels ++ nix2vastConfig.extraLabels;
+              Labels = options.labels ++ options.extraLabels;
             };
           };
         };

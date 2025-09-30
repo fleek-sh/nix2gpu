@@ -41,7 +41,32 @@ let
         }
     '';
 
-  mkPerContainerType = module: lib.deferredModuleWith { staticModules = [ module ]; };
+  # Lifted from flake-parts
+  # Differs from nixpkgs implementation slightly
+  deferredModuleWith =
+    attrs@{
+      staticModules ? [ ],
+    }:
+    lib.mkOptionType {
+      name = "deferredModule";
+      description = "module";
+      check = x: lib.isAttrs x || lib.isFunction x || lib.types.path.check x;
+      merge =
+        loc: defs:
+        staticModules
+        ++ map (
+          def: lib.setDefaultModuleLocation "${def.file}, via option ${lib.showOption loc}" def.value
+        ) defs;
+      inherit (lib.types.submoduleWith { modules = staticModules; }) getSubOptions getSubModules;
+      substSubModules = m: deferredModuleWith (attrs // { staticModules = m; });
+      functor = lib.defaultFunctor "deferredModuleWith" // {
+        type = deferredModuleWith;
+        payload = { inherit staticModules; };
+        binOp = lhs: rhs: { staticModules = lhs.staticModules ++ rhs.staticModules; };
+      };
+    };
+
+  mkPerContainerType = module: deferredModuleWith { staticModules = [ module ]; };
   mkPerContainerOption = module: lib.mkOption { type = mkPerContainerType module; };
 in
 {
@@ -73,7 +98,7 @@ in
           inherit modules;
           prefix = [
             "perContainer"
-            container
+            container.name
           ];
           specialArgs = { inherit container; };
           class = "perContainer";
@@ -92,7 +117,7 @@ in
       containersList = lib.mapAttrsToList (name: options: { inherit name options; }) config.nix2vast;
     in
     {
-      allContainers = lib.genAttrs containersList config.perContainer;
+      allContainers = builtins.listToAttrs (builtins.map config.perContainer containersList);
 
       flake.lib = { inherit mkPerContainerOption mkPerContainerType; };
     };

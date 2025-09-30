@@ -4,11 +4,11 @@ let
   homeManagerModule = home-manager.flakeModules.default;
 in
 {
-  imports = [ homeManagerModule ];
-
-  config.perContainer =
-    { name, nix2vastConfig, ... }:
+  perContainer =
+    { container, ... }:
     {
-      flake.homeConfigurations."${name}-home" = nix2vastConfig.home;
+      imports = [ homeManagerModule ];
+
+      flake.homeConfigurations."${container.name}-home" = container.options.home;
     };
 }

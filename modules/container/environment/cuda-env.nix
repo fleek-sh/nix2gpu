@@ -1,13 +1,13 @@
 {
-  perContainer =
-    { name, nix2vastConfig, ... }:
+  perSystem =
+    { pkgs, ... }:
     {
-      perSystem =
-        { pkgs, ... }:
+      perContainer =
+        { container, ... }:
         {
           environment.cudaEnv = pkgs.symlinkJoin {
-            name = "${name}-cuda-env";
-            paths = with nix2vastConfig.cudaPackages; [
+            name = "${container.name}-cuda-env";
+            paths = with container.options.cudaPackages; [
               cudatoolkit
               cudnn
               cusparselt

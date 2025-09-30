@@ -1,12 +1,12 @@
 {
-  perContainer =
-    { name, nix2vastConfig, ... }:
+  scripts =
+    { pkgs, inputs', ... }:
     {
-      scripts =
-        { pkgs, inputs', ... }:
+      perContainer =
+        { container, ... }:
         {
           copyToGithub = pkgs.writeShellApplication {
-            name = "${name}-copy-to-github-registry";
+            name = "${container.name}-copy-to-github-registry";
             runtimeInputs = with pkgs; [
               gh
               inputs'.nix2container.packages.skopeo-nix2container
@@ -37,8 +37,8 @@
               nix build .#container
 
               TAG="$(date +%Y%m%d-%H%M%S)"
-              REPO="${nix2vastConfig.registry}"
-              IMAGE="${name}:$TAG"
+              REPO="${container.options.registry}"
+              IMAGE="${container.name}:$TAG"
 
               # Get credentials from gh
               GITHUB_USER=$(gh api user --jq .login)
