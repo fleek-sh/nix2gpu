@@ -25,13 +25,17 @@ in
     };
   });
 
-  config.perSystem =
-    { config, ... }:
-    {
-      passwdContents =
-        let
-          users = lib.attrValues (lib.mapAttrs userToPasswd config.users);
-        in
-        lib.concatStringsSep "\n" users;
-    };
+  config = {
+    transposition.passwdContents = { };
+
+    perSystem =
+      { config, ... }:
+      {
+        passwdContents =
+          let
+            users = lib.attrValues (lib.mapAttrs userToPasswd config.users);
+          in
+          lib.concatStringsSep "\n" users;
+      };
+  };
 }

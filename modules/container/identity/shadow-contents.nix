@@ -15,15 +15,19 @@ in
     };
   });
 
-  config.perSystem =
-    { config, ... }:
-    {
-      shadowContents =
-        let
-          userCfg = config.users;
-          shadows = lib.attrValues (lib.mapAttrs userToShadow userCfg);
-        in
-        lib.concatStringsSep "\n" shadows;
-    };
+  config = {
+    transposition.shadowContents = { };
+
+    perSystem =
+      { config, ... }:
+      {
+        shadowContents =
+          let
+            userCfg = config.users;
+            shadows = lib.attrValues (lib.mapAttrs userToShadow userCfg);
+          in
+          lib.concatStringsSep "\n" shadows;
+      };
+  };
 
 }

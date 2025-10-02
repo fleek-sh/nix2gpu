@@ -51,19 +51,20 @@ in
             groups = [ "nobody" ];
             description = "Unprivileged account";
           };
-        } // lib.listToAttrs (
-            map (n: {
-              name = "nixbld${toString n}";
-              value = {
-                uid = 30000 + n;
-                gid = 30000;
-                groups = [ "nixbld" ];
-                shell = "${pkgs.shadow}/bin/nologin";
-                home = "/var/empty";
-                description = "Nix build user ${toString n}";
-              };
-            }) (lib.lists.range 1 32)
-          );
+        }
+        // lib.listToAttrs (
+          map (n: {
+            name = "nixbld${toString n}";
+            value = {
+              uid = 30000 + n;
+              gid = 30000;
+              groups = [ "nixbld" ];
+              shell = "${pkgs.shadow}/bin/nologin";
+              home = "/var/empty";
+              description = "Nix build user ${toString n}";
+            };
+          }) (lib.lists.range 1 32)
+        );
       };
   };
 }
