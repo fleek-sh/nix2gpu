@@ -9,8 +9,7 @@
       perContainer =
         { container, ... }:
         {
-
-          loginToGithub = pkgs.writeShellApplication {
+          scripts.loginToGithub = pkgs.writeShellApplication {
             name = "${container.name}-login-to-github-registry";
             runtimeInputs = with pkgs; [
               gh
