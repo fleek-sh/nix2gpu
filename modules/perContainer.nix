@@ -126,11 +126,9 @@ in
       containerNames = lib.attrNames config.nix2vast;
     in
     {
-      allContainers = lib.attrsets.mergeAttrsList
-        (lib.zipListsWith
-          (name: modules: { "${name}" = modules; })
-          containerNames
-          containerPer);
+      allContainers = lib.attrsets.mergeAttrsList (
+        lib.zipListsWith (name: modules: { "${name}" = modules; }) containerNames containerPer
+      );
 
       flake.lib = { inherit mkPerContainerOption mkPerContainerType; };
     };
