@@ -10,7 +10,8 @@
     import-tree.url = "github:vic/import-tree";
 
     nix2container = {
-      url = "github:nlewo/nix2container";
+      # TODO: Return to actual nix2container once this is merged
+      url = "github:baileylutcd/nix2container?ref=add-passthru-attribute";
       inputs.nixpkgs.follows = "hf-nix/nixpkgs";
     };
 

@@ -180,15 +180,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1752002763,
-        "narHash": "sha256-JYAkdZvpdSx9GUoHPArctYMypSONob4DYKRkOubUWtY=",
-        "owner": "nlewo",
+        "lastModified": 1759343371,
+        "narHash": "sha256-AVNDLKUc4Y4PprIOkXdrXQeGhWtHSD5kRKN7s1agvKs=",
+        "owner": "baileylutcd",
         "repo": "nix2container",
-        "rev": "4f2437f6a1844b843b380d483087ae6d461240ee",
+        "rev": "bb526c357806861a7a25fda5f2a5fc3879a049d9",
         "type": "github"
       },
       "original": {
-        "owner": "nlewo",
+        "owner": "baileylutcd",
+        "ref": "add-passthru-attribute",
         "repo": "nix2container",
         "type": "github"
       }

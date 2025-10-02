@@ -1,3 +1,4 @@
+{ config, ... }:
 {
   perSystem =
     {
@@ -34,7 +35,10 @@
               ExposedPorts = options.exposedPorts;
 
               Labels = options.labels ++ options.extraLabels;
+
             };
+
+            passthru = { inherit (config.scripts) copyToGithub loginToGithub; };
           };
         };
     };
