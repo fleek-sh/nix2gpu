@@ -7,6 +7,8 @@
 let
   inherit (lib) mkOption types;
 
+  rootConfig = config;
+
   throwShouldBeTopError =
     param:
     throw ''
@@ -75,61 +77,64 @@ let
   mkPerContainerOption = module: lib.mkOption { type = mkPerContainerType module; };
 in
 {
-  options = {
-    perContainer = mkOption {
-      description = ''
-        A function from container to flake-like attributes omitting the `<container>` attribute.
+  options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
+    options = {
+      perContainer = mkOption {
+        description = ''
+          A function from container to flake-like attributes omitting the `<container>` attribute.
 
-        Modules defined here have access to a `container` struct holding the `name` and
-        `options` fields for every container.
+          Modules defined here have access to a `container` struct holding the `name` and
+          `options` fields for every container.
 
-        Behaves similarly to `perSystem` from `flake-parts`.
-      '';
-      type = mkPerContainerType (_: {
-        _file = ./perContainer.nix;
-        config = {
-          _module.args.self = throwShouldBeTopError "self";
-          _module.args.inputs = throwShouldBeTopError "inputs";
+          Behaves similarly to `perSystem` from `flake-parts`.
+        '';
+        type = mkPerContainerType (_: {
+          _file = ./perContainer.nix;
+          config = {
+            _module.args.self = throwShouldBeTopError "self";
+            _module.args.inputs = throwShouldBeTopError "inputs";
 
-          _module.args.config = throwShouldBePerSystemError "config";
-          _module.args.getSystem = throwShouldBePerSystemError "getSystem";
-          _module.args.withSystem = throwShouldBePerSystemError "withSystem";
-          _module.args.moduleWithSystem = throwShouldBePerSystemError "moduleWithSystem";
-        };
-      });
-      apply =
-        modules: container:
-        (lib.evalModules {
-          inherit modules;
-          prefix = [
-            "perContainer"
-            container.name
-          ];
-          specialArgs = { inherit container flake-parts-lib; };
-          class = "perContainer";
-        }).config;
+            _module.args.getSystem = throwShouldBePerSystemError "getSystem";
+            _module.args.withSystem = throwShouldBePerSystemError "withSystem";
+            _module.args.moduleWithSystem = throwShouldBePerSystemError "moduleWithSystem";
+          };
+        });
+        apply =
+          modules: container:
+          (lib.evalModules {
+            inherit modules;
+            prefix = [
+              "perContainer"
+              container.name
+            ];
+            specialArgs = { inherit container flake-parts-lib; };
+            class = "perContainer";
+          }).config;
+      };
+
+      allContainers = mkOption {
+        type = types.lazyAttrsOf types.unspecified;
+        description = "The container-specific config for each of systems.";
+        internal = true;
+      };
     };
+  });
 
-    allContainers = mkOption {
-      type = types.lazyAttrsOf types.unspecified;
-      description = "The container-specific config for each of systems.";
-      internal = true;
-    };
-  };
-
-  config =
+  config.perSystem =
+    { config, ... }:
     let
-      containersList = lib.mapAttrsToList (name: options: { inherit name options; }) config.nix2vast;
+      containersList = lib.mapAttrsToList (name: options: { inherit name options; }) rootConfig.nix2vast;
 
       containerPer = builtins.map config.perContainer containersList;
 
-      containerNames = lib.attrNames config.nix2vast;
+      containerNames = lib.attrNames rootConfig.nix2vast;
     in
     {
       allContainers = lib.attrsets.mergeAttrsList (
         lib.zipListsWith (name: modules: { "${name}" = modules; }) containerNames containerPer
       );
 
-      flake.lib = { inherit mkPerContainerOption mkPerContainerType; };
     };
+
+  config.flake.lib = { inherit mkPerContainerOption mkPerContainerType; };
 }
