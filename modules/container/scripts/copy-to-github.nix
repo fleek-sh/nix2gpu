@@ -1,11 +1,11 @@
 {
-  scripts =
-    { pkgs, inputs', ... }:
+  perSystem =
+    { pkgs, ... }:
     {
       perContainer =
         { container, ... }:
         {
-          copyToGithub = pkgs.writeShellApplication {
+          scripts.copyToGithub = pkgs.writeShellApplication {
             name = "${container.name}-copy-to-github-registry";
             runtimeInputs = with pkgs; [
               gh

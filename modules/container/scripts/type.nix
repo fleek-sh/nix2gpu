@@ -1,17 +1,26 @@
-{ lib, flake-parts-lib, ... }:
+{
+  config,
+  lib,
+  flake-parts-lib,
+  ...
+}:
 let
-  inherit (lib) types;
+  inherit (lib) types mkOption;
 
   executablePackage = types.package // {
     check = x: lib.isDerivation x && lib.hasAttr "mainProgram" x.meta;
   };
 in
 {
-  options.scripts = flake-parts-lib.mkPerSystemOption {
-    description = ''
-      nix2vast's scripts to attach to containers after generation.
-    '';
-    type = types.attrsOf executablePackage;
-    internal = true;
-  };
+  options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
+    options.perContainer = config.flake.lib.mkPerContainerOption (_: {
+      options.scripts = mkOption {
+        description = ''
+          nix2vast's scripts to attach to containers after generation.
+        '';
+        type = types.attrsOf executablePackage;
+        internal = true;
+      };
+    });
+  });
 }
