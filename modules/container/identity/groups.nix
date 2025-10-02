@@ -1,9 +1,9 @@
 { config, lib, ... }:
 let
-  inherit (lib) types;
+  inherit (lib) types mkOption;
 in
 {
-  options.groups = lib.mkOption {
+  options.groups = mkOption {
     description = ''
       groups to place inside the generated nix2vast container.
     '';

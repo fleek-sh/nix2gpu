@@ -1,35 +1,40 @@
 { lib, flake-parts-lib, ... }:
 let
-  inherit (lib) types;
+  inherit (lib) types mkOption;
 in
 {
-  options.createBaseSystem = flake-parts-lib.mkPerSystemOption {
-    description = ''
-      nix2vast script to generate baseSystem.
-    '';
-    type = types.package;
-    internal = true;
-  };
 
-  config.createBaseSystem =
+  options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
+    options.createBaseSystem = mkOption {
+      description = ''
+        nix2vast script to generate baseSystem.
+      '';
+      type = types.package;
+      internal = true;
+    };
+  });
+
+  config.perSystem =
     { pkgs, config, ... }:
-    pkgs.replaceVarsWith {
-      src = ./create-system.sh;
-      dir = "bin";
-      isExecutable = true;
-      replacements = {
-        inherit (config.nix2vast) sshdConfig nixConfig;
+    {
+      createBaseSystem = pkgs.replaceVarsWith {
+        src = ./create-system.sh;
+        dir = "bin";
+        isExecutable = true;
+        replacements = {
+          inherit (config.nix2vast) sshdConfig nixConfig;
 
-        inherit (config) passwdContents groupContents shadowContents;
+          inherit (config) passwdContents groupContents shadowContents;
 
-        inherit (pkgs)
-          bashInteractive
-          coreutils-full
-          glibc
-          cacert
-          ;
+          inherit (pkgs)
+            bashInteractive
+            coreutils-full
+            glibc
+            cacert
+            ;
 
-        glibcBin = pkgs.glibc.bin;
+          glibcBin = pkgs.glibc.bin;
+        };
       };
     };
 }

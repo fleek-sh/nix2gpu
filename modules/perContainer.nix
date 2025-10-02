@@ -120,9 +120,17 @@ in
   config =
     let
       containersList = lib.mapAttrsToList (name: options: { inherit name options; }) config.nix2vast;
+
+      containerPer = builtins.map config.perContainer containersList;
+
+      containerNames = lib.attrNames config.nix2vast;
     in
     {
-      allContainers = builtins.listToAttrs (builtins.map config.perContainer containersList);
+      allContainers = lib.attrsets.mergeAttrsList
+        (lib.zipListsWith
+          (name: modules: { "${name}" = modules; })
+          containerNames
+          containerPer);
 
       flake.lib = { inherit mkPerContainerOption mkPerContainerType; };
     };
