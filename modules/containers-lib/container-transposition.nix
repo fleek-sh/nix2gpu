@@ -51,6 +51,13 @@ in
         '';
         type = types.unspecified;
       };
+
+      packages = lib.mkOption {
+        description = ''
+          passthru for packages opts
+        '';
+        type = types.unspecified;
+      };
     };
   });
 

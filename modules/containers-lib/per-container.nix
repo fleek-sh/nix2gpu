@@ -1,13 +1,10 @@
 {
   lib,
-  config,
   flake-parts-lib,
   ...
 }:
 let
   inherit (lib) mkOption types;
-
-  rootConfig = config;
 
   throwShouldBeTopError =
     param:
@@ -123,11 +120,11 @@ in
   config.perSystem =
     { config, ... }:
     let
-      containersList = lib.mapAttrsToList (name: options: { inherit name options; }) rootConfig.nix2vast;
+      containersList = lib.mapAttrsToList (name: options: { inherit name options; }) config.nix2vast;
 
       containerPer = builtins.map config.perContainer containersList;
 
-      containerNames = lib.attrNames rootConfig.nix2vast;
+      containerNames = lib.attrNames config.nix2vast;
     in
     {
       allContainers = lib.attrsets.mergeAttrsList (
