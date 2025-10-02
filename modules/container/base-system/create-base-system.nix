@@ -1,40 +1,59 @@
-{ lib, flake-parts-lib, ... }:
+{
+  config,
+  lib,
+  flake-parts-lib,
+  ...
+}:
 let
   inherit (lib) types mkOption;
 in
 {
-
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
-    options.createBaseSystem = mkOption {
-      description = ''
-        nix2vast script to generate baseSystem.
-      '';
-      type = types.package;
-      internal = true;
-    };
+    options.perContainer = config.flake.lib.mkPerContainerOption (
+      { container, ... }:
+      {
+        options.createBaseSystem = mkOption {
+          description = ''
+            nix2vast script to generate baseSystem for ${container.name}.
+          '';
+          type = types.package;
+          internal = true;
+        };
+      }
+    );
   });
 
-  config.perSystem =
-    { pkgs, config, ... }:
-    {
-      createBaseSystem = pkgs.replaceVarsWith {
-        src = ./create-system.sh;
-        dir = "bin";
-        isExecutable = true;
-        replacements = {
-          inherit (config.nix2vast) sshdConfig nixConfig;
+  config = {
+    transposition.createBaseSystem = { };
 
-          inherit (config) passwdContents groupContents shadowContents;
+    perSystem =
+      { pkgs, config, ... }:
+      {
+        containerTransposition.createBaseSystem = { };
 
-          inherit (pkgs)
-            bashInteractive
-            coreutils-full
-            glibc
-            cacert
-            ;
+        perContainer =
+          { container, ... }:
+          {
+            createBaseSystem = pkgs.replaceVarsWith {
+              src = ./create-system.sh;
+              dir = "bin";
+              isExecutable = true;
+              replacements = {
+                inherit (container.options) sshdConfig nixConfig;
 
-          glibcBin = pkgs.glibc.bin;
-        };
+                inherit (config) passwdContents groupContents shadowContents;
+
+                inherit (pkgs)
+                  bashInteractive
+                  coreutils-full
+                  glibc
+                  cacert
+                  ;
+
+                glibcBin = pkgs.glibc.bin;
+              };
+            };
+          };
       };
-    };
+  };
 }

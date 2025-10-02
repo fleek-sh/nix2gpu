@@ -1,7 +1,8 @@
 {
-  inputs,
   config,
+  inputs,
   lib,
+  flake-parts-lib,
   ...
 }:
 let
@@ -12,29 +13,33 @@ let
   servicesProcessComposeModule = services-flake.processComposeModules.default;
 in
 {
-  options.perContainer = config.flake.lib.mkPerContainerOption (
-    { container, ... }:
-    {
-      options.process-compose = mkOption {
-        description = ''
-          nix2vast process compose for container ${container.name}.
-        '';
-        type = types.attrsOf types.unspecified;
-        internal = true;
-        default = { };
+  options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
+    options.perContainer = config.flake.lib.mkPerContainerOption (
+      { container, ... }:
+      {
+        options.process-compose = mkOption {
+          description = ''
+            nix2vast process compose for container ${container.name}.
+          '';
+          type = types.attrsOf types.unspecified;
+          internal = true;
+          default = { };
+        };
+      }
+    );
+  });
+
+  config.perSystem = _: {
+    config.perContainer =
+      { container, ... }:
+      {
+        imports = [ processComposeFlakeModule ];
+
+        process-compose."${container.name}-services" = {
+          imports = [ servicesProcessComposeModule ];
+
+          inherit (container.options) services;
+        };
       };
-    }
-  );
-
-  config.perContainer =
-    { container, ... }:
-    {
-      imports = [ processComposeFlakeModule ];
-
-      process-compose."${container.name}-services" = {
-        imports = [ servicesProcessComposeModule ];
-
-        inherit (container.options) services;
-      };
-    };
+  };
 }

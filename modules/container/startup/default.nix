@@ -9,15 +9,18 @@ let
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
-    options.perContainer = config.flake.lib.mkPerContainerOption (container: {
-      options."${container.name}-startupScript" = flake-parts-lib.mkPerSystemOption {
-        description = ''
-          nix2vast container ${container.name} startup script.
-        '';
-        type = types.package;
-        internal = true;
-      };
-    });
+    options.perContainer = config.flake.lib.mkPerContainerOption (
+      { container, ... }:
+      {
+        options."${container.name}-startupScript" = flake-parts-lib.mkPerSystemOption {
+          description = ''
+            nix2vast container ${container.name} startup script.
+          '';
+          type = types.package;
+          internal = true;
+        };
+      }
+    );
   });
 
   config.perSystem =

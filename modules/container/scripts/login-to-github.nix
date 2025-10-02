@@ -1,10 +1,15 @@
 {
+  transposition.loginToGithub = { };
+
   perSystem =
     { pkgs, ... }:
     {
+      containerTransposition.loginToGithub = { };
+
       perContainer =
         { container, ... }:
         {
+
           loginToGithub = pkgs.writeShellApplication {
             name = "${container.name}-login-to-github-registry";
             runtimeInputs = with pkgs; [

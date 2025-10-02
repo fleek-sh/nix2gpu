@@ -1,4 +1,6 @@
 {
+  transposition.allPkgs = { };
+
   perSystem =
     {
       config,
@@ -7,6 +9,8 @@
       ...
     }:
     {
+      containerTransposition.allPkgs = { };
+
       perContainer =
         _:
         let

@@ -4,7 +4,7 @@ let
   homeManagerModule = home-manager.flakeModules.default;
 in
 {
-  perContainer =
+  perSystem.perContainer =
     { container, ... }:
     {
       imports = [ homeManagerModule ];

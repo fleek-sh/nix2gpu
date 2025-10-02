@@ -1,29 +1,43 @@
-{ lib, flake-parts-lib, ... }:
+{
+  config,
+  lib,
+  flake-parts-lib,
+  ...
+}:
 let
   inherit (lib) types mkOption;
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
-    options.baseSystem = mkOption {
-      description = ''
-        nix2vast generated baseSystem.
-      '';
-      type = types.package;
-      internal = true;
-    };
+    options.perContainer = config.flake.lib.mkPerContainerOption (
+      { container, ... }:
+      {
+        options.baseSystem = mkOption {
+          description = ''
+            nix2vast generated baseSystem for ${container.name}.
+          '';
+          type = types.package;
+          internal = true;
+        };
+      }
+    );
   });
 
   config.perSystem =
-    { pkgs, self', ... }:
+    { pkgs, ... }:
     {
-      baseSystem =
-        pkgs.runCommand "base-system"
-          {
-            allowSubstitutes = false;
-            preferLocalBuild = true;
-          }
-          ''
-            exec ${self'.packages.createBaseSystem}/bin/create-system.sh
-          '';
+      perContainer =
+        { config, ... }:
+        {
+          baseSystem =
+            pkgs.runCommand "base-system"
+              {
+                allowSubstitutes = false;
+                preferLocalBuild = true;
+              }
+              ''
+                exec ${config.createBaseSystem}/bin/create-system.sh
+              '';
+        };
     };
 }
