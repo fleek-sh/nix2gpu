@@ -1,21 +1,25 @@
 { lib, flake-parts-lib, ... }:
 let
-  inherit (lib) types;
+  inherit (lib) types mkOption;
 in
 {
-  options.nixStoreProfile = flake-parts-lib.mkPerSystemOption {
-    description = ''
-      nix2vast generated nix store profile.
-    '';
-    type = types.package;
-    internal = true;
-  };
+  options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
+    options.nixStoreProfile = mkOption {
+      description = ''
+        nix2vast generated nix store profile.
+      '';
+      type = types.package;
+      internal = true;
+    };
+  });
 
-  config.nixStoreProfile =
+  config.perSystem =
     { pkgs, ... }:
-    pkgs.runCommand "nix-store-profile" { } ''
-      mkdir -p $out/root
-      mkdir -p $out/root/.nix-defexpr
-      touch $out/root/.nix-channels
-    '';
+    {
+      nixStoreProfile = pkgs.runCommand "nix-store-profile" { } ''
+        mkdir -p $out/root
+        mkdir -p $out/root/.nix-defexpr
+        touch $out/root/.nix-channels
+      '';
+    };
 }

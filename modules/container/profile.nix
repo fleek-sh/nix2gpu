@@ -1,27 +1,32 @@
 { lib, flake-parts-lib, ... }:
 let
-  inherit (lib) types;
+  inherit (lib) types mkOption;
 in
 {
-  options.profile = flake-parts-lib.mkPerSystemOption {
-    description = ''
-      nix2vast generated nix store profile.
-    '';
-    type = types.package;
-    internal = true;
-  };
+  options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
+    options.profile = mkOption {
+      description = ''
+        nix2vast generated nix store profile.
+      '';
+      type = types.package;
+      internal = true;
+    };
+  });
 
-  config.profile =
+  config.perSystem =
     { pkgs, self', ... }:
-    pkgs.buildEnv {
-      name = "nix2vast-profile";
-      paths = [ self'.packages.allPkgs ];
-      pathsToLink = [
-        "/bin"
-        "/sbin"
-        "/lib"
-        "/libexec"
-        "/share"
-      ];
+    {
+      profile = pkgs.buildEnv {
+        name = "nix2vast-profile";
+        paths = [ self'.packages.allPkgs ];
+        pathsToLink = [
+          "/bin"
+          "/sbin"
+          "/lib"
+          "/libexec"
+          "/share"
+        ];
+      };
+
     };
 }
