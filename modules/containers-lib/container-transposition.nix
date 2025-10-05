@@ -45,30 +45,17 @@ in
         type = types.lazyAttrsOf (types.submoduleWith { modules = [ transpositionModule ]; });
       };
 
-      flake = lib.mkOption {
-        description = ''
-          passthru for flake opts
-        '';
-        type = types.unspecified;
-      };
-
-      packages = lib.mkOption {
-        description = ''
-          passthru for packages opts
-        '';
+      container = lib.mkOption {
         type = types.unspecified;
       };
     };
   });
 
   config = {
-    transposition.containerTransposition = { };
-    transposition.flake = { };
-
     perSystem =
       { config, ... }:
       {
-        flake = lib.mapAttrs (
+        container = lib.mapAttrs (
           attrName: _attrConfig:
           mapAttrs (
             _system: v:

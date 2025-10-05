@@ -1,11 +1,7 @@
 {
-  transposition.loginToGithub = { };
-
   perSystem =
     { pkgs, ... }:
     {
-      containerTransposition.loginToGithub = { };
-
       perContainer =
         { container, ... }:
         {

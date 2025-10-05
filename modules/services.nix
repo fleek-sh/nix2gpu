@@ -30,7 +30,7 @@ in
   });
 
   config.perSystem = _: {
-    config.perContainer =
+    perContainer =
       { container, ... }:
       {
         imports = [ processComposeFlakeModule ];

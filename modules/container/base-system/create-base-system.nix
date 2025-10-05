@@ -24,13 +24,9 @@ in
   });
 
   config = {
-    transposition.createBaseSystem = { };
-
     perSystem =
       { pkgs, config, ... }:
       {
-        containerTransposition.createBaseSystem = { };
-
         perContainer =
           { container, ... }:
           {

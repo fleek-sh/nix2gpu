@@ -4,11 +4,14 @@ let
   homeManagerModule = home-manager.flakeModules.default;
 in
 {
-  perSystem.perContainer =
-    { container, ... }:
-    {
-      imports = [ homeManagerModule ];
+  imports = [ homeManagerModule ];
 
-      flake.homeConfigurations."${container.name}-home" = container.options.home;
-    };
+  perSystem =
+  _: {
+    perContainer =
+      { container, ... }:
+      builtins.trace "options: ${container.name}" {
+        container.homeConfigurations."${container.name}-home" = container.options.home;
+      };
+  };
 }
