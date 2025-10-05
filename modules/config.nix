@@ -59,7 +59,7 @@ in
                     agenix integration is included for hacking on your machines.
                   '';
                   type = types.lazyAttrsOf types.raw;
-                  inherit (config.flake.homeConfigurations) default;
+                  inherit (config.homeConfigurations) default;
                 };
 
                 extraStartupScript = mkOption {
@@ -67,6 +67,7 @@ in
                     extra commands to run on container startup.
                   '';
                   type = types.str;
+                  default = "";
                 };
 
                 nixConfig = mkOption {

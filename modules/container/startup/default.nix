@@ -5,14 +5,14 @@
   ...
 }:
 let
-  inherit (lib) types;
+  inherit (lib) types mkOption;
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
     options.perContainer = config.flake.lib.mkPerContainerOption (
       { container, ... }:
       {
-        options.startupScript = flake-parts-lib.mkPerSystemOption {
+        options.startupScript = mkOption {
           description = ''
             nix2vast container ${container.name} startup script.
           '';
@@ -26,32 +26,33 @@ in
   config.perSystem =
     {
       pkgs,
-      self',
-      system,
+      config,
       ...
     }:
+    let
+      outerConfig = config;
+    in
     {
       perContainer =
-        { container, ... }:
+        { container, config, ... }:
         {
           startupScript =
             let
-              scriptText =
-                (builtins.readFile ./startup.sh)
-                ++ container.options.extraStartupScript
-                ++ ''
-                  echo "[nix2vast] entering interactive terminal..."
-                  exec bash
-                '';
+              scriptText = ''
+                ${builtins.readFile ./startup.sh}
+                ${outerConfig.nix2vast.${container.name}.extraStartupScript}
+                echo "[nix2vast] entering interactive terminal..."
+                exec bash
+              '';
             in
             pkgs.writeShellApplication {
               name = "${container.name}-startup.sh";
               text = scriptText;
 
-              runtimeInputs = [
-                self'.packages.corePkgs
-                self'.packages.networkPkgs
-                config.${system}.homeConfigurations.default.activationPackage
+              runtimeInputs = with config; [
+                environment.corePkgs
+                environment.networkPkgs
+                outerConfig.homeConfigurations.default.activationPackage
               ];
             };
         };

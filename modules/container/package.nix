@@ -28,7 +28,6 @@ in
       {
         pkgs,
         inputs',
-        self',
         ...
       }:
       {

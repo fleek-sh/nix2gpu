@@ -1,6 +1,6 @@
 {
   perSystem =
-    { pkgs, ... }:
+    { pkgs, inputs', ... }:
     {
       perContainer =
         { container, ... }:

@@ -11,6 +11,14 @@ let
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
+    options.homeConfigurations = mkOption {
+      description = ''
+        nix2vast default home configuration.
+      '';
+      type = types.lazyAttrsOf types.raw;
+      internal = true;
+    };
+
     options.perContainer = config.flake.lib.mkPerContainerOption (
       { container, ... }:
       {
@@ -31,7 +39,7 @@ in
     perSystem =
       { pkgs, ... }:
       {
-        flake.homeConfigurations.default = home-manager.lib.homeManagerConfiguration {
+        homeConfigurations.default = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = { inherit inputs; };
           modules = [
@@ -39,6 +47,7 @@ in
             ./_starship
             ./_bash
             ./_agenix
+            ./_config.nix
           ];
         };
 
