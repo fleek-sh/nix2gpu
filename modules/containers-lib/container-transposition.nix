@@ -23,8 +23,6 @@ let
 in
 {
   options = {
-    container = lib.mkOption { type = types.unspecified; };
-
     perSystem = flake-parts-lib.mkPerSystemOption (_: {
       options = {
         containerTransposition = lib.mkOption {
@@ -48,7 +46,33 @@ in
           type = types.lazyAttrsOf (types.submoduleWith { modules = [ transpositionModule ]; });
         };
 
-        container = lib.mkOption { type = types.unspecified; };
+        flake = mkOption {
+          type = types.submoduleWith {
+            modules = [
+              {
+                freeformType = types.lazyAttrsOf (
+                  types.unique {
+                    message = ''
+                      No option has been declared for this flake output attribute, so its definitions can't be merged automatically.
+                      Possible solutions:
+                        - Load a module that defines this flake output attribute
+                          Many modules are listed at https://flake.parts
+                        - Declare an option for this flake output attribute
+                        - Make sure the output attribute is spelled correctly
+                        - Define the value only once, with a single definition in a single module
+                    '';
+                  } types.raw
+                );
+              }
+            ];
+          };
+          description = ''
+            Raw flake output attributes. Any attribute can be set here, but some
+            attributes are represented by options, to provide appropriate
+            configuration merging.
+          '';
+        };
+
       };
     });
   };
@@ -57,7 +81,7 @@ in
     perSystem =
       { config, ... }:
       {
-        container = lib.mapAttrs (
+        flake = lib.mapAttrs (
           attrName: _attrConfig:
           mapAttrs (
             _system: v:

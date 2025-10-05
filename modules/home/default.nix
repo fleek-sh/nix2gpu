@@ -1,12 +1,26 @@
 { inputs, ... }:
+let
+  inherit (inputs) home-manager;
+in
 {
-  imports = [ inputs.home-manager.flakeModules.default ];
+  imports = [ home-manager.flakeModules.default ];
 
-  perSystem = _: {
+  perSystem = {pkgs, ...}: {
+    flake.homeConfigurations.default = home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      extraSpecialArgs = { inherit inputs; };
+      modules = [
+        ./_tmux
+        ./_starship
+        ./_bash
+        ./_agenix
+      ];
+    };
+
     perContainer =
       { container, ... }:
-      builtins.trace "options: ${container.name}" {
-        container.homeConfigurations."${container.name}-home" = container.options.home;
+      {
+        homeConfigurations."${container.name}-home" = container.options.home;
       };
   };
 }
