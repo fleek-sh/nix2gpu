@@ -129,7 +129,5 @@ in
 
     };
 
-  config.flake.lib = {
-    inherit mkPerContainerOption mkPerContainerType;
-  };
+  config.flake.lib = { inherit mkPerContainerOption mkPerContainerType; };
 }

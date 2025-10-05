@@ -22,34 +22,36 @@ let
 
 in
 {
-  options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
-    options = {
-      containerTransposition = lib.mkOption {
-        description = ''
-          A helper that defines transposed attributes in the flake outputs.
+  options = {
+    container = lib.mkOption { type = types.unspecified; };
 
-          When you define `containerTransposition.foo = { };`, definitions are added to the effect of (pseudo-code):
+    perSystem = flake-parts-lib.mkPerSystemOption (_: {
+      options = {
+        containerTransposition = lib.mkOption {
+          description = ''
+            A helper that defines transposed attributes in the flake outputs.
 
-          ```nix
-          flake.foo.''${container} = (perContainer container).foo;
-          ```
+            When you define `containerTransposition.foo = { };`, definitions are added to the effect of (pseudo-code):
 
-          Transposition is the operation that swaps the indices of a data structure.
-          Here it refers specifically to the transposition between
+            ```nix
+            flake.foo.''${container} = (perContainer container).foo;
+            ```
 
-          ```plain
-          perContainer: .''${container}.''${attribute}
-          outputs:   .''${attribute}.''${container}
-          ```
-        '';
-        type = types.lazyAttrsOf (types.submoduleWith { modules = [ transpositionModule ]; });
+            Transposition is the operation that swaps the indices of a data structure.
+            Here it refers specifically to the transposition between
+
+            ```plain
+            perContainer: .''${container}.''${attribute}
+            outputs:   .''${attribute}.''${container}
+            ```
+          '';
+          type = types.lazyAttrsOf (types.submoduleWith { modules = [ transpositionModule ]; });
+        };
+
+        container = lib.mkOption { type = types.unspecified; };
       };
-
-      container = lib.mkOption {
-        type = types.unspecified;
-      };
-    };
-  });
+    });
+  };
 
   config = {
     perSystem =

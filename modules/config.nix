@@ -59,16 +59,7 @@ in
                   agenix integration is included for hacking on your machines.
                 '';
                 inherit (homeManagerModule.options.flake.homeConfigurations) type;
-                default = home-manager.lib.homeManagerConfiguration {
-                  inherit pkgs;
-                  extraSpecialArgs = { inherit inputs; };
-                  modules = [
-                    ./_tmux
-                    ./_starship
-                    ./_bash
-                    ./_agenix
-                  ];
-                };
+                default = config.homeConfigurations;
               };
 
               extraStartupScript = mkOption {

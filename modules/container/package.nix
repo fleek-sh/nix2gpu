@@ -14,7 +14,7 @@
           inherit (container) name options;
         in
         {
-          packages."${name}-container" = inputs'.nix2container.packages.nix2container.buildImage {
+          container.packages."${name}-container" = inputs'.nix2container.packages.nix2container.buildImage {
             inherit (options) name tag maxLayers;
 
             copyToRoot = options.copyToRoot ++ options.extraCopyToRoot;

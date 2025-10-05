@@ -1,13 +1,8 @@
 { inputs, ... }:
-let
-  inherit (inputs) home-manager;
-  homeManagerModule = home-manager.flakeModules.default;
-in
 {
-  imports = [ homeManagerModule ];
+  imports = [ inputs.home-manager.flakeModules.default ];
 
-  perSystem =
-  _: {
+  perSystem = _: {
     perContainer =
       { container, ... }:
       builtins.trace "options: ${container.name}" {
