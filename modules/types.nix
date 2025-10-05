@@ -13,7 +13,7 @@ in
 
   config.types = {
     cudaPackageSet = types.package // {
-      check = x: lib.isDerivation x && lib.hasAttr "cudatoolkit" x;
+      check = x: lib.hasAttr "cudatoolkit" x;
     };
     textFilePackage = types.package // {
       check = x: lib.isDerivation x && lib.hasAttr "text" x;
