@@ -78,6 +78,8 @@ in
   };
 
   config = {
+    transposition.flake = { };
+
     perSystem =
       { config, ... }:
       {

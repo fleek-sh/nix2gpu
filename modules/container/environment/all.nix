@@ -1,14 +1,9 @@
 {
   perSystem =
-    {
-      config,
-      self',
-      pkgs,
-      ...
-    }:
+    { self', pkgs, ... }:
     {
       perContainer =
-        _:
+        { config, container, ... }:
         let
           includedEnv = with config.environment; [
             corePkgs
@@ -17,7 +12,7 @@
             cudaEnv
           ];
 
-          includedPkgs = with self'.packages; [ container-services ];
+          includedPkgs = [ self'.packages."${container.name}-services" ];
         in
         {
           environment.allPkgs = pkgs.symlinkJoin {

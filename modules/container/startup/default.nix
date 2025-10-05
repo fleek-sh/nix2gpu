@@ -12,7 +12,7 @@ in
     options.perContainer = config.flake.lib.mkPerContainerOption (
       { container, ... }:
       {
-        options."${container.name}-startupScript" = flake-parts-lib.mkPerSystemOption {
+        options.startupScript = flake-parts-lib.mkPerSystemOption {
           description = ''
             nix2vast container ${container.name} startup script.
           '';
@@ -34,7 +34,7 @@ in
       perContainer =
         { container, ... }:
         {
-          "${container.name}-startupScript" =
+          startupScript =
             let
               scriptText =
                 (builtins.readFile ./startup.sh)

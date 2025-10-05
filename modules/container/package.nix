@@ -1,45 +1,71 @@
-{ config, ... }:
 {
-  perSystem =
-    {
-      pkgs,
-      inputs',
-      self',
-      ...
-    }:
-    {
-      perContainer =
-        { container, ... }:
-        let
-          inherit (container) name options;
-        in
-        {
-          container.packages."${name}-container" = inputs'.nix2container.packages.nix2container.buildImage {
-            inherit (options) name tag maxLayers;
-
-            copyToRoot = options.copyToRoot ++ options.extraCopyToRoot;
-            initializeNixDatabase = true;
-
-            config = {
-              entrypoint = [
-                "${pkgs.tini}/bin/tini"
-                "--"
-                "${self'.packages.startupScript}/bin/startup.sh"
-              ];
-
-              Env = options.env ++ options.extraEnv;
-
-              WorkingDir = options.workingDir;
-              User = options.user;
-
-              ExposedPorts = options.exposedPorts;
-
-              Labels = options.labels ++ options.extraLabels;
-
-            };
-
-            passthru = { inherit (config.scripts) copyToGithub loginToGithub; };
-          };
+  config,
+  lib,
+  flake-parts-lib,
+  ...
+}:
+let
+  inherit (lib) types mkOption;
+in
+{
+  options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
+    options.perContainer = config.flake.lib.mkPerContainerOption (
+      { container, ... }:
+      {
+        options.packages = mkOption {
+          description = ''
+            nix2vast packages for ${container.name}.
+          '';
+          type = types.lazyAttrsOf types.raw;
+          internal = true;
         };
-    };
+      }
+    );
+  });
+
+  config = {
+    perSystem =
+      {
+        pkgs,
+        inputs',
+        self',
+        ...
+      }:
+      {
+        perContainer =
+          { container, config, ... }:
+          let
+            inherit (container) name options;
+          in
+          {
+            packages."${name}" = inputs'.nix2container.packages.nix2container.buildImage {
+              inherit name;
+              inherit (options) tag maxLayers;
+
+              copyToRoot = options.copyToRoot ++ options.extraCopyToRoot;
+              initializeNixDatabase = true;
+
+              config = {
+                entrypoint = [
+                  "${pkgs.tini}/bin/tini"
+                  "--"
+                  "${config.startupScript}/bin/startup.sh"
+                ];
+
+                Env = options.env ++ options.extraEnv;
+
+                WorkingDir = options.workingDir;
+                User = options.user;
+
+                ExposedPorts = options.exposedPorts;
+
+                Labels = options.labels // options.extraLabels;
+
+              };
+
+              passthru = { inherit (config.scripts) copyToGithub loginToGithub; };
+            };
+          };
+      };
+  };
 }

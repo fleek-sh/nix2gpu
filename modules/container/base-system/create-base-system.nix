@@ -31,7 +31,7 @@ in
           { container, ... }:
           {
             createBaseSystem = pkgs.replaceVarsWith {
-              src = ./create-system.sh;
+              src = ./create-base-system.sh;
               dir = "bin";
               isExecutable = true;
               replacements = {

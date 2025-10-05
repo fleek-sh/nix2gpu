@@ -1,10 +1,4 @@
-{
-  config,
-  inputs,
-  lib,
-  flake-parts-lib,
-  ...
-}:
+{ inputs, lib, ... }:
 let
   inherit (inputs) services-flake process-compose-flake;
 
@@ -14,15 +8,20 @@ in
 {
   imports = [ processComposeFlakeModule ];
 
-  perSystem = _: {
-    perContainer =
-      { container, ... }:
-      {
-        process-compose."${container.name}-services" = {
-          imports = [ servicesProcessComposeModule ];
+  config.perSystem =
+    { config, ... }:
+    let
+      containers = lib.attrNames config.allContainers;
+    in
+    {
+      process-compose = lib.mergeAttrsList (
+        builtins.map (name: {
+          "${name}-services" = {
+            imports = [ servicesProcessComposeModule ];
 
-          inherit (container.options) services;
-        };
-      };
-  };
+            inherit (config.nix2vast.${name}) services;
+          };
+        }) containers
+      );
+    };
 }
