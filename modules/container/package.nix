@@ -65,7 +65,15 @@ in
 
               };
 
-              passthru = { inherit (config.scripts) copyToGithub loginToGithub; };
+              passthru = {
+                inherit (config.scripts)
+                  copyToGithub
+                  loginToGithub
+                  podmanShell
+                  dockerShell
+                  shell
+                  ;
+              };
             };
           };
       };
