@@ -36,7 +36,7 @@ in
                 preferLocalBuild = true;
               }
               ''
-                exec ${config.createBaseSystem}/bin/create-system.sh
+                exec ${config.createBaseSystem}/bin/create-base-system.sh
               '';
         };
     };

@@ -115,16 +115,11 @@ in
                     default set? see `extraCopyToRoot`.
                   '';
                   type = types.listOf types.package;
-                  default = [ ];
-                  # TODO: use actual pkgs
-                  # default = builtins.trace (
-                  #   with config.${name};
-                  #   [
-                  #     baseSystem
-                  #     nixStoreProfile
-                  #     profile
-                  #   ]
-                  # );
+                  default = with config; [
+                    allContainers.${name}.baseSystem
+                    allContainers.${name}.profile
+                    nixStoreProfile
+                  ];
                 };
 
                 extraCopyToRoot = mkOption {
