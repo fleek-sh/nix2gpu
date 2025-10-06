@@ -9,26 +9,26 @@ mkdir -p \
   "$out"/run/lock \
   "$out"/dev/dri
 
-cat > "$out/etc/passwd" <<'EOF'
+cat >"$out/etc/passwd" <<'EOF'
 @passwdContents@
 EOF
 
-cat > "$out/etc/group" <<'EOF'
+cat >"$out/etc/group" <<'EOF'
 @groupContents@
 EOF
 
-cat > "$out/etc/shadow" <<'EOF'
+cat >"$out/etc/shadow" <<'EOF'
 @shadowContents@
 EOF
 
 mkdir -p "$out/etc/nix"
-cat > "$out/etc/nix/nix.conf" <<'EOF'
+cat >"$out/etc/nix/nix.conf" <<'EOF'
 @nixConfig@
 EOF
 
 # Nixpkgs config for unfree packages
 mkdir -p "$out/root/.config/nixpkgs"
-cat > "$out/root/.config/nixpkgs/config.nix" <<'EOF'
+cat >"$out/root/.config/nixpkgs/config.nix" <<'EOF'
 {
   allowUnfree = true;
   cudaSupport = true;
@@ -36,7 +36,7 @@ cat > "$out/root/.config/nixpkgs/config.nix" <<'EOF'
 EOF
 
 mkdir -p "$out/etc/ssh"
-cat > "$out/etc/ssh/sshd_config" <<'EOF'
+cat >"$out/etc/ssh/sshd_config" <<'EOF'
 @sshdConfig@
 EOF
 
@@ -54,7 +54,7 @@ mkdir -p \
 mkdir -p "$out/etc/ld.so.conf.d"
 touch "$out/etc/ld.so.cache"
 
-cat > "$out/etc/ld.so.conf" <<'EOF'
+cat >"$out/etc/ld.so.conf" <<'EOF'
 include /etc/ld.so.conf.d/*.conf
 /lib/x86_64-linux-gnu
 /usr/local/lib64
@@ -67,7 +67,7 @@ include /etc/ld.so.conf.d/*.conf
 /lib
 EOF
 
-cat > "$out/etc/ld.so.conf.d/nvidia.conf" <<'EOF'
+cat >"$out/etc/ld.so.conf.d/nvidia.conf" <<'EOF'
 /lib/x86_64-linux-gnu
 /usr/lib64
 /usr/lib
@@ -78,7 +78,7 @@ mkdir -p "$out/etc/ssl/certs"
 ln -s @cacert@/etc/ssl/certs/ca-bundle.crt "$out/etc/ssl/certs/ca-bundle.crt"
 ln -s @cacert@/etc/ssl/certs/ca-bundle.crt "$out/etc/ssl/certs/ca-certificates.crt"
 
-cat > "$out/etc/nsswitch.conf" <<'EOF'
+cat >"$out/etc/nsswitch.conf" <<'EOF'
 passwd:    files
 group:     files
 shadow:    files
@@ -86,12 +86,12 @@ hosts:     files dns
 networks:  files
 EOF
 
-cat > "$out/etc/hosts" <<'EOF'
+cat >"$out/etc/hosts" <<'EOF'
 127.0.0.1   localhost
 ::1         localhost
 EOF
 
-cat > "$out/etc/os-release" <<'EOF'
+cat >"$out/etc/os-release" <<'EOF'
 NAME="nix2vast"
 ID=nix2vast
 VERSION="1.0"
@@ -113,7 +113,7 @@ if [ -e @glibc@/lib/ld-linux-x86-64.so.2 ]; then
 fi
 
 # // locale
-cat > "$out/etc/locale.conf" <<'EOF'
+cat >"$out/etc/locale.conf" <<'EOF'
 LANG=en_US.UTF-8
 LC_ALL=en_US.UTF-8
 EOF

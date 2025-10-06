@@ -30,22 +30,22 @@ in
         { container, ... }:
         let
           script = pkgs.replaceVars ./create-base-system.sh {
-              inherit (container.options) sshdConfig nixConfig;
+            inherit (container.options) sshdConfig nixConfig;
 
-              inherit (config) passwdContents groupContents shadowContents;
+            inherit (config) passwdContents groupContents shadowContents;
 
-              inherit (pkgs)
-                bashInteractive
-                coreutils-full
-                glibc
-                cacert
-                ;
+            inherit (pkgs)
+              bashInteractive
+              coreutils-full
+              glibc
+              cacert
+              ;
 
-              glibcBin = pkgs.glibc.bin;
-            };
+            glibcBin = pkgs.glibc.bin;
+          };
         in
         {
-          baseSystem = pkgs.runCommandLocal "base-system" { 
+          baseSystem = pkgs.runCommandLocal "base-system" {
             nativeBuildInputs = with pkgs; [
               bashInteractive
               coreutils-full

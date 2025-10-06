@@ -116,7 +116,14 @@ in
   config.perSystem =
     { config, ... }:
     let
-      containersList = lib.mapAttrsToList (name: options: { inherit name options; }) config.nix2vast;
+      containersList = lib.mapAttrsToList (
+        name: options:
+        assert lib.assertMsg (lib.toLower name == name)
+          "`nix2vast` attribute names must be lowercase due to a restriction by container parsing rules - https://pkg.go.dev/github.com/distribution/reference#pkg-variables";
+        {
+          inherit name options;
+        }
+      ) config.nix2vast;
 
       containerPer = builtins.map config.perContainer containersList;
 

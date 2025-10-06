@@ -40,6 +40,11 @@
               REPO="${container.options.registry}"
               IMAGE="${container.name}:$TAG"
 
+              if [[ -z "$REPO" ]]; then
+                printf '\033[31mError:\033[0m %s.\n' 'In order to use `pushToGithub` the `registry` attribute of your nix2vast container must be set' >&2
+                exit 1
+              fi
+
               # Get credentials from gh
               GITHUB_USER="$(gh api user --jq .login)"
               GITHUB_TOKEN="$(gh auth token)"

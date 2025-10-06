@@ -47,5 +47,23 @@
     ];
   };
 
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
+  outputs =
+    { flake-parts, import-tree, ... }@inputs:
+    flake-parts.lib.mkFlake { inherit inputs; } (
+      let
+        module = import-tree ./modules;
+      in
+      {
+        flake.flakeModule = module;
+
+        systems = import inputs.systems;
+
+        imports = [
+          module
+          (import-tree ./examples)
+          (import-tree ./dev)
+          (import-tree ./checks)
+        ];
+      }
+    );
 }

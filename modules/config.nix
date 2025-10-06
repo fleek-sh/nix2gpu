@@ -94,6 +94,7 @@ in
                     the container registry to push your images to.
                   '';
                   type = types.str;
+                  default = "";
                 };
 
                 cudaPackages = mkOption {
@@ -234,37 +235,4 @@ in
       };
     }
   );
-
-  config.perSystem = _: {
-    nix2vast = {
-      basic = {
-        services.clickhouse."clickhouse-example" = {
-          enable = true;
-          extraConfig = {
-            http_port = 9050;
-          };
-        };
-
-        exposedPorts = {
-          "9050/tcp" = { };
-        };
-
-        registry = "ghcr.io/fleek-platform";
-      };
-      second = {
-        services.clickhouse."clickhouse-example" = {
-          enable = true;
-          extraConfig = {
-            http_port = 9050;
-          };
-        };
-
-        exposedPorts = {
-          "9050/tcp" = { };
-        };
-
-        registry = "ghcr.io/fleek-platform";
-      };
-    };
-  };
 }

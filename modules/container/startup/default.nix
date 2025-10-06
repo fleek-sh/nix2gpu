@@ -24,7 +24,12 @@ in
   });
 
   config.perSystem =
-    { pkgs, config, self', ... }:
+    {
+      pkgs,
+      config,
+      self',
+      ...
+    }:
     let
       outerConfig = config;
     in
