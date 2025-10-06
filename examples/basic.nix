@@ -5,5 +5,5 @@
   # This derivation also exposes some scripts,
   # for example, running `nix build .#basic.copyToGithub`
   # will copy it to it's github registry.
-  perSystem = _: { nix2vast.basic = { }; };
+  perSystem.nix2vast.basic = { };
 }
