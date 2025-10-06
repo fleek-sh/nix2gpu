@@ -26,11 +26,14 @@ in
   config = {
     perSystem =
       {
+        config,
         pkgs,
         inputs',
         ...
       }:
       {
+        packages = builtins.mapAttrs (name: value: value.packages.${name}) config.allContainers;
+
         perContainer =
           { container, config, ... }:
           let

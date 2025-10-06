@@ -2,7 +2,6 @@
   config,
   lib,
   flake-parts-lib,
-  inputs,
   ...
 }:
 let
