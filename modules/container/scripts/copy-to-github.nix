@@ -29,39 +29,39 @@
 
               # Check if logged in
               if ! gh auth status &>/dev/null; then
-                echo "Not logged in. Run 'nix run .#container.loginToGithub' first"
+                echo "Not logged in. Run 'nix run .#${container.name}.loginToGithub' first"
                 exit 1
               fi
 
-              echo "building image..."
-              nix build .#container
+              echo "[nix2vast] building image..."
+              nix build .#${container.name}
 
               TAG="$(date +%Y%m%d-%H%M%S)"
               REPO="${container.options.registry}"
               IMAGE="${container.name}:$TAG"
 
               # Get credentials from gh
-              GITHUB_USER=$(gh api user --jq .login)
-              GITHUB_TOKEN=$(gh auth token)
+              GITHUB_USER="$(gh api user --jq .login)"
+              GITHUB_TOKEN="$(gh auth token)"
 
-              echo "converting to tarball..."
+              echo "[nix2vast] converting to tarball..."
               TARBALL=$(mktemp --suffix=.tar)
               skopeo copy \
                 --insecure-policy \
-                nix:$(readlink -f result) \
-                docker-archive:$TARBALL
+                nix:"$(readlink -f result)" \
+                docker-archive:"$TARBALL"
 
-              echo "pushing $IMAGE to $REPO..."
+              echo "[nix2vast] pushing $IMAGE to $REPO..."
               skopeo copy \
                 --insecure-policy \
                 --dest-creds="$GITHUB_USER:$GITHUB_TOKEN" \
-                docker-archive:$TARBALL \
+                docker-archive:"$TARBALL" \
                 "docker://$REPO/$IMAGE"
 
-              rm -f $TARBALL
+              rm -f "$TARBALL"
 
-              echo "Successfully pushed $REPO/$IMAGE"
-              echo "Pull with: docker pull $REPO/$IMAGE"
+              echo "[nix2vast] successfully pushed $REPO/$IMAGE"
+              echo "[nix2vast] pull with: docker pull $REPO/$IMAGE"
             '';
           };
         };
