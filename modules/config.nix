@@ -73,8 +73,8 @@ in
                   description = ''
                     a replacement nix.conf to use.
                   '';
-                  type = types.path;
-                  default = ./config/nix.conf;
+                  type = types.str;
+                  default = builtins.readFile ./container/config/nix.conf;
                 };
 
                 sshdConfig =
@@ -85,8 +85,8 @@ in
                     description = ''
                       a replacement sshd configuration to use.
                     '';
-                    type = types.path;
-                    default = sshdConf;
+                    type = types.str;
+                    default = builtins.readFile sshdConf;
                   };
 
                 registry = mkOption {

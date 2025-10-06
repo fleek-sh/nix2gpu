@@ -24,20 +24,35 @@ in
   });
 
   config.perSystem =
-    { pkgs, ... }:
+    { pkgs, config, ... }:
     {
       perContainer =
-        { config, ... }:
+        { container, ... }:
+        let
+          script = pkgs.replaceVars ./create-base-system.sh {
+              inherit (container.options) sshdConfig nixConfig;
+
+              inherit (config) passwdContents groupContents shadowContents;
+
+              inherit (pkgs)
+                bashInteractive
+                coreutils-full
+                glibc
+                cacert
+                ;
+
+              glibcBin = pkgs.glibc.bin;
+            };
+        in
         {
-          baseSystem =
-            pkgs.runCommand "base-system"
-              {
-                allowSubstitutes = false;
-                preferLocalBuild = true;
-              }
-              ''
-                exec ${config.createBaseSystem}/bin/create-base-system.sh
-              '';
+          baseSystem = pkgs.runCommandLocal "base-system" { 
+            nativeBuildInputs = with pkgs; [
+              bashInteractive
+              coreutils-full
+              glibc
+              cacert
+            ];
+          } (builtins.readFile script);
         };
     };
 }

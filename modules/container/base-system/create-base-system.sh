@@ -1,23 +1,44 @@
-mkdir -p $out/etc
+set -euo pipefail
 
-cp @passwdContents@ $out/etc/passwd
-cp @groupContents@ $out/etc/group
-cp @shadowContents@ $out/etc/shadow
+# // FHS // directories
+mkdir -p \
+  "$out"/{bin,sbin,lib,lib64,usr,var,run,tmp,home,root,proc,sys,dev,etc} \
+  "$out"/usr/{bin,sbin,local} \
+  "$out"/usr/local/{bin,sbin} \
+  "$out"/var/{log,cache,lib,run,empty,tmp} \
+  "$out"/run/lock \
+  "$out"/dev/dri
 
-mkdir -p $out/etc/nix
-cp @nixConfig@ $out/etc/nix/nix.conf
+cat > "$out/etc/passwd" <<'EOF'
+@passwdContents@
+EOF
+
+cat > "$out/etc/group" <<'EOF'
+@groupContents@
+EOF
+
+cat > "$out/etc/shadow" <<'EOF'
+@shadowContents@
+EOF
+
+mkdir -p "$out/etc/nix"
+cat > "$out/etc/nix/nix.conf" <<'EOF'
+@nixConfig@
+EOF
 
 # Nixpkgs config for unfree packages
-mkdir -p $out/root/.config/nixpkgs
-cat >$out/root/.config/nixpkgs/config.nix <<'EOF'
+mkdir -p "$out/root/.config/nixpkgs"
+cat > "$out/root/.config/nixpkgs/config.nix" <<'EOF'
 {
   allowUnfree = true;
   cudaSupport = true;
 }
 EOF
 
-mkdir -p $out/etc/ssh
-cp @sshdConfig@ $out/etc/ssh/sshd_config
+mkdir -p "$out/etc/ssh"
+cat > "$out/etc/ssh/sshd_config" <<'EOF'
+@sshdConfig@
+EOF
 
 # // nvidia-container-toolkit // paths
 mkdir -p \
@@ -30,10 +51,10 @@ mkdir -p \
   "$out/usr/local/lib64"
 
 # // ld.so // nvidia-container-cli
-mkdir -p $out/etc/ld.so.conf.d
-touch $out/etc/ld.so.cache
+mkdir -p "$out/etc/ld.so.conf.d"
+touch "$out/etc/ld.so.cache"
 
-cat >$out/etc/ld.so.conf <<'EOF'
+cat > "$out/etc/ld.so.conf" <<'EOF'
 include /etc/ld.so.conf.d/*.conf
 /lib/x86_64-linux-gnu
 /usr/local/lib64
@@ -46,18 +67,18 @@ include /etc/ld.so.conf.d/*.conf
 /lib
 EOF
 
-cat >$out/etc/ld.so.conf.d/nvidia.conf <<'EOF'
+cat > "$out/etc/ld.so.conf.d/nvidia.conf" <<'EOF'
 /lib/x86_64-linux-gnu
 /usr/lib64
 /usr/lib
 EOF
 
 # // ssl // certificates
-mkdir -p $out/etc/ssl/certs
-ln -s @cacert@/etc/ssl/certs/ca-bundle.crt $out/etc/ssl/certs/ca-bundle.crt
-ln -s @cacert@/etc/ssl/certs/ca-bundle.crt $out/etc/ssl/certs/ca-certificates.crt
+mkdir -p "$out/etc/ssl/certs"
+ln -s @cacert@/etc/ssl/certs/ca-bundle.crt "$out/etc/ssl/certs/ca-bundle.crt"
+ln -s @cacert@/etc/ssl/certs/ca-bundle.crt "$out/etc/ssl/certs/ca-certificates.crt"
 
-cat >$out/etc/nsswitch.conf <<'EOF'
+cat > "$out/etc/nsswitch.conf" <<'EOF'
 passwd:    files
 group:     files
 shadow:    files
@@ -65,45 +86,34 @@ hosts:     files dns
 networks:  files
 EOF
 
-cat >$out/etc/hosts <<'EOF'
+cat > "$out/etc/hosts" <<'EOF'
 127.0.0.1   localhost
 ::1         localhost
 EOF
 
-cat >$out/etc/os-release <<'EOF'
+cat > "$out/etc/os-release" <<'EOF'
 NAME="nix2vast"
 ID=nix2vast
 VERSION="1.0"
 PRETTY_NAME="nix2vast GPU container"
 EOF
 
-# // FHS // directories
-mkdir -p \
-  "$out/{bin,sbin,lib,lib64,usr,var,run,tmp,home,root,proc,sys,dev}" \
-  "$out/usr/{bin,sbin,local}" \
-  "$out/usr/local/{bin,sbin}" \
-  "$out/var/{log,cache,lib,run,empty,tmp}" \
-  "$out/run/lock" \
-  "$out/dev/dri"
-
 # // shell // compatibility
-ln -s @bashInteractive@/bin/bash $out/bin/bash
-ln -s @bashInteractive@/bin/bash $out/bin/sh
-ln -s @coreutils-full@/bin/env $out/usr/bin/env
+ln -s @bashInteractive@/bin/bash "$out/bin/bash"
+ln -s @bashInteractive@/bin/bash "$out/bin/sh"
+ln -s @coreutils-full@/bin/env "$out/usr/bin/env"
 
 # // nvidia-container-cli // ldconfig
-mkdir -p $out/sbin
-ln -s @glibcBin@/sbin/ldconfig $out/sbin/ldconfig
-ln -s @glibcBin@/sbin/ldconfig.real $out/sbin/ldconfig.real
+ln -s @glibcBin@/sbin/ldconfig "$out/sbin/ldconfig"
+ln -s @glibcBin@/sbin/ldconfig.real "$out/sbin/ldconfig.real"
 
 # // dynamic linking // standard interpreter
-mkdir -p $out/lib64
 if [ -e @glibc@/lib/ld-linux-x86-64.so.2 ]; then
-  ln -s @glibc@/lib/ld-linux-x86-64.so.2 $out/lib64/ld-linux-x86-64.so.2
+  ln -s @glibc@/lib/ld-linux-x86-64.so.2 "$out/lib64/ld-linux-x86-64.so.2"
 fi
 
 # // locale
-cat >$out/etc/locale.conf <<'EOF'
+cat > "$out/etc/locale.conf" <<'EOF'
 LANG=en_US.UTF-8
 LC_ALL=en_US.UTF-8
 EOF
