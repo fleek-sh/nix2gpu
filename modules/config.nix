@@ -157,7 +157,6 @@ in
                     "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
                     "TERM=xterm-256color"
                     "USER=root"
-                    "RUN_SERVICES=1"
                   ];
                 };
 

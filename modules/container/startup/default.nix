@@ -24,7 +24,7 @@ in
   });
 
   config.perSystem =
-    { pkgs, config, ... }:
+    { pkgs, config, self', ... }:
     let
       outerConfig = config;
     in
@@ -37,6 +37,10 @@ in
               scriptText = ''
                 ${builtins.readFile ./startup.sh}
                 ${outerConfig.nix2vast.${container.name}.extraStartupScript}
+
+                echo "[nix2vast] starting services..."
+                ${container.name}-services
+
                 echo "[nix2vast] entering interactive terminal..."
                 exec bash
               '';
@@ -49,6 +53,7 @@ in
                 environment.corePkgs
                 environment.networkPkgs
                 outerConfig.homeConfigurations.default.activationPackage
+                self'.packages."${container.name}-services"
               ];
             };
         };
