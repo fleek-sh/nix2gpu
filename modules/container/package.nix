@@ -51,7 +51,7 @@ in
                 entrypoint = [
                   "${pkgs.tini}/bin/tini"
                   "--"
-                  "${config.startupScript}/bin/startup.sh"
+                  "${config.startupScript}/bin/${container.name}-startup.sh"
                 ];
 
                 Env = options.env ++ options.extraEnv;
