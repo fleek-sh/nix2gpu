@@ -118,8 +118,11 @@ in
     let
       containersList = lib.mapAttrsToList (
         name: options:
-        assert lib.assertMsg (lib.toLower name == name)
-          "`nix2vast` attribute names must be lowercase due to a restriction by container parsing rules - https://pkg.go.dev/github.com/distribution/reference#pkg-variables";
+        assert lib.assertMsg (lib.toLower name == name) ''
+          `nix2vast` attribute names must be lowercase due to a restriction by container parsing rules - https://pkg.go.dev/github.com/distribution/reference#pkg-variables
+
+          The failing attribute name is `${name}`.
+        '';
         {
           inherit name options;
         }
