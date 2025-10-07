@@ -38,6 +38,21 @@ in
           { container, config, ... }:
           let
             inherit (container) name options;
+
+            toEnvStrings =
+              envAttrs:
+              lib.mapAttrsToList (
+                name: val:
+
+                assert lib.assertMsg (lib.toUpper name == name) ''
+                  `nix2vast` env var names should be uppercase 
+                  in order to be properly recognized.
+
+                  The failing attribute name is `${name}`.
+                '';
+
+                "${name}-${val}"
+              ) envAttrs;
           in
           {
             packages."${name}" = inputs'.nix2container.packages.nix2container.buildImage {
@@ -54,7 +69,7 @@ in
                   "${config.startupScript}/bin/${container.name}-startup.sh"
                 ];
 
-                Env = options.env ++ options.extraEnv;
+                Env = (toEnvStrings options.env) ++ (toEnvStrings options.extraEnv);
 
                 WorkingDir = options.workingDir;
                 User = options.user;

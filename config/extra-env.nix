@@ -2,7 +2,6 @@
 let
   inherit (lib) types mkOption;
 in
-# TODO: make this and env proper nix key value sets
 {
   options.extraEnv = mkOption {
     description = ''
@@ -14,18 +13,16 @@ in
 
       This is the recommended way to add your own custom environment variables.
 
-      Each variable should be a string in the format `"KEY=VALUE"`.
-
       **Example:**
 
       ```nix
-      extraEnv = [
-        "DATABASE_URL=postgres://user:password@host:port/db"
-        "NIXPKGS_ALLOW_UNFREE=1"
-      ];
+      extraEnv = {
+        DATABASE_URL = "postgres://user:password@host:port/db";
+        NIXPKGS_ALLOW_UNFREE = "1";
+      };
       ```
     '';
-    type = types.listOf types.str;
-    default = [ ];
+    type = types.attrsOf types.str;
+    default = { };
   };
 }
