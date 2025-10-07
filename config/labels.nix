@@ -6,10 +6,30 @@ in
 {
   options.labels = mkOption {
     description = ''
-      container labels to set.
+      A set of labels to apply to the container.
 
-      looking to add labels without effecting the
-      default set? see `extraLabels`.
+      This option allows you to define metadata for the container in the form
+      of labels. These labels can be used for organizing and filtering
+      containers, or for storing information about the container's contents
+      or purpose.
+
+      The default value includes several labels that provide information
+      about the container's origin, runtime, and dependencies.
+
+      If you want to add extra labels without replacing the default set,
+      use the `extraLabels` option instead.
+
+      > This is a direct mapping to the `Labels` attribute of the [oci container
+      > spec](https://github.com/opencontainers/image-spec/blob/8b9d41f48198a7d6d0a5c1a12dc2d1f7f47fc97f/specs-go/v1/config.go#L23). 
+
+      **Example:**
+
+      ```nix
+      labels = {
+        "my.custom.label" = "some-value";
+        "another.label" = "another-value";
+      };
+      ```
     '';
     type = types.attrsOf types.str;
     default = {

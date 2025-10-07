@@ -5,7 +5,19 @@ in
 {
   options.registry = mkOption {
     description = ''
-      the container registry to push your images to.
+      The container registry to push your images to.
+
+      This option specifies the full registry path, including the repository
+      and image name, where the container image will be pushed. This is a
+      mandatory field if you intend to publish your images via `<container>.copyToGithub`.
+
+      **Example:**
+
+      To push to GitHub Container Registry:
+
+      ```nix
+      registry = "ghcr.io/my-org/my-image";
+      ```
     '';
     type = types.str;
     default = "";

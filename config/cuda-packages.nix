@@ -6,10 +6,23 @@ in
 {
   options.cudaPackages = mkOption {
     description = ''
-      the cuda packages source to use.
+      The set of CUDA packages to be used in the container.
 
-      this is useful for selecting a specific version
-      on which your container relies.
+      This option allows you to select a specific version of the CUDA toolkit
+      to be installed in the container. This is crucial for ensuring
+      compatibility with applications and machine learning frameworks that
+      depend on a particular CUDA version.
+
+      The value should be a package set from `pkgs.cudaPackages`. You can find
+      available versions by [searching for `cudaPackages` in Nixpkgs](https://ryantm.github.io/nixpkgs/languages-frameworks/cuda/).
+
+      **Example:**
+
+      To use CUDA version 11.8:
+
+      ```nix
+      cudaPackages = pkgs.cudaPackages_11_8;
+      ```
     '';
     type = rootConfig.types.cudaPackageSet;
     default = pkgs.cudaPackages_12_8;

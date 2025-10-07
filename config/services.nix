@@ -5,15 +5,40 @@ in
 {
   options.services = mkOption {
     description = ''
-      the [`services-flake`](https://github.com/juspay/services-flake)
-      configuration to use inside your `nix2vast` container.
+      The `services-flake` configuration for the container.
 
-      when your container is launched it boots into a
-      [process-compose](https://github.com/F1bonacc1/process-compose]
-      interface running all services specificed. 
+      This option allows you to define and manage long-running services within
+      the container using the [`services-flake`](https://github.com/juspay/services-flake)
+      framework. When the container starts, it will launch a
+      [process-compose](https://github.com/F1bonacc1/process-compose)
+      instance that manages all the services you define here.
 
-      this can be useful for running your own web servers or things
-      like nginx.
+      This is a powerful way to run web servers, databases, or any other
+      background processes your application might need.
+
+      > If this option is left blank no services will be started and 
+      > an interactive bash session will open instead.
+
+      **Example:**
+
+      To run a simple Nginx web server:
+
+      ```nix
+      exposedPorts = {
+        "22/tcp" = { };
+        "8888/tcp" = { };
+      };
+
+      services.nginx."nginx-example" = {
+        enable = true;
+        httpConfig = '''
+          server {
+            listen 8888;  
+            include ../../importedconfig.conf;
+          }
+        ''';
+      };
+      ```
     '';
     type = types.lazyAttrsOf types.raw;
     default = { };
