@@ -13,15 +13,12 @@ in
 
       This is the recommended way to add your own packages to the container's
       root directory.
-
-      **Example:**
-
-      ```nix
+    '';
+    example = ''
       extraCopyToRoot = with pkgs; [
         btop
         neovim
       ];
-      ```
     '';
     type = types.listOf types.package;
     default = [ ];

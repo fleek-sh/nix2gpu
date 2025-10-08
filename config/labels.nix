@@ -21,15 +21,13 @@ in
 
       > This is a direct mapping to the `Labels` attribute of the [oci container
       > spec](https://github.com/opencontainers/image-spec/blob/8b9d41f48198a7d6d0a5c1a12dc2d1f7f47fc97f/specs-go/v1/config.go#L23). 
+    '';
 
-      **Example:**
-
-      ```nix
+    example = ''
       labels = {
         "my.custom.label" = "some-value";
         "another.label" = "another-value";
       };
-      ```
     '';
     type = types.attrsOf types.str;
     default = {

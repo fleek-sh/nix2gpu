@@ -17,14 +17,9 @@ in
       > This is a direct mapping to the
       > [`maxLaybers`](https://github.com/nlewo/nix2container?tab=readme-ov-file#nix2containerbuildimage)
       > attribute from [`nix2container`](https://github.com/nlewo/nix2container).
-
-      **Example:**
-
-      To increase the maximum number of layers to 100:
-
-      ```nix
+    '';
+    example = ''
       maxLayers = 100;
-      ```
     '';
     type = types.int;
     default = 50;

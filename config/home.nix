@@ -16,12 +16,8 @@ in
       By default, a minimal set of useful modern shell packages and `agenix`
       integration is included to provide a comfortable and secure hacking
       environment on your machines.
-
-      **Example:**
-
-      To use a custom home configuration:
-
-      ```nix
+    '';
+    example = ''
       home = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = { inherit inputs; };
@@ -29,7 +25,6 @@ in
           ./home
         ];
       };
-      ```
     '';
     type = types.lazyAttrsOf types.raw;
     inherit (systemConfig.homeConfigurations) default;

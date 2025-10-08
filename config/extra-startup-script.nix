@@ -13,16 +13,13 @@ in
 
       This is useful for tasks such as starting services, running background
       processes, or printing diagnostic information.
-
-      **Example:**
-
-      ```nix
+    '';
+    example = ''
       extraStartupScript = '''
         echo "Launching custom startup script process..."
         # Start a background service
         my-service &
       ''';
-      ```
     '';
     type = types.str;
     default = "";

@@ -18,12 +18,8 @@ in
 
       > If this option is left blank no services will be started and 
       > an interactive bash session will open instead.
-
-      **Example:**
-
-      To run a simple Nginx web server:
-
-      ```nix
+    '';
+    example = ''
       exposedPorts = {
         "22/tcp" = { };
         "8888/tcp" = { };
@@ -35,10 +31,9 @@ in
           server {
             listen 8888;  
             include ../../importedconfig.conf;
-          }
-        ''';
+          };
+        };
       };
-      ```
     '';
     type = types.lazyAttrsOf types.raw;
     default = { };

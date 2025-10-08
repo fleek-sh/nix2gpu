@@ -12,15 +12,12 @@ in
       will be appended to the main `env` list.
 
       This is the recommended way to add your own custom environment variables.
-
-      **Example:**
-
-      ```nix
+    '';
+    example = ''
       extraEnv = {
         DATABASE_URL = "postgres://user:password@host:port/db";
         NIXPKGS_ALLOW_UNFREE = "1";
       };
-      ```
     '';
     type = types.attrsOf types.str;
     default = { };

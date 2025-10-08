@@ -14,14 +14,9 @@ in
       The default value is "/root". You may want to change this to a
       more appropriate directory for your application, such as `/app` or
       `/srv`.
-
-      **Example:**
-
-      To set the working directory to `/app`:
-
-      ```nix
+    '';
+    example = ''
       workingDir = "/app";
-      ```
     '';
     type = types.str;
     default = "/root";

@@ -15,14 +15,9 @@ in
 
       The value should be a package set from `pkgs.cudaPackages`. You can find
       available versions by [searching for `cudaPackages` in Nixpkgs](https://ryantm.github.io/nixpkgs/languages-frameworks/cuda/).
-
-      **Example:**
-
-      To use CUDA version 11.8:
-
-      ```nix
+    '';
+    example = ''
       cudaPackages = pkgs.cudaPackages_11_8;
-      ```
     '';
     type = rootConfig.types.cudaPackageSet;
     default = pkgs.cudaPackages_12_8;

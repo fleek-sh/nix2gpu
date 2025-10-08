@@ -16,15 +16,12 @@ in
 
       This is the recommended way to add more labels to your project 
       rather than overriding labels.
-
-      **Example:**
-
-      ```nix
+    '';
+    example = ''
       extraLabels = {
         "com.example.vendor" = "My Company";
         "com.example.project" = "My Project";
       };
-      ```
     '';
     type = types.attrsOf types.str;
     default = { };

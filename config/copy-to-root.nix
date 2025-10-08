@@ -22,15 +22,12 @@ in
       > This is a direct mapping to the
       > [`copyToRoot`](https://github.com/nlewo/nix2container?tab=readme-ov-file#nix2containerbuildimage)
       > attribute from [`nix2container`](https://github.com/nlewo/nix2container).
-
-      **Example:**
-
-      ```nix
+    '';
+    example = ''
       copyToRoot = with pkgs; [
         coreutils
         git
       ];
-      ```
     '';
     type = types.listOf types.package;
     default = with systemConfig; [

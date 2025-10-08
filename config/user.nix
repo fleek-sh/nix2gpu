@@ -15,14 +15,9 @@ in
       production environments to improve security. You can create users
       and groups using the `users` and `groups` options in your `home-manager`
       configuration.
-
-      **Example:**
-
-      To set the default user to `appuser`:
-
-      ```nix
+    '';
+    example = ''
       user = "appuser";
-      ```
     '';
     type = types.str;
     default = "root";

@@ -18,12 +18,8 @@ in
       By default, a standard `sshd_config` is provided that is suitable for most
       use cases, with password authentication disabled in favor of public key
       authentication.
-
-      **Example:**
-
-      To allow password authentication (not recommended for production):
-
-      ```nix
+    '';
+    example = ''
       sshdConfig = builtins.readFile ./my-sshd-config;
       ```
 
@@ -33,7 +29,6 @@ in
       # ... other sshd_config options
       PasswordAuthentication yes
       # ... other sshd_config options
-      ```
     '';
     type = types.str;
     default = builtins.readFile sshdConf;

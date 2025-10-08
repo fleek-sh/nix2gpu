@@ -15,17 +15,12 @@ in
 
       > This is a direct mapping to the `ExposedPorts` attribute of the [oci container
       > spec](https://github.com/opencontainers/image-spec/blob/8b9d41f48198a7d6d0a5c1a12dc2d1f7f47fc97f/specs-go/v1/config.go#L23). 
-
-      **Example:**
-
-      To expose port 8080 and 443 for a web server:
-
-      ```nix
+    '';
+    example = ''
       exposedPorts = {
         "8080/tcp" = {};
         "443/tcp" = {};
       };
-      ```
     '';
     type = types.attrsOf types.anything;
     default = {

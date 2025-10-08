@@ -14,14 +14,9 @@ in
       The default value is "latest", which is a common convention for the most
       recent build. However, it is highly recommended to use more descriptive
       tags for production images, such as version numbers or git commit hashes.
-
-      **Example:**
-
-      To use a version number as the tag:
-
-      ```nix
+    '';
+    example = ''
       tag = "v1.2.3";
-      ```
     '';
     type = types.str;
     default = "latest";
