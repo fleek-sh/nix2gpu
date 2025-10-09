@@ -43,6 +43,10 @@ in
                 ${builtins.readFile ./startup.sh}
                 ${outerConfig.nix2vast.${container.name}.extraStartupScript}
 
+                if [[ $- != *i* ]] || ! [ -t 0 ]; then
+                  export PC_DISABLE_TUI=true
+                fi
+
                 echo "[nix2vast] starting services..."
                 ${container.name}-services
 
