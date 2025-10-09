@@ -15,6 +15,8 @@
 
           age
           inputs'.agenix.packages.default
+
+          nix-fast-build
         ];
       };
     };
