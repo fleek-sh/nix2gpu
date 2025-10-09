@@ -51,7 +51,7 @@ in
                   The failing attribute name is `${name}`.
                 '';
 
-                "${name}-${val}"
+                "${name}=${val}"
               ) envAttrs;
           in
           {
