@@ -46,7 +46,6 @@ in
             ./_tmux
             ./_starship
             ./_bash
-            ./_agenix
             ./_config.nix
           ];
         };
