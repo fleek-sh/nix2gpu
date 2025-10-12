@@ -54,6 +54,11 @@ in
                 "${name}=${val}"
               ) envAttrs;
           in
+
+          assert lib.assertMsg (options.tag != "") ''
+            The `tag` option for container `${name}` must be a non-empty string.
+          '';
+
           {
             packages."${name}" = inputs'.nix2container.packages.nix2container.buildImage {
               inherit name;
