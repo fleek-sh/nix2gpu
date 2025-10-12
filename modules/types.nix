@@ -32,11 +32,11 @@ in
     };
     userDef = types.submodule {
       options.uid = mkOption {
-        type = types.int;
+        type = types.ints.u32;
         description = "User id";
       };
       options.gid = mkOption {
-        type = types.int;
+        type = types.ints.u32;
         description = "Group id";
       };
       options.shell = mkOption {
