@@ -1,6 +1,8 @@
 { lib, ... }:
 let
   inherit (lib) types mkOption;
+
+  hasAttrs = attrList: attrs: builtins.all (attr: lib.hasAttr attr attrs) attrList;
 in
 {
   options.nix2vastTypes = lib.mkOption {
@@ -13,7 +15,17 @@ in
 
   config.nix2vastTypes = {
     cudaPackageSet = types.package // {
-      check = x: lib.hasAttr "cudatoolkit" x;
+      check =
+        x:
+        hasAttrs [
+          "cudatoolkit"
+          "cudnn"
+          "cusparselt"
+          "libcublas"
+          "libcufile"
+          "libcusparse"
+          "nccl"
+        ] x;
     };
     textFilePackage = types.package // {
       check = x: lib.isDerivation x && lib.hasAttr "text" x;
@@ -46,7 +58,7 @@ in
     };
     groupDef = types.submodule {
       options.gid = mkOption {
-        type = types.int;
+        type = types.ints.u32;
         description = "Group id";
       };
     };
