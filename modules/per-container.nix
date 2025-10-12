@@ -31,7 +31,7 @@ let
       The following is an example usage of `${param}`. Note that its binding
       is in the `perSystem` parameter list, rather than the `perContainer` module.
 
-        top@{ config, lib, , ... }: {
+        top@{ config, lib, ... }: {
           perSystem = { ${param}, ... }: {
             # in scope here:
             #  - ${param}
