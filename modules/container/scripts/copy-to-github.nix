@@ -5,7 +5,7 @@
       perContainer =
         { container, ... }:
         {
-          scripts.copyToGithub = pkgs.writeShellApplication {
+          scripts.copyToGithub = pkgs.writeShellApplication rec {
             name = "${container.name}-copy-to-github-registry";
             runtimeInputs = with pkgs; [
               gh
@@ -41,7 +41,7 @@
               IMAGE="${container.name}:$TAG"
 
               if [[ -z "$REPO" ]]; then
-                printf '\033[31mError:\033[0m %s.\n' 'In order to use `pushToGithub` the `registry` attribute of your nix2vast container must be set' >&2
+                printf '\033[31mError:\033[0m %s.\n' 'In order to use `${name}` the `registry` attribute of your nix2vast container must be set' >&2
                 exit 1
               fi
 
