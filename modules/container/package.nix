@@ -79,15 +79,7 @@ in
                 Labels = options.labels // options.extraLabels;
               };
 
-              passthru = {
-                inherit (config.scripts)
-                  copyToGithub
-                  loginToGithub
-                  podmanShell
-                  dockerShell
-                  shell
-                  ;
-              };
+              passthru = config.scripts;
             };
           };
       };
