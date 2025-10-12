@@ -4,7 +4,7 @@
     {
       perContainer = _: {
         environment.devPkgs = pkgs.symlinkJoin {
-          name = "network-pkgs";
+          name = "dev-pkgs";
           paths = with pkgs; [
             binutils
             elfutils
