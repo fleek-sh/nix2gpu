@@ -13,8 +13,8 @@ in
       .You can configure everything from shell aliases and environment
       variables to user services and application settings.
 
-      By default, a minimal set of useful modern shell packages and `agenix`
-      integration is included to provide a comfortable and secure hacking
+      By default, a minimal set of useful modern shell packages
+      is included to provide a comfortable and secure hacking
       environment on your machines.
     '';
     example = ''
