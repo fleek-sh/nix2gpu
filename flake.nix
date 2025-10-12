@@ -18,11 +18,6 @@
     services-flake.url = "github:juspay/services-flake";
     process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
 
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
