@@ -41,33 +41,21 @@ let
         }
     '';
 
-  # Lifted from flake-parts
-  # Differs from nixpkgs implementation slightly
-  deferredModuleWith =
-    attrs@{
-      staticModules ? [ ],
-    }:
-    lib.mkOptionType {
-      name = "deferredModule";
-      description = "module";
-      check = x: lib.isAttrs x || lib.isFunction x || lib.types.path.check x;
-      merge =
-        loc: defs:
-        staticModules
-        ++ map (
-          def: lib.setDefaultModuleLocation "${def.file}, via option ${lib.showOption loc}" def.value
-        ) defs;
-      inherit (lib.types.submoduleWith { modules = staticModules; }) getSubOptions getSubModules;
-      substSubModules = m: deferredModuleWith (attrs // { staticModules = m; });
-      functor = lib.defaultFunctor "deferredModuleWith" // {
-        type = deferredModuleWith;
-        payload = { inherit staticModules; };
-        binOp = lhs: rhs: { staticModules = lhs.staticModules ++ rhs.staticModules; };
-      };
-    };
+  mkPerContainerType = flake-parts-lib.mkDeferredModuleType;
+  mkPerContainerOption = flake-parts-lib.mkDeferredModuleOption;
 
-  mkPerContainerType = module: deferredModuleWith { staticModules = [ module ]; };
-  mkPerContainerOption = module: lib.mkOption { type = mkPerContainerType module; };
+  evaluteModulesPerContainer =
+    modules: container:
+    (lib.evalModules {
+      inherit modules;
+      prefix = [
+        "perContainer"
+        container.name
+      ];
+      specialArgs = { inherit container flake-parts-lib; };
+      class = "perContainer";
+    }).config;
+
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
@@ -92,17 +80,7 @@ in
             _module.args.moduleWithSystem = throwShouldBePerSystemError "moduleWithSystem";
           };
         });
-        apply =
-          modules: container:
-          (lib.evalModules {
-            inherit modules;
-            prefix = [
-              "perContainer"
-              container.name
-            ];
-            specialArgs = { inherit container flake-parts-lib; };
-            class = "perContainer";
-          }).config;
+        apply = evaluteModulesPerContainer;
       };
 
       allContainers = mkOption {
