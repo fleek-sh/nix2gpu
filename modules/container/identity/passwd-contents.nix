@@ -16,7 +16,7 @@ let
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
-    options.passwdContents = mkOption {
+    options.nix2vastPasswdContents = mkOption {
       description = ''
         contents of /etc/passwd.
       '';
@@ -26,14 +26,14 @@ in
   });
 
   config = {
-    transposition.passwdContents = { };
+    transposition.nix2vastPasswdContents = { };
 
     perSystem =
       { config, ... }:
       {
-        passwdContents =
+        nix2vastPasswdContents =
           let
-            users = lib.attrValues (lib.mapAttrs userToPasswd config.users);
+            users = lib.attrValues (lib.mapAttrs userToPasswd config.nix2vastUsers);
           in
           lib.concatStringsSep "\n" users;
       };

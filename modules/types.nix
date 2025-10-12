@@ -3,7 +3,7 @@ let
   inherit (lib) types mkOption;
 in
 {
-  options.types = lib.mkOption {
+  options.nix2vastTypes = lib.mkOption {
     description = ''
       nix2vast's custom types for use in describing it's config.
     '';
@@ -11,7 +11,7 @@ in
     internal = true;
   };
 
-  config.types = {
+  config.nix2vastTypes = {
     cudaPackageSet = types.package // {
       check = x: lib.hasAttr "cudatoolkit" x;
     };

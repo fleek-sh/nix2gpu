@@ -61,7 +61,7 @@ in
               runtimeInputs = with config; [
                 environment.corePkgs
                 environment.networkPkgs
-                outerConfig.homeConfigurations.default.activationPackage
+                outerConfig.nix2vastHomeConfigurations.default.activationPackage
                 self'.packages."${container.name}-services"
               ];
             };

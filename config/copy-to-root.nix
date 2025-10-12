@@ -33,7 +33,7 @@ in
     default = with systemConfig; [
       allContainers.${name}.baseSystem
       allContainers.${name}.profile
-      nixStoreProfile
+      nix2vastNixStoreProfile
     ];
   };
 }

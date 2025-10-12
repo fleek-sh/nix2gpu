@@ -10,7 +10,7 @@ let
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
-    options.groupContents = mkOption {
+    options.nix2vastGroupContents = mkOption {
       description = ''
         contents of /etc/group.
       '';
@@ -20,12 +20,12 @@ in
   });
 
   config = {
-    transposition.groupContents = { };
+    transposition.nix2vastGroupContents = { };
 
     perSystem =
       { config, ... }:
       {
-        groupContents =
+        nix2vastGroupContents =
           let
             groupMemberMap =
               let
@@ -35,7 +35,7 @@ in
                     userGroups = config.users.${user}.groups or [ ];
                   in
                   acc ++ map (group: { inherit user group; }) userGroups
-                ) [ ] (lib.attrNames config.users);
+                ) [ ] (lib.attrNames config.nix2vastUsers);
               in
               builtins.foldl' (acc: v: acc // { ${v.group} = acc.${v.group} or [ ] ++ [ v.user ]; }) { } mappings;
 
@@ -47,7 +47,7 @@ in
               in
               "${k}:x:${toString gid}:${lib.concatStringsSep "," members}";
 
-            groups = lib.attrValues (lib.mapAttrs groupToGroup rootConfig.groups);
+            groups = lib.attrValues (lib.mapAttrs groupToGroup rootConfig.nix2vastGroups);
           in
           lib.concatStringsSep "\n" groups;
       };

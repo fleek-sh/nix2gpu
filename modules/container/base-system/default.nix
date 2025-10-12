@@ -32,7 +32,7 @@ in
           script = pkgs.replaceVars ./create-base-system.sh {
             inherit (container.options) sshdConfig nixConfig;
 
-            inherit (config) passwdContents groupContents shadowContents;
+            inherit (config) nix2vastPasswdContents nix2vastGroupContents nix2vastShadowContents;
 
             inherit (pkgs)
               bashInteractive

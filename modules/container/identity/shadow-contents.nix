@@ -6,7 +6,7 @@ let
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
-    options.shadowContents = mkOption {
+    options.nix2vastShadowContents = mkOption {
       description = ''
         contents of /etc/shadow.
       '';
@@ -16,14 +16,14 @@ in
   });
 
   config = {
-    transposition.shadowContents = { };
+    transposition.nix2vastShadowContents = { };
 
     perSystem =
       { config, ... }:
       {
-        shadowContents =
+        nix2vastShadowContents =
           let
-            userCfg = config.users;
+            userCfg = config.nix2vastUsers;
             shadows = lib.attrValues (lib.mapAttrs userToShadow userCfg);
           in
           lib.concatStringsSep "\n" shadows;

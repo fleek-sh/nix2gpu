@@ -10,15 +10,15 @@ mkdir -p \
   "$out"/dev/dri
 
 cat >"$out/etc/passwd" <<'EOF'
-@passwdContents@
+@nix2vastPasswdContents@
 EOF
 
 cat >"$out/etc/group" <<'EOF'
-@groupContents@
+@nix2vastGroupContents@
 EOF
 
 cat >"$out/etc/shadow" <<'EOF'
-@shadowContents@
+@nix2vastShadowContents@
 EOF
 
 mkdir -p "$out/etc/nix"

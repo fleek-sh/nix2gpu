@@ -11,7 +11,7 @@ let
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
-    options.homeConfigurations = mkOption {
+    options.nix2vastHomeConfigurations = mkOption {
       description = ''
         nix2vast default home configuration.
       '';
@@ -39,7 +39,7 @@ in
     perSystem =
       { pkgs, ... }:
       {
-        homeConfigurations.default = home-manager.lib.homeManagerConfiguration {
+        nix2vastHomeConfigurations.default = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = { inherit inputs; };
           modules = [

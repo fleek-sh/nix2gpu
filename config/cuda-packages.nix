@@ -19,7 +19,7 @@ in
     example = ''
       cudaPackages = pkgs.cudaPackages_11_8;
     '';
-    type = rootConfig.types.cudaPackageSet;
+    type = rootConfig.nix2vastTypes.cudaPackageSet;
     default = pkgs.cudaPackages_12_8;
   };
 }

@@ -9,22 +9,22 @@ let
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
-    options.users = mkOption {
+    options.nix2vastUsers = mkOption {
       description = ''
         users to place inside the generated nix2vast container.
       '';
-      type = types.attrsOf config.types.userDef;
+      type = types.attrsOf config.nix2vastTypes.userDef;
       internal = true;
     };
   });
 
   config = {
-    transposition.users = { };
+    transposition.nix2vastUsers = { };
 
     perSystem =
       { pkgs, ... }:
       {
-        users = {
+        nix2vastUsers = {
           root = {
             uid = 0;
             gid = 0;
