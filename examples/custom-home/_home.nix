@@ -4,5 +4,5 @@
   home.username = "root";
   home.homeDirectory = "/root";
 
-  environment.systemPackages = with pkgs; [ cowsay ];
+  home.packages = with pkgs; [ cowsay ];
 }
