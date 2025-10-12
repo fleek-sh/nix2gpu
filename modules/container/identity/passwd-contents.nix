@@ -25,17 +25,13 @@ in
     };
   });
 
-  config = {
-    transposition.nix2vastPasswdContents = { };
-
-    perSystem =
-      { config, ... }:
-      {
-        nix2vastPasswdContents =
-          let
-            users = lib.attrValues (lib.mapAttrs userToPasswd config.nix2vastUsers);
-          in
-          lib.concatStringsSep "\n" users;
-      };
-  };
+  config.perSystem =
+    { config, ... }:
+    {
+      nix2vastPasswdContents =
+        let
+          users = lib.attrValues (lib.mapAttrs userToPasswd config.nix2vastUsers);
+        in
+        lib.concatStringsSep "\n" users;
+    };
 }

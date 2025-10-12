@@ -15,19 +15,14 @@ in
     };
   });
 
-  config = {
-    transposition.nix2vastShadowContents = { };
-
-    perSystem =
-      { config, ... }:
-      {
-        nix2vastShadowContents =
-          let
-            userCfg = config.nix2vastUsers;
-            shadows = lib.attrValues (lib.mapAttrs userToShadow userCfg);
-          in
-          lib.concatStringsSep "\n" shadows;
-      };
-  };
-
+  config.perSystem =
+    { config, ... }:
+    {
+      nix2vastShadowContents =
+        let
+          userCfg = config.nix2vastUsers;
+          shadows = lib.attrValues (lib.mapAttrs userToShadow userCfg);
+        in
+        lib.concatStringsSep "\n" shadows;
+    };
 }
