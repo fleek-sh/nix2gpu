@@ -15,7 +15,7 @@ in
       for some nice information on layers in a nix context.
 
       > This is a direct mapping to the
-      > [`maxLaybers`](https://github.com/nlewo/nix2container?tab=readme-ov-file#nix2containerbuildimage)
+      > [`maxLayers`](https://github.com/nlewo/nix2container?tab=readme-ov-file#nix2containerbuildimage)
       > attribute from [`nix2container`](https://github.com/nlewo/nix2container).
     '';
     example = ''
