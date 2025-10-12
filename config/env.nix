@@ -29,7 +29,7 @@ in
     '';
     type = types.attrsOf types.str;
     default = {
-      CUDA_VERSION = "12.8";
+      CUDA_VERSION = config.cudaPackages.cudaMajorMinorVersion;
       CURL_CA_BUNDLE = "/etc/ssl/certs/ca-bundle.crt";
       HOME = "/root";
       LANG = "en_US.UTF-8";
