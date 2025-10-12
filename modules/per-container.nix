@@ -55,7 +55,6 @@ let
       specialArgs = { inherit container flake-parts-lib; };
       class = "perContainer";
     }).config;
-
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
@@ -96,11 +95,24 @@ in
     let
       containersList = lib.mapAttrsToList (
         name: options:
-        assert lib.assertMsg (lib.toLower name == name) ''
-          `nix2vast` attribute names must be lowercase due to a restriction by container parsing rules - https://pkg.go.dev/github.com/distribution/reference#pkg-variables
+        let
+          mkContainerAssert =
+            assertation: message:
+            lib.assertMsg assertation ''
+              A nix2vast` attribute name has failed a restriction by container parsing rules - https://pkg.go.dev/github.com/distribution/reference#pkg-variables
 
-          The failing attribute name is `${name}`.
-        '';
+              `${name}` ${message}.
+            '';
+        in
+
+        assert mkContainerAssert (lib.toLower name == name) "should be lowercase";
+        assert mkContainerAssert (
+          lib.stringLength name < 255
+        ) "should be less than 255 characters in length";
+        assert mkContainerAssert (lib.stringLength name > 1) "should be more than 1 character in length";
+        assert mkContainerAssert (builtins.match "[a-z0-9][a-z0-9_.-]*[a-z0-9]" name == [ ])
+          "should start with and end with a number or letter, while containing any amount of `.`, `-`, `_`, a letter or a number";
+
         {
           inherit name options;
         }
