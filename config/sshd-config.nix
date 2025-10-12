@@ -21,14 +21,6 @@ in
     '';
     example = ''
       sshdConfig = builtins.readFile ./my-sshd-config;
-      ```
-
-      Where `my-sshd-config` contains:
-
-      ```
-      # ... other sshd_config options
-      PasswordAuthentication yes
-      # ... other sshd_config options
     '';
     type = types.str;
     default = builtins.readFile sshdConf;
