@@ -34,7 +34,6 @@ perSystem.nix2vast.sample = { };
 nix build .#sample
 
 # push to registry
-nix run .#sample.loginToGithub
 nix run .#sample.copyToGIthub
 
 # run locally (docker or podman)
