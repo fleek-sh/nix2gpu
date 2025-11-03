@@ -2,8 +2,9 @@
   description = "nix2vast - nixos containers optimized for vast.ai compute";
 
   inputs = {
+    # TODO: Return to actual nixpkgs once this is merged
+    nixpkgs.url = "github:baileyluTCD/nixpkgs?ref=init-vastai";
     hf-nix.url = "github:huggingface/hf-nix";
-    nixpkgs.follows = "hf-nix/nixpkgs";
 
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -12,7 +13,7 @@
     nix2container = {
       # TODO: Return to actual nix2container once this is merged
       url = "github:baileylutcd/nix2container?ref=add-passthru-attribute";
-      inputs.nixpkgs.follows = "hf-nix/nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     services-flake.url = "github:juspay/services-flake";

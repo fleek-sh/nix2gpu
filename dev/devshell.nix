@@ -9,6 +9,7 @@
           inputs'.nix2container.packages.skopeo-nix2container
           dive
 
+          vastai
           gh
 
           nix-fast-build
