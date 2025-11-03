@@ -28,6 +28,12 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixified-ai = {
+      url = "github:nixified-ai/flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
   };
 
   nixConfig = {
@@ -61,6 +67,7 @@
         flake.flakeModule = module;
 
         systems = import inputs.systems;
+        debug = true;
 
         imports = [
           module
