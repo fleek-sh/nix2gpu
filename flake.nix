@@ -4,7 +4,8 @@
   inputs = {
     # TODO: Return to actual nixpkgs once this is merged
     nixpkgs.url = "github:baileyluTCD/nixpkgs?ref=init-vastai";
-    hf-nix.url = "github:huggingface/hf-nix";
+    # TODO: Return to actual hf-nix once this is merged
+    hf-nix.url = "github:baileyluTCD/hf-nix?ref=fix-overlay-eval-recent-nixpkgs";
 
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
