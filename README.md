@@ -12,10 +12,12 @@ a nix-based container runtime that makes distributed gpu compute actually work. 
 ## // tree // architecture
 
 ```
-nix/
-├── flake-modules/    # composable configuration
-├── lib/              # shared functions
-└── packages/         # package definitions
+├─ secrets/           # agenix secrets
+├─ nix/               # nix code
+├─── flake-modules/   # composable configuration
+├─── lib/             # shared functions
+├─── home/            # home manager configuration
+└─── packages/        # package definitions
 ```
 
 clean separation of concerns. the flake stays minimal, modules do the work.
@@ -30,9 +32,13 @@ nix build .#container
 nix run .#loginToGithub
 nix run .#copyToGIthub
 
-# run locally
+# run locally (docker)
 nix run .#copyToDockerDaemon
 nix run .#dockerShell
+
+# run locally (podman)
+nix run .#copyToPodman
+nix run .#podmanShell
 ```
 
 ## // manifest // what's inside
@@ -41,6 +47,7 @@ nix run .#dockerShell
 - **`tailscale`** for seamless and secure networking across a heterogeneous fleet
 - **`development tools`** - `gcc`, `python`, `uv`, `patchelf`
 - **`modern shell`** - `tmux`, `starship`, `atuin`, `ripgrep`, `fzf`, the usual suspects
+- **`secret management`** - `agenix` for declarative secret management
 - **`nix`** - because `docker`/`OCI` is a reasonable deployment target but an unreasonable build system
 
 ## // deployment
@@ -63,6 +70,12 @@ TAILSCALE_AUTHKEY=...
 ```
 
 passwordless root by default. we're already inside the machine.
+
+## // secrets
+
+secret management is done through [agenix](https://github.com/ryantm/agenix).
+
+modify the secrets and keys to your liking in `secrets/`, and add them to your home directory somewhere in `nix/home/agenix`.
 
 ## // technical details
 

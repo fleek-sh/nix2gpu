@@ -3,6 +3,7 @@
   pkgs,
   system,
   lib,
+  self,
   self',
   ...
 }:
@@ -12,7 +13,7 @@ let
   # Import components from lib
   inherit (import ../lib/users.nix { inherit lib pkgs; }) passwdContents shadowContents groupContents;
 
-  inherit (import ../lib/config.nix { inherit pkgs; }) nixConfContents sshdConfig;
+  inherit (import ../lib/config.nix { inherit pkgs self; }) nixConfContents sshdConfig startupScript;
 
   # Import packages
   inherit (import ./environment.nix { inherit pkgs lib; })
@@ -20,7 +21,6 @@ let
     corePkgs
     devPkgs
     networkPkgs
-    shellPkgs
     ;
 
   inherit
@@ -36,13 +36,11 @@ let
         ;
     })
     baseSystem
-    rootHome
     nixStoreProfile
     ;
 
   allPkgs =
     corePkgs
-    ++ shellPkgs
     ++ networkPkgs
     ++ devPkgs
     ++ [
@@ -68,7 +66,6 @@ nix2containerPkgs.nix2container.buildImage {
 
   copyToRoot = [
     baseSystem
-    rootHome
     nixStoreProfile
     profile
   ];
@@ -79,7 +76,7 @@ nix2containerPkgs.nix2container.buildImage {
     entrypoint = [
       "${pkgs.tini}/bin/tini"
       "--"
-      "/root/startup.sh"
+      "${startupScript}/bin/startup.sh"
     ];
 
     Env = [

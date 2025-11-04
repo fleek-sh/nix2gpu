@@ -27,13 +27,13 @@ s3dl() {
   rclone copyurl "$1" "$2"
 }
 
-if [[ -n "$RUN_SERVICES" ]]; then
+if [ -n "$RUN_SERVICES" ] && [ -z "$TMUX" ]; then
   container-services
 fi
 
 if [[ -z "$TMUX" ]]; then
   echo -e "\033[1;34m╔════════════════════════════════════╗\033[0m"
-  echo -e "\033[1;34m║\033[0m  Welcome to \033[1;36mnix2vast\033[0m GPU runtime  \033[1;34m║\033[0m"
+  echo -e "\033[1;34m║\033[0m  Welcome to \033[1;36mnix2vast\033[0m GPU runtime   \033[1;34m║\033[0m"
   echo -e "\033[1;34m╚════════════════════════════════════╝\033[0m"
   echo ""
   if [ -e /usr/bin/nvidia-smi ]; then

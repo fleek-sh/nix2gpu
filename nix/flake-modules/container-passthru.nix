@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, self, ... }:
 {
   perSystem =
     {
@@ -15,6 +15,7 @@
           pkgs
           inputs
           system
+          self
           self'
           ;
       };

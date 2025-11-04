@@ -2,7 +2,7 @@
   description = "nix2vast - nixos containers optimized for vast.ai compute";
 
   outputs =
-    inputs@{ flake-parts, ... }:
+    inputs@{ flake-parts, self, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = import inputs.systems;
 
@@ -25,11 +25,37 @@
           };
         };
 
+      flake = {
+        homeConfigurations.default = inputs.home-manager.lib.homeManagerConfiguration {
+          pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
+          extraSpecialArgs = {
+            inherit inputs;
+            nix2vast = self.packages.x86_64-linux;
+          };
+          modules = [
+            inputs.agenix.homeManagerModules.default
+            self.homeModules.default
+          ];
+        };
+
+        homeModules.default =
+          { ... }:
+          {
+            imports = [ ./nix/home ];
+
+            home.stateVersion = "25.11";
+            home.username = "root";
+            home.homeDirectory = "/root";
+          };
+      };
+
       imports = [
         inputs.treefmt-nix.flakeModule
         inputs.process-compose-flake.flakeModule
+        inputs.home-manager.flakeModules.home-manager
         ./nix/flake-modules
       ];
+
     };
 
   nixConfig = {
@@ -52,11 +78,6 @@
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix2container = {
       url = "github:nlewo/nix2container";
       inputs.nixpkgs.follows = "hf-nix/nixpkgs";
@@ -64,6 +85,16 @@
 
     services-flake.url = "github:juspay/services-flake";
     process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
