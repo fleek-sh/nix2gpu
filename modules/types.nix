@@ -15,17 +15,7 @@ in
 
   config.nix2vastTypes = {
     cudaPackageSet = types.package // {
-      check =
-        x:
-        hasAttrs [
-          "cudatoolkit"
-          "cudnn"
-          "cusparselt"
-          "libcublas"
-          "libcufile"
-          "libcusparse"
-          "nccl"
-        ] x;
+      check = x: hasAttrs [ "cudatoolkit" "cudnn" "libcublas" "libcufile" "libcusparse" "nccl" ] x;
     };
     textFilePackage = types.package // {
       check = x: lib.isDerivation x && lib.hasAttr "text" x;

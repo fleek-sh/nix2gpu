@@ -10,7 +10,7 @@
             paths = with container.options.cudaPackages; [
               cudatoolkit
               cudnn
-              cusparselt
+              # cusparselt
               libcublas
               libcufile
               libcusparse
