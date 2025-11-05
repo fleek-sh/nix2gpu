@@ -16,6 +16,7 @@ a nix-based container runtime that makes distributed gpu compute actually work. 
 ├── config       # avalible `nix2vast` config options
 ├── dev          # `flake-parts` config for development of this repo
 ├── examples     # working `nix2vast` examples
+├── services     # extra `services-flake` compatible services
 └── modules      # implementation of `nix2vast`
 ```
 
