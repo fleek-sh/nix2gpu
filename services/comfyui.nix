@@ -7,6 +7,11 @@
 }:
 let
   inherit (lib) types;
+
+  comfyuiPackage = config.package.override {
+    withModels = config.models;
+    withCustomNodes = config.customNodes;
+  };
 in
 {
   options = {
@@ -28,17 +33,78 @@ in
         The TCP port to accept connections.
       '';
     };
+
+    databasePath = lib.mkOption {
+      type = types.str;
+      default = "${config.dataDir}/comfyui.db";
+      example = "/home/my-user/comfyui/comfyui.db";
+      description = ''
+        SQL database URL. Passed as --database-url cli flag to comfyui. If it does not start with sqlite:/// it will be prepended automatically.
+      '';
+      apply = x: if (lib.hasPrefix "sqlite:///" x) then x else "sqlite:///${x}";
+    };
+
+    extraFlags = lib.mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [
+        "--fast"
+        "--deterministic"
+      ];
+      description = ''
+        A list of extra string arguments to pass to comfyui
+      '';
+    };
+
+    models = lib.mkOption {
+      type = types.listOf types.attrs;
+      default = [ ];
+      defaultText = [ ];
+      example = [ ];
+      description = ''
+        A list of models to fetch and supply to comfyui
+      '';
+    };
+
+    customNodes = lib.mkOption {
+      type = types.listOf types.attrs;
+      default = [ ];
+      defaultText = [ ];
+      example = [ ];
+      description = ''
+        A list of custom nodes to fetch and supply to comfyui in its custom_nodes folder
+      '';
+    };
+
+    environmentVariables = lib.mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      example = {
+        HIP_VISIBLE_DEVICES = "0,1";
+      };
+      description = ''
+        Set arbitrary environment variables for the comfyui service.
+
+        Be aware that these are only seen by the comfyui server (systemd service),
+        not normal invocations like `comfyui run`.
+        Since `comfyui run` is mostly a shell around the comfyui server, this is usually sufficient.
+      '';
+    };
   };
 
   config.outputs.settings.processes."${name}" =
     let
       wrapper = pkgs.writeShellApplication {
         name = "comfyui";
+        runtimeEnv = config.environmentVariables;
         text = ''
-          ${lib.getExe config.package} \
+          ${lib.getExe comfyuiPackage} \
             --listen ${config.listen} \
             --port ${toString config.port} \
-            --output-directory ${config.dataDir}
+            --output-directory ${config.dataDir} \
+            --database-url ${config.databasePath} \
+            ${lib.concatStringsSep " " config.extraFlags} \
+            "$@"
         '';
       };
     in
