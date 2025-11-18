@@ -33,6 +33,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
+
+    flake-parts-website = {
+      url = "github:hercules-ci/flake.parts-website";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.treefmt-nix.follows = "treefmt-nix";
+      inputs.process-compose-flake.follows = "process-compose-flake";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   nixConfig = {
