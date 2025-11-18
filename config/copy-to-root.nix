@@ -35,5 +35,8 @@ in
       allContainers.${name}.profile
       nix2vastNixStoreProfile
     ];
+    defaultText = ''
+      The generated base system from the other config options
+    '';
   };
 }

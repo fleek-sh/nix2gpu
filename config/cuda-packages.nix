@@ -21,5 +21,6 @@ in
     '';
     type = rootConfig.nix2vastTypes.cudaPackageSet;
     default = pkgs.cudaPackages_12_8;
+    defaultText = "pkgs.cudaPackages_12_8";
   };
 }
