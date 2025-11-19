@@ -1,0 +1,21 @@
+site_name: My Docs
+site_url: https://mydomain.org/mysite
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: deep purple
+    accent: deep purple
+  font:
+    text: Geist
+  features:
+    - navigation.expand
+    - search.suggest
+    - search.share
+plugins:
+  - search:
+      prebuild_index: true
+markdown_extensions:
+  - toc:
+      permalink: "#"
+      separator: "_"
