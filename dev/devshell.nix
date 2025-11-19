@@ -1,12 +1,11 @@
 {
   perSystem =
-    { pkgs, inputs', ... }:
-    let
-      pythonMkDocs = pkgs.python3.withPackages(ps: with ps; [
-        mkdocs
-        mkdocs-material
-      ]);
-    in
+    {
+      pkgs,
+      inputs',
+      config,
+      ...
+    }:
     {
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
@@ -16,7 +15,7 @@
           dive
 
           mkdocs
-          pythonMkDocs
+          config.pythonWithMkdocs
 
           vastai
           gh
