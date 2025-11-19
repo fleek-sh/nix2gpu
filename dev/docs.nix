@@ -40,7 +40,7 @@ in
     {
       render.inputs.self = {
         baseUrl = "https://github.com/fleek-platform/nix2vast/blob/main";
-        title = "nix2vast";
+        title = "// nix2vast // options";
         sourceName = "nix2vast";
         intro = ''
           `nixos` containers for cost-effective and capable gpu compute. [vast.ai](https://vast.ai) is the first target, there will be many more.
