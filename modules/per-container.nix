@@ -138,7 +138,7 @@ in
 
               # Use perContainer to apply common settings
               perContainer = { container, ... }: {
-                myOption = "hello world!";
+                myOption = "hello world, ''${container.name}!";
               };
             };
           }
