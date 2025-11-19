@@ -1,9 +1,10 @@
 { lib, flake-parts-lib, ... }:
 let
   inherit (lib) types mkOption;
+  inherit (flake-parts-lib) mkPerSystemOption;
 in
 {
-  options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
+  options.perSystem = mkPerSystemOption {
     options.nix2vastNixStoreProfile = mkOption {
       description = ''
         nix2vast generated nix store profile.
@@ -11,7 +12,7 @@ in
       type = types.package;
       internal = true;
     };
-  });
+  };
 
   config.perSystem =
     { pkgs, ... }:
