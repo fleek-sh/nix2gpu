@@ -10,6 +10,14 @@ let
   inherit (flake-parts-lib) mkPerSystemOption;
 
   rootConfig = config;
+
+  containerAttrsOf =
+    elemType:
+    types.attrsWith {
+      lazy = true;
+      placeholder = "container";
+      inherit elemType;
+    };
 in
 {
   options.perSystem = mkPerSystemOption (
@@ -36,7 +44,7 @@ in
         example = ''
           perSystem.nix2vast.sample = { };
         '';
-        type = types.attrsOf (
+        type = containerAttrsOf (
           types.submodule (
             { name, ... }:
             {
