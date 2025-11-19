@@ -1,5 +1,5 @@
-site_name: My Docs
-site_url: https://mydomain.org/mysite
+site_name: nix2vast
+site_url: https://github.com/fleek-platform/nix2vast
 theme:
   name: material
   palette:
@@ -19,3 +19,10 @@ markdown_extensions:
   - toc:
       permalink: "#"
       separator: "_"
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
