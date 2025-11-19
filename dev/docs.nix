@@ -9,7 +9,7 @@ let
   inherit (flake-parts-lib) mkPerSystemOption;
 in
 {
-  imports = [ inputs.flake-parts-website.flakeModules.empty-site ];
+  imports = [ inputs.flake-parts-website.flakeModules.render ];
 
   options.perSystem = mkPerSystemOption (
     { pkgs, ... }:

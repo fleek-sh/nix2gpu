@@ -35,7 +35,7 @@
     };
 
     flake-parts-website = {
-      url = "github:hercules-ci/flake.parts-website";
+      url = "github:baileylutcd/flake.parts-website?ref=expose-render-module";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
       inputs.treefmt-nix.follows = "treefmt-nix";
