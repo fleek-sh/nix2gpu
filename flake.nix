@@ -3,7 +3,7 @@
 
   inputs = {
     # TODO: Return to actual nixpkgs once this is merged
-    nixpkgs.url = "github:baileyluTCD/nixpkgs?ref=init-vastai";
+    nixpkgs.url = "github:baileyluTCD/nixpkgs?ref=init-vastcli";
 
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
