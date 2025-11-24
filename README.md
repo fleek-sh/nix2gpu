@@ -12,33 +12,34 @@ a nix-based container runtime that makes distributed gpu compute actually work. 
 ## // tree // architecture
 
 ```
-├─ secrets/           # agenix secrets
-├─ nix/               # nix code
-├─── flake-modules/   # composable configuration
-├─── lib/             # shared functions
-├─── home/            # home manager configuration
-└─── packages/        # package definitions
+├── checks       # flake checks run on this repo
+├── config       # avalible `nix2vast` config options
+├── dev          # `flake-parts` config for development of this repo
+├── examples     # working `nix2vast` examples
+├── services     # extra `services-flake` compatible services
+└── modules      # implementation of `nix2vast`
 ```
 
 clean separation of concerns. the flake stays minimal, modules do the work.
 
 ## // quick // start
 
+create a `nix2vast` container:
+
+```nix
+perSystem.nix2vast.sample = { };
+```
+
 ```bash
 # build
-nix build .#container
+nix build .#sample
 
 # push to registry
-nix run .#loginToGithub
-nix run .#copyToGIthub
+nix run .#sample.copyToGIthub
 
-# run locally (docker)
-nix run .#copyToDockerDaemon
-nix run .#dockerShell
-
-# run locally (podman)
-nix run .#copyToPodman
-nix run .#podmanShell
+# run locally (docker or podman)
+nix run .#sample.copyToContainerRuntime
+nix run .#sample.shell
 ```
 
 ## // manifest // what's inside
@@ -47,7 +48,6 @@ nix run .#podmanShell
 - **`tailscale`** for seamless and secure networking across a heterogeneous fleet
 - **`development tools`** - `gcc`, `python`, `uv`, `patchelf`
 - **`modern shell`** - `tmux`, `starship`, `atuin`, `ripgrep`, `fzf`, the usual suspects
-- **`secret management`** - `agenix` for declarative secret management
 - **`nix`** - because `docker`/`OCI` is a reasonable deployment target but an unreasonable build system
 
 ## // deployment
@@ -71,12 +71,6 @@ TAILSCALE_AUTHKEY=...
 
 passwordless root by default. we're already inside the machine.
 
-## // secrets
-
-secret management is done through [agenix](https://github.com/ryantm/agenix).
-
-modify the secrets and keys to your liking in `secrets/`, and add them to your home directory somewhere in `nix/home/agenix`.
-
 ## // technical details
 
 `vast.ai` uses debian library paths (`/lib/x86_64-linux-gnu`). their `nvidia-container-runtime` injects driver libraries at container start. we handle this gracefully:
@@ -95,13 +89,6 @@ nix develop      # enter shell
 nix build        # build image
 nix run .#<app>  # run apps
 ```
-
-apps:
-- `load` - build and load to daemon
-- `run` - run with gpu passthrough
-- `shell` - interactive shell
-- `login` - authenticate with registry
-- `push` - push to registry
 
 ## // philosophy
 
