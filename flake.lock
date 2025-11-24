@@ -2495,16 +2495,16 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1761763048,
-        "narHash": "sha256-Ns2nL8M4HkrX7l54VZvG8HIu5DjoELSdQ9jaek7YwyI=",
+        "lastModified": 1763211878,
+        "narHash": "sha256-q0+4iTYKkRu5WmveMXwMFF8Ld4kZVykdb6dt4xRrXw8=",
         "owner": "baileyluTCD",
         "repo": "nixpkgs",
-        "rev": "cfde1d85dc61438f714d7eaed1bd7d35626237ac",
+        "rev": "d37eea6b6e1a2a8e8be76b7fd299ab030713a917",
         "type": "github"
       },
       "original": {
         "owner": "baileyluTCD",
-        "ref": "init-vastai",
+        "ref": "init-vastcli",
         "repo": "nixpkgs",
         "type": "github"
       }

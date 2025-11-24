@@ -17,7 +17,7 @@
           mkdocs
           config.pythonWithMkdocs
 
-          vastai
+          vast-cli
           gh
 
           nix-fast-build
