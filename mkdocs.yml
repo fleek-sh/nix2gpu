@@ -1,0 +1,28 @@
+site_name: nix2vast
+site_url: https://github.com/fleek-platform/nix2vast
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: deep purple
+    accent: deep purple
+  font:
+    text: Geist
+  features:
+    - navigation.expand
+    - search.suggest
+    - search.share
+plugins:
+  - search:
+      prebuild_index: true
+markdown_extensions:
+  - toc:
+      permalink: "#"
+      separator: "_"
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

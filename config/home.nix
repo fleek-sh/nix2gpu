@@ -28,5 +28,9 @@ in
     '';
     type = types.lazyAttrsOf types.raw;
     inherit (systemConfig.homeConfigurations) default;
+    defaultText = ''
+      A sample home manager config with some nice defaults
+      from nix2vast
+    '';
   };
 }

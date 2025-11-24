@@ -10,6 +10,14 @@ let
   inherit (flake-parts-lib) mkPerSystemOption;
 
   rootConfig = config;
+
+  containerAttrsOf =
+    elemType:
+    types.attrsWith {
+      lazy = true;
+      placeholder = "container";
+      inherit elemType;
+    };
 in
 {
   options.perSystem = mkPerSystemOption (
@@ -24,19 +32,19 @@ in
 
           `vast.ai` is the first supported platform, with more to come.
 
-          # // key features:
+          key features:
           - **reproducible environments**: leverage the power of nix to create deterministic and portable container images.
           - **`cuda 12.8`**: comes with a full suite of `cuda` libraries, including `cudnn`, `nccl`, and `cublas`.
           - **`tailscale` networking**: seamlessly and securely connect your heterogeneous fleet of machines.
           - **modern development tools**: includes `gcc`, `python`, `uv`, `patchelf`, `tmux`, `starship`, and more.
 
-          # // configuration options:
+          configuration options:
           take a look at config options for individual containers inside ${../config}
         '';
         example = ''
           perSystem.nix2vast.sample = { };
         '';
-        type = types.attrsOf (
+        type = containerAttrsOf (
           types.submodule (
             { name, ... }:
             {

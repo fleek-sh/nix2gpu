@@ -24,6 +24,9 @@ in
 
       statix.enable = true;
       deadnix.enable = true;
+
+      yamlfmt.enable = true;
+      mdformat.enable = true;
     };
   };
 }

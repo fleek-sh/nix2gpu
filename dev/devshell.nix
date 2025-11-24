@@ -1,6 +1,11 @@
 {
   perSystem =
-    { pkgs, inputs', ... }:
+    {
+      pkgs,
+      inputs',
+      config,
+      ...
+    }:
     {
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
@@ -8,6 +13,9 @@
           podman
           inputs'.nix2container.packages.skopeo-nix2container
           dive
+
+          mkdocs
+          config.pythonWithMkdocs
 
           vastai
           gh

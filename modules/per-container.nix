@@ -61,12 +61,33 @@ in
     options = {
       perContainer = mkOption {
         description = ''
-          A function from container to flake-like attributes omitting the `<container>` attribute.
+          A function that applies configurations to each container defined in `nix2vast`.
 
-          Modules defined here have access to a `container` struct holding the `name` and
-          `options` fields for every container.
+          Think of `perContainer` as a cookie cutter for your containers. You define the
+          shape of the cookie once (the configuration), and `nix2vast` uses it to cut
+          out a cookie for each container you've defined in `nix2vast.<container-name>`.
 
-          Behaves similarly to `perSystem` from `flake-parts`.
+          This allows you to write container configurations once and apply them across
+          all your containers, making your flake more DRY (Don't Repeat Yourself).
+
+          How it works:
+
+          For each container you define under the `nix2vast` option in your `flake.nix`,
+          `nix2vast` will call the `perContainer` function. This function is passed
+          a set of arguments, including a `container` attribute, which holds the
+          specifics of the container being processed.
+
+          The `container` attribute contains:
+          - `name`: The name of the container (e.g., `"my-container"`).
+          - `options`: The options you've defined for that container under `nix2vast.<container-name>`.
+
+          Analogy to `perSystem`:
+
+          As the name suggests, `perContainer` is analogous to `flake-parts`' `perSystem`.
+          While `perSystem` applies configurations to each system (like `x86_64-linux`),
+          `perContainer` applies configurations to each container defined in `nix2vast`.
+          This provides a powerful and consistent way to manage configurations at
+          different levels of your flake.
         '';
         type = mkPerContainerType (_: {
           _file = ./perContainer.nix;
@@ -80,6 +101,48 @@ in
           };
         });
         apply = evaluteModulesPerContainer;
+        example = ''
+          { flake-parts-lib, lib, inputs, ...}:
+          let
+            inherit (lib) types mkOption;
+            inherit (flake-parts-lib) mkPerSystemOption;
+            inherit (inputs.nix2vast.lib) mkPerContainerOption;
+          in
+          {
+            options.perSystem = mkPerSystemOption {
+              options.perContainer = mkPerContainerOption (
+                { container, ... }:
+                {
+                  options.myOption = mkOption {
+                    description = '''
+                      unique option that exists for ''${container.name}
+                    ''';
+                    type = types.str;
+                  };
+                }
+              );
+            });
+
+            config.perSystem = { pkgs, ... }: {
+              nix2vast = {
+                # Define two containers
+                my-app = {
+                  # container-specific options
+                  workingDir = "/app";
+                };
+                my-db = {
+                  # container-specific options
+                  workingDir = "/data";
+                };
+              };
+
+              # Use perContainer to apply common settings
+              perContainer = { container, ... }: {
+                myOption = "hello world, ''${container.name}!";
+              };
+            };
+          }
+        '';
       };
 
       allContainers = mkOption {
