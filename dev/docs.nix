@@ -39,9 +39,9 @@ in
     }:
     {
       render.inputs.self = {
-        baseUrl = "https://github.com/fleek-platform/nix2vast/blob/main";
-        title = "// nix2vast // options";
-        sourceName = "nix2vast";
+        baseUrl = "https://github.com/fleek-platform/nix2gpu/blob/main";
+        title = "// nix2gpu // options";
+        sourceName = "nix2gpu";
         intro = ''
           `nixos` containers for cost-effective and capable gpu compute. [vast.ai](https://vast.ai) is the first target, there will be many more.
 
@@ -56,7 +56,7 @@ in
       };
 
       packages.docs = pkgs.stdenvNoCC.mkDerivation {
-        name = "nix2vast-docs";
+        name = "nix2gpu-docs";
 
         src = ../.;
 
@@ -86,9 +86,9 @@ in
         installPhase = ''
           runHook preInstall
 
-          mkdir -p "$out/share/nix2vast/site"
+          mkdir -p "$out/share/nix2gpu/site"
 
-          cp -r site/. "$out/share/nix2vast/site"
+          cp -r site/. "$out/share/nix2gpu/site"
 
           runHook postInstall
         '';

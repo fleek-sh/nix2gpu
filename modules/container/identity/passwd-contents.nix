@@ -16,7 +16,7 @@ let
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
-    options.nix2vastPasswdContents = mkOption {
+    options.nix2gpuPasswdContents = mkOption {
       description = ''
         contents of /etc/passwd.
       '';
@@ -28,9 +28,9 @@ in
   config.perSystem =
     { config, ... }:
     {
-      nix2vastPasswdContents =
+      nix2gpuPasswdContents =
         let
-          users = lib.attrValues (lib.mapAttrs userToPasswd config.nix2vastUsers);
+          users = lib.attrValues (lib.mapAttrs userToPasswd config.nix2gpuUsers);
         in
         lib.concatStringsSep "\n" users;
     };

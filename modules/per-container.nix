@@ -61,31 +61,31 @@ in
     options = {
       perContainer = mkOption {
         description = ''
-          A function that applies configurations to each container defined in `nix2vast`.
+          A function that applies configurations to each container defined in `nix2gpu`.
 
           Think of `perContainer` as a cookie cutter for your containers. You define the
-          shape of the cookie once (the configuration), and `nix2vast` uses it to cut
-          out a cookie for each container you've defined in `nix2vast.<container-name>`.
+          shape of the cookie once (the configuration), and `nix2gpu` uses it to cut
+          out a cookie for each container you've defined in `nix2gpu.<container-name>`.
 
           This allows you to write container configurations once and apply them across
           all your containers, making your flake more DRY (Don't Repeat Yourself).
 
           How it works:
 
-          For each container you define under the `nix2vast` option in your `flake.nix`,
-          `nix2vast` will call the `perContainer` function. This function is passed
+          For each container you define under the `nix2gpu` option in your `flake.nix`,
+          `nix2gpu` will call the `perContainer` function. This function is passed
           a set of arguments, including a `container` attribute, which holds the
           specifics of the container being processed.
 
           The `container` attribute contains:
           - `name`: The name of the container (e.g., `"my-container"`).
-          - `options`: The options you've defined for that container under `nix2vast.<container-name>`.
+          - `options`: The options you've defined for that container under `nix2gpu.<container-name>`.
 
           Analogy to `perSystem`:
 
           As the name suggests, `perContainer` is analogous to `flake-parts`' `perSystem`.
           While `perSystem` applies configurations to each system (like `x86_64-linux`),
-          `perContainer` applies configurations to each container defined in `nix2vast`.
+          `perContainer` applies configurations to each container defined in `nix2gpu`.
           This provides a powerful and consistent way to manage configurations at
           different levels of your flake.
         '';
@@ -106,7 +106,7 @@ in
           let
             inherit (lib) types mkOption;
             inherit (flake-parts-lib) mkPerSystemOption;
-            inherit (inputs.nix2vast.lib) mkPerContainerOption;
+            inherit (inputs.nix2gpu.lib) mkPerContainerOption;
           in
           {
             options.perSystem = mkPerSystemOption {
@@ -124,7 +124,7 @@ in
             });
 
             config.perSystem = { pkgs, ... }: {
-              nix2vast = {
+              nix2gpu = {
                 # Define two containers
                 my-app = {
                   # container-specific options
@@ -162,7 +162,7 @@ in
           mkContainerAssert =
             assertation: message:
             lib.assertMsg assertation ''
-              A nix2vast` attribute name has failed a restriction by container parsing rules - https://pkg.go.dev/github.com/distribution/reference#pkg-variables
+              A nix2gpu` attribute name has failed a restriction by container parsing rules - https://pkg.go.dev/github.com/distribution/reference#pkg-variables
 
               `${name}` ${message}.
             '';
@@ -179,11 +179,11 @@ in
         {
           inherit name options;
         }
-      ) config.nix2vast;
+      ) config.nix2gpu;
 
       containerPer = builtins.map config.perContainer containersList;
 
-      containerNames = lib.attrNames config.nix2vast;
+      containerNames = lib.attrNames config.nix2gpu;
     in
     {
       allContainers = lib.attrsets.mergeAttrsList (

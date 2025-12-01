@@ -1,4 +1,4 @@
-# `// nix2vast //`
+# `// nix2gpu //`
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -14,21 +14,21 @@ a nix-based container runtime that makes distributed gpu compute actually work. 
 
 ```
 ├── checks       # flake checks run on this repo
-├── config       # avalible `nix2vast` config options
+├── config       # avalible `nix2gpu` config options
 ├── dev          # `flake-parts` config for development of this repo
-├── examples     # working `nix2vast` examples
+├── examples     # working `nix2gpu` examples
 ├── services     # extra `services-flake` compatible services
-└── modules      # implementation of `nix2vast`
+└── modules      # implementation of `nix2gpu`
 ```
 
 clean separation of concerns. the flake stays minimal, modules do the work.
 
 ## // quick // start
 
-create a `nix2vast` container:
+create a `nix2gpu` container:
 
 ```nix
-perSystem.nix2vast.sample = { };
+perSystem.nix2gpu.sample = { };
 ```
 
 ```bash
@@ -56,7 +56,7 @@ nix run .#sample.shell
 push to `ghcr.io`, point `vast.ai` at it:
 
 ```
-ghcr.io/fleek-platform/nix2vast:20250914-142437
+ghcr.io/fleek-platform/nix2gpu:20250914-142437
 ```
 
 or run your own registry. we don't care.

@@ -10,15 +10,15 @@ mkdir -p \
   "$out"/dev/dri
 
 cat >"$out/etc/passwd" <<'EOF'
-@nix2vastPasswdContents@
+@nix2gpuPasswdContents@
 EOF
 
 cat >"$out/etc/group" <<'EOF'
-@nix2vastGroupContents@
+@nix2gpuGroupContents@
 EOF
 
 cat >"$out/etc/shadow" <<'EOF'
-@nix2vastShadowContents@
+@nix2gpuShadowContents@
 EOF
 
 mkdir -p "$out/etc/nix"
@@ -92,10 +92,10 @@ cat >"$out/etc/hosts" <<'EOF'
 EOF
 
 cat >"$out/etc/os-release" <<'EOF'
-NAME="nix2vast"
-ID=nix2vast
+NAME="nix2gpu"
+ID=nix2gpu
 VERSION="1.0"
-PRETTY_NAME="nix2vast GPU container"
+PRETTY_NAME="nix2gpu GPU container"
 EOF
 
 # // shell // compatibility

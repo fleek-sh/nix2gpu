@@ -2,7 +2,7 @@
   # This example shows how one may use
   # [services-flake](https://github.com/juspay/services-flake)
   # config options via the `services` attribute
-  perSystem.nix2vast."with-services-flake" = {
+  perSystem.nix2gpu."with-services-flake" = {
     services.clickhouse."clickhouse-example" = {
       enable = true;
       extraConfig = {

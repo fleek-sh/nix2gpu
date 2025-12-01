@@ -25,7 +25,7 @@ in
     type = types.str;
     default = builtins.readFile sshdConf;
     defaultText = ''
-      nix2vast generated sshd config
+      nix2gpu generated sshd config
     '';
   };
 }

@@ -14,7 +14,7 @@ in
       {
         options.baseSystem = mkOption {
           description = ''
-            nix2vast generated baseSystem for ${container.name}.
+            nix2gpu generated baseSystem for ${container.name}.
           '';
           type = types.package;
           internal = true;
@@ -32,7 +32,7 @@ in
           script = pkgs.replaceVars ./create-base-system.sh {
             inherit (container.options) sshdConfig nixConfig;
 
-            inherit (config) nix2vastPasswdContents nix2vastGroupContents nix2vastShadowContents;
+            inherit (config) nix2gpuPasswdContents nix2gpuGroupContents nix2gpuShadowContents;
 
             inherit (pkgs)
               bashInteractive

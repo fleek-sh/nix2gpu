@@ -16,7 +16,7 @@ in
     options.perContainer = config.flake.lib.mkPerContainerOption (_: {
       options.scripts = mkOption {
         description = ''
-          nix2vast's scripts to attach to containers after generation.
+          nix2gpu's scripts to attach to containers after generation.
         '';
         type = types.attrsOf executablePackage;
         internal = true;

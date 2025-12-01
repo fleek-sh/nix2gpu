@@ -1,6 +1,6 @@
-# // `nix2vast` // `ComfyUI` setup guide
+# // `nix2gpu` // `ComfyUI` setup guide
 
-This guide covers a walk through of setting up `ComfyUI` inside a `nix2vast` container, and then deploying it to `vast.ai`. It should hopefully also provide useful information to others trying to deploy different pieces of software too.
+This guide covers a walk through of setting up `ComfyUI` inside a `nix2gpu` container, and then deploying it to `vast.ai`. It should hopefully also provide useful information to others trying to deploy different pieces of software too.
 
 # Installing Nix
 
@@ -17,9 +17,9 @@ There are a couple of easy ways to get it:
 With nix installed you can now run:
 
 ```sh
-mkdir my-nix2vast-project
+mkdir my-nix2gpu-project
 
-cd my-nix2vast-project
+cd my-nix2gpu-project
 
 git init
 
@@ -35,7 +35,7 @@ git commit -m "nix flake init"
 You will now have a new git repository with an empty `flake.nix`. Edit this to add
 
 ```nix
-nix2vast.url = "github:fleek-platform/nix2vast?ref=baileylu/public-api";
+nix2gpu.url = "github:fleek-platform/nix2gpu?ref=baileylu/public-api";
 
 systems.url = "github:nix-systems/default";
 
@@ -51,29 +51,29 @@ outputs =
   inputs@{ flake-parts, self, ... }:
   flake-parts.lib.mkFlake { inherit inputs; } {
     imports = [
-      inputs.nix2vast.flakeModule
+      inputs.nix2gpu.flakeModule
     ];
 
     systems = import inputs.systems;
 
-    # This is where nix2vast config goes
+    # This is where nix2gpu config goes
     # More on this later
-    perSystem.nix2vast = {};
+    perSystem.nix2gpu = {};
   };
 ```
 
-# Select a `nix2vast` starter config to use
+# Select a `nix2gpu` starter config to use
 
-Take a look in the [examples folder](https://github.com/fleek-platform/nix2vast/tree/baileylu/public-api/examples) and pick one which looks useful.
+Take a look in the [examples folder](https://github.com/fleek-platform/nix2gpu/tree/baileylu/public-api/examples) and pick one which looks useful.
 
 Going forward, we will use the `comfyui.nix` example.
 
-We can run this in `nix2vast` like (replacing the `perSystem.nix2vast` from earlier:
+We can run this in `nix2gpu` like (replacing the `perSystem.nix2gpu` from earlier:
 
 ```nix
 {
   perSystem = { pkgs, ... }: {
-    nix2vast."comfyui-service" = {
+    nix2gpu."comfyui-service" = {
       services.comfyui."comfyui-example" = {
         enable = true;
         # You'll need to use the nixified-ai overlay for this
@@ -112,7 +112,7 @@ You can now connect with the command and IP address it gives you. Make sure you 
 
 # Other options
 
-You can also run a `nix2vast` image locally if you have docker or `podman` installed:
+You can also run a `nix2gpu` image locally if you have docker or `podman` installed:
 
 ```nix
 nix run .#my-service.copyToDockerDaemon

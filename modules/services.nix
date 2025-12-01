@@ -26,7 +26,7 @@ in
               (map multiService)
             ];
 
-            inherit (config.nix2vast.${name}) services;
+            inherit (config.nix2gpu.${name}) services;
           };
         }) containers
       );

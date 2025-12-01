@@ -39,7 +39,7 @@ in
               name = "${shell}-shell";
               runtimeInputs = [ inputs'.nix2container.packages.skopeo-nix2container ];
               text = ''
-                echo "[nix2vast] starting ${shell} shell..."
+                echo "[nix2gpu] starting ${shell} shell..."
 
                 exec ${shell} run --rm -it \
                   --gpus all \

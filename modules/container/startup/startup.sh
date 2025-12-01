@@ -1,4 +1,4 @@
-echo "[nix2vast] Container initialization starting..."
+echo "[nix2gpu] Container initialization starting..."
 
 # // critical // runtime directories
 mkdir -p /tmp /var/tmp /run /run/sshd /var/log /var/empty /var/lib/tailscale
@@ -13,7 +13,7 @@ mkdir -p /dev/net
 
 # // ldconfig // regenerate cache with NVIDIA libs
 if [ -d /lib/x86_64-linux-gnu ] && [ "$(ls -A /lib/x86_64-linux-gnu/*.so* 2>/dev/null)" ]; then
-  echo "[nix2vast] Found NVIDIA libraries, updating ld cache..."
+  echo "[nix2gpu] Found NVIDIA libraries, updating ld cache..."
 
   # Create symlinks for common library names
   for lib in /lib/x86_64-linux-gnu/*.so.*; do
@@ -44,10 +44,10 @@ fi
 
 # // root // password
 if [ -n "${ROOT_PASSWORD:-}" ]; then
-  echo "[nix2vast] Setting root password..."
+  echo "[nix2gpu] Setting root password..."
   echo "root:$ROOT_PASSWORD" | chpasswd
 else
-  echo "[nix2vast] Enabling passwordless root..."
+  echo "[nix2gpu] Enabling passwordless root..."
   passwd -d root
 fi
 
@@ -61,11 +61,11 @@ fi
 
 # // nvidia-smi // validation
 if [ -e /usr/bin/nvidia-smi ]; then
-  echo "[nix2vast] Testing nvidia-smi..."
+  echo "[nix2gpu] Testing nvidia-smi..."
 
   # First check if it needs patching
   if ! /usr/bin/nvidia-smi --version &>/dev/null; then
-    echo "[nix2vast] Patching nvidia-smi..."
+    echo "[nix2gpu] Patching nvidia-smi..."
 
     # Find the correct interpreter
     INTERP=$(find /nix/store -name "ld-linux-x86-64.so.2" -type f | head -1)
@@ -76,13 +76,13 @@ if [ -e /usr/bin/nvidia-smi ]; then
   fi
 
   if /usr/bin/nvidia-smi &>/dev/null; then
-    echo "[nix2vast] GPU ready: $(/usr/bin/nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | head -1)"
+    echo "[nix2gpu] GPU ready: $(/usr/bin/nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | head -1)"
   else
-    echo "[nix2vast] Warning: nvidia-smi not functional"
+    echo "[nix2gpu] Warning: nvidia-smi not functional"
     # Debug info
-    echo "[nix2vast] Library dependencies:"
+    echo "[nix2gpu] Library dependencies:"
     ldd /usr/bin/nvidia-smi 2>&1 | head -10 || true
-    echo "[nix2vast] Available NVIDIA libraries:"
+    echo "[nix2gpu] Available NVIDIA libraries:"
     printf '%s\n' /lib/x86_64-linux-gnu/libnvidia* 2>/dev/null | head -5
   fi
 fi
@@ -93,24 +93,24 @@ for type in rsa ecdsa ed25519; do
 done
 
 # // `tailscaled` // userspace
-echo "[nix2vast] Starting Tailscale daemon..."
+echo "[nix2gpu] Starting Tailscale daemon..."
 tailscaled --tun=userspace-networking --socket=/var/run/tailscale/tailscaled.sock 2>&1 &
 
 if [ -n "${TAILSCALE_AUTHKEY:-}" ]; then
-  echo "[nix2vast] authenticating tailscale..."
+  echo "[nix2gpu] authenticating tailscale..."
   sleep 3
   tailscale up --authkey="$TAILSCALE_AUTHKEY" --ssh &
 else
-  echo "[nix2vast] Tailscale running (no authkey provided)"
+  echo "[nix2gpu] Tailscale running (no authkey provided)"
 fi
 
-echo "[nix2vast] activating home-manager..."
+echo "[nix2gpu] activating home-manager..."
 home-manager-generation
 
 # // ssh // daemon
-echo "[nix2vast] starting ssh daemon..."
+echo "[nix2gpu] starting ssh daemon..."
 $(which sshd) -t || exit 1
 $(which sshd) -D -e &
 
 # // config // extra startup script
-echo "[nix2vast] running extra startup script..."
+echo "[nix2gpu] running extra startup script..."

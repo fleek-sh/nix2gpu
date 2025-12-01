@@ -1,5 +1,5 @@
 {
-  perSystem.nix2vast."nginx-test" = {
+  perSystem.nix2gpu."nginx-test" = {
     services.nginx."hello-world-server" = {
       enable = true;
       httpConfig = ''

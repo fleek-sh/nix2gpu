@@ -9,11 +9,11 @@ let
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
-    options.nix2vastUsers = mkOption {
+    options.nix2gpuUsers = mkOption {
       description = ''
-        users to place inside the generated nix2vast container.
+        users to place inside the generated nix2gpu container.
       '';
-      type = types.attrsOf config.nix2vastTypes.userDef;
+      type = types.attrsOf config.nix2gpuTypes.userDef;
       internal = true;
     };
   });
@@ -21,7 +21,7 @@ in
   config.perSystem =
     { pkgs, ... }:
     {
-      nix2vastUsers = {
+      nix2gpuUsers = {
         root = {
           uid = 0;
           gid = 0;

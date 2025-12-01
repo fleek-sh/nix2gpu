@@ -33,7 +33,7 @@ in
     default = with systemConfig; [
       allContainers.${name}.baseSystem
       allContainers.${name}.profile
-      nix2vastNixStoreProfile
+      nix2gpuNixStoreProfile
     ];
     defaultText = ''
       The generated base system from the other config options

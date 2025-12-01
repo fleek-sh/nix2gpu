@@ -14,7 +14,7 @@ in
       {
         options.startupScript = mkOption {
           description = ''
-            nix2vast container ${container.name} startup script.
+            nix2gpu container ${container.name} startup script.
           '';
           type = types.package;
           internal = true;
@@ -41,16 +41,16 @@ in
             let
               scriptText = ''
                 ${builtins.readFile ./startup.sh}
-                ${outerConfig.nix2vast.${container.name}.extraStartupScript}
+                ${outerConfig.nix2gpu.${container.name}.extraStartupScript}
 
                 if [[ $- != *i* ]] || ! [ -t 0 ]; then
                   export PC_DISABLE_TUI=true
                 fi
 
-                echo "[nix2vast] starting services..."
+                echo "[nix2gpu] starting services..."
                 ${container.name}-services
 
-                echo "[nix2vast] entering interactive terminal..."
+                echo "[nix2gpu] entering interactive terminal..."
                 exec bash
               '';
             in
@@ -61,7 +61,7 @@ in
               runtimeInputs = with config; [
                 environment.corePkgs
                 environment.networkPkgs
-                outerConfig.nix2vastHomeConfigurations.default.activationPackage
+                outerConfig.nix2gpuHomeConfigurations.default.activationPackage
                 self'.packages."${container.name}-services"
               ];
             };

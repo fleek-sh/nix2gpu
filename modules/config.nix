@@ -23,9 +23,9 @@ in
   options.perSystem = mkPerSystemOption (
     { pkgs, config, ... }:
     {
-      options.nix2vast = mkOption {
+      options.nix2gpu = mkOption {
         description = ''
-          `nix2vast` is a Nix-based container runtime that makes distributed GPU compute accessible and efficient.
+          `nix2gpu` is a Nix-based container runtime that makes distributed GPU compute accessible and efficient.
 
           it provides reproducible environments with `cuda` 12.8, `tailscale` networking,
           and a modern development toolset, turning any gpu into a coherent compute cluster.
@@ -42,7 +42,7 @@ in
           take a look at config options for individual containers inside ${../config}
         '';
         example = ''
-          perSystem.nix2vast.sample = { };
+          perSystem.nix2gpu.sample = { };
         '';
         type = containerAttrsOf (
           types.submodule (

@@ -12,7 +12,7 @@ in
     options.perContainer = config.flake.lib.mkPerContainerOption (_: {
       options.profile = mkOption {
         description = ''
-          nix2vast generated nix store profile.
+          nix2gpu generated nix store profile.
         '';
         type = types.package;
         internal = true;
@@ -27,7 +27,7 @@ in
         { config, ... }:
         {
           profile = pkgs.buildEnv {
-            name = "nix2vast-profile";
+            name = "nix2gpu-profile";
             paths = [ config.environment.allPkgs ];
             pathsToLink = [
               "/bin"

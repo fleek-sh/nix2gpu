@@ -1,11 +1,11 @@
 {
   # This example shows how one may run
   # [comfyui](https://www.comfy.org/)
-  # with `nix2vast`
+  # with `nix2gpu`
   perSystem =
     { pkgs, ... }:
     {
-      nix2vast."comfyui-service" = {
+      nix2gpu."comfyui-service" = {
         services.comfyui."comfyui-example" = {
           enable = true;
           models = [ pkgs.nixified-ai.models.stable-diffusion-v1-5 ];

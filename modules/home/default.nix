@@ -11,9 +11,9 @@ let
 in
 {
   options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
-    options.nix2vastHomeConfigurations = mkOption {
+    options.nix2gpuHomeConfigurations = mkOption {
       description = ''
-        nix2vast default home configuration.
+        nix2gpu default home configuration.
       '';
       type = types.lazyAttrsOf types.raw;
       internal = true;
@@ -24,7 +24,7 @@ in
       {
         options.homeConfigurations = mkOption {
           description = ''
-            nix2vast home configuration for ${container.name}.
+            nix2gpu home configuration for ${container.name}.
           '';
           type = types.lazyAttrsOf types.raw;
           internal = true;
@@ -39,7 +39,7 @@ in
     perSystem =
       { pkgs, ... }:
       {
-        nix2vastHomeConfigurations.default = home-manager.lib.homeManagerConfiguration {
+        nix2gpuHomeConfigurations.default = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = { inherit inputs; };
           modules = [

@@ -1,5 +1,5 @@
-site_name: nix2vast
-site_url: https://github.com/fleek-platform/nix2vast
+site_name: nix2gpu
+site_url: https://github.com/fleek-platform/nix2gpu
 theme:
   name: material
   palette:

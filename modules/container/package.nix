@@ -14,7 +14,7 @@ in
       {
         options.packages = mkOption {
           description = ''
-            nix2vast packages for ${container.name}.
+            nix2gpu packages for ${container.name}.
           '';
           type = types.lazyAttrsOf types.raw;
           internal = true;
@@ -45,7 +45,7 @@ in
                 name: val:
 
                 assert lib.assertMsg (lib.toUpper name == name) ''
-                  `nix2vast` env var names should be uppercase 
+                  `nix2gpu` env var names should be uppercase 
                   in order to be properly recognized.
 
                   The failing attribute name is `${name}`.

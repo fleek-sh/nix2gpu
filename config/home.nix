@@ -30,7 +30,7 @@ in
     inherit (systemConfig.homeConfigurations) default;
     defaultText = ''
       A sample home manager config with some nice defaults
-      from nix2vast
+      from nix2gpu
     '';
   };
 }

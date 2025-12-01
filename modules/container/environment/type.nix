@@ -12,7 +12,7 @@ in
     options.perContainer = config.flake.lib.mkPerContainerOption (_: {
       options.environment = mkOption {
         description = ''
-          nix2vast environment packages.
+          nix2gpu environment packages.
         '';
         type = types.attrsOf types.package;
         internal = true;

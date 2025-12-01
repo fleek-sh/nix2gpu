@@ -32,18 +32,18 @@ in
     type = types.attrsOf types.str;
     default = {
       "ai.vast.gpu" = "required";
-      "ai.vast.runtime" = "nix2vast";
+      "ai.vast.runtime" = "nix2gpu";
       "com.nvidia.volumes.needed" = "nvidia_driver";
-      "com.nvidia.cuda.version" = systemConfig.nix2vast.${name}.cudaPackages.cudatoolkit.version;
-      "org.opencontainers.image.source" = "https://github.com/fleek-platform/nix2vast";
+      "com.nvidia.cuda.version" = systemConfig.nix2gpu.${name}.cudaPackages.cudatoolkit.version;
+      "org.opencontainers.image.source" = "https://github.com/fleek-platform/nix2gpu";
       "org.opencontainers.image.description" = "Nix-based GPU container with Tailscale mesh";
     };
     defaultText = ''
       "ai.vast.gpu" = "required";
-      "ai.vast.runtime" = "nix2vast";
+      "ai.vast.runtime" = "nix2gpu";
       "com.nvidia.volumes.needed" = "nvidia_driver";
-      "com.nvidia.cuda.version" = systemConfig.nix2vast.<name>.cudaPackages.cudatoolkit.version;
-      "org.opencontainers.image.source" = "https://github.com/fleek-platform/nix2vast";
+      "com.nvidia.cuda.version" = systemConfig.nix2gpu.<name>.cudaPackages.cudatoolkit.version;
+      "org.opencontainers.image.source" = "https://github.com/fleek-platform/nix2gpu";
       "org.opencontainers.image.description" = "Nix-based GPU container with Tailscale mesh";
     '';
   };

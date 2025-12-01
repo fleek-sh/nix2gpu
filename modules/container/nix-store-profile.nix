@@ -5,9 +5,9 @@ let
 in
 {
   options.perSystem = mkPerSystemOption {
-    options.nix2vastNixStoreProfile = mkOption {
+    options.nix2gpuNixStoreProfile = mkOption {
       description = ''
-        nix2vast generated nix store profile.
+        nix2gpu generated nix store profile.
       '';
       type = types.package;
       internal = true;
@@ -17,7 +17,7 @@ in
   config.perSystem =
     { pkgs, ... }:
     {
-      nix2vastNixStoreProfile = pkgs.runCommand "nix-store-profile" { } ''
+      nix2gpuNixStoreProfile = pkgs.runCommand "nix-store-profile" { } ''
         mkdir -p $out/root
         mkdir -p $out/root/.nix-defexpr
         touch $out/root/.nix-channels

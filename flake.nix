@@ -1,5 +1,5 @@
 {
-  description = "nix2vast - nixos containers optimized for vast.ai compute";
+  description = "nix2gpu - nixos containers optimized for vast.ai compute";
 
   inputs = {
     # TODO: Return to actual nixpkgs once this is merged

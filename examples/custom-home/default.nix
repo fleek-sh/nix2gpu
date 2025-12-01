@@ -9,7 +9,7 @@ in
   perSystem =
     { pkgs, ... }:
     {
-      nix2vast."custom-home" = {
+      nix2gpu."custom-home" = {
         home = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = { inherit inputs; };
