@@ -1,4 +1,4 @@
-# // `nix2gpu` // `ComfyUI` setup guide
+# // `ComfyUI` setup guide //
 
 This guide covers a walk through of setting up `ComfyUI` inside a `nix2gpu` container, and then deploying it to `vast.ai`. It should hopefully also provide useful information to others trying to deploy different pieces of software too.
 
