@@ -63,6 +63,7 @@ in
         nativeBuildInputs = [
           config.pythonWithMkdocs
           pkgs.mkdocs
+          pkgs.makeWrapper
         ];
 
         preBuild = ''
@@ -90,8 +91,13 @@ in
 
           cp -r site/. "$out/share/nix2gpu/site"
 
+          makeWrapper "${lib.getExe pkgs.http-server}" "$out/bin/nix2gpu-docs" \
+            --chdir "$out/share/nix2gpu/site"
+
           runHook postInstall
         '';
+
+        meta.mainProgram = "nix2gpu-docs";
       };
     };
 }
