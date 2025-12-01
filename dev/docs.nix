@@ -39,7 +39,7 @@ in
     }:
     {
       render.inputs.self = {
-        baseUrl = "https://github.com/fleek-platform/nix2gpu/blob/main";
+        baseUrl = "https://github.com/weyl-ai/nix2gpu/blob/main";
         title = "// options //";
         sourceName = "nix2gpu";
         intro = ''

@@ -56,7 +56,7 @@ nix run .#sample.shell
 push to `ghcr.io`, point `vast.ai` at it:
 
 ```
-ghcr.io/fleek-platform/nix2gpu:20250914-142437
+ghcr.io/weyl-ai/nix2gpu:20250914-142437
 ```
 
 or run your own registry. we don't care.

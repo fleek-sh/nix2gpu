@@ -35,7 +35,7 @@ in
       "ai.vast.runtime" = "nix2gpu";
       "com.nvidia.volumes.needed" = "nvidia_driver";
       "com.nvidia.cuda.version" = systemConfig.nix2gpu.${name}.cudaPackages.cudatoolkit.version;
-      "org.opencontainers.image.source" = "https://github.com/fleek-platform/nix2gpu";
+      "org.opencontainers.image.source" = "https://github.com/weyl-ai/nix2gpu";
       "org.opencontainers.image.description" = "Nix-based GPU container with Tailscale mesh";
     };
     defaultText = ''
@@ -43,7 +43,7 @@ in
       "ai.vast.runtime" = "nix2gpu";
       "com.nvidia.volumes.needed" = "nvidia_driver";
       "com.nvidia.cuda.version" = systemConfig.nix2gpu.<name>.cudaPackages.cudatoolkit.version;
-      "org.opencontainers.image.source" = "https://github.com/fleek-platform/nix2gpu";
+      "org.opencontainers.image.source" = "https://github.com/weyl-ai/nix2gpu";
       "org.opencontainers.image.description" = "Nix-based GPU container with Tailscale mesh";
     '';
   };

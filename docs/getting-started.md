@@ -35,7 +35,7 @@ git commit -m "nix flake init"
 You will now have a new git repository with an empty `flake.nix`. Edit this to add
 
 ```nix
-nix2gpu.url = "github:fleek-platform/nix2gpu?ref=baileylu/public-api";
+nix2gpu.url = "github:weyl-ai/nix2gpu?ref=baileylu/public-api";
 
 systems.url = "github:nix-systems/default";
 
@@ -64,7 +64,7 @@ outputs =
 
 # Select a `nix2gpu` starter config to use
 
-Take a look in the [examples folder](https://github.com/fleek-platform/nix2gpu/tree/baileylu/public-api/examples) and pick one which looks useful.
+Take a look in the [examples folder](https://github.com/weyl-ai/nix2gpu/tree/baileylu/public-api/examples) and pick one which looks useful.
 
 Going forward, we will use the `comfyui.nix` example.
 
@@ -81,7 +81,7 @@ We can run this in `nix2gpu` like (replacing the `perSystem.nix2gpu` from earlie
         models = [ pkgs.nixified-ai.models.stable-diffusion-v1-5 ];
       };
 
-      registry = "ghcr.io/fleek-platform";
+      registry = "ghcr.io/weyl-ai";
 
       exposedPorts = {
         "22/tcp" = { };
