@@ -81,7 +81,7 @@ We can run this in `nix2gpu` like (replacing the `perSystem.nix2gpu` from earlie
         models = [ pkgs.nixified-ai.models.stable-diffusion-v1-5 ];
       };
 
-      registry = "ghcr.io/weyl-ai";
+      registries = [ "ghcr.io/weyl-ai" ];
 
       exposedPorts = {
         "22/tcp" = { };
