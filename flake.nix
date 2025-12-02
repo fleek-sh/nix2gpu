@@ -34,6 +34,13 @@
       inputs.flake-parts.follows = "flake-parts";
     };
 
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     flake-parts-website = {
       url = "github:baileylutcd/flake.parts-website?ref=expose-render-module";
       inputs.nixpkgs.follows = "nixpkgs";
