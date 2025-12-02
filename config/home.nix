@@ -16,6 +16,16 @@ in
       By default, a minimal set of useful modern shell packages
       is included to provide a comfortable and secure hacking
       environment on your machines.
+
+      To use this, you must first enable the optional `home-manager` 
+      integration by adding it to your flake inputs:
+
+      ```nix
+      inputs.home-manager = {
+        url = "github:nix-community/home-manager";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
+      ```
     '';
     example = ''
       home = home-manager.lib.homeManagerConfiguration {
