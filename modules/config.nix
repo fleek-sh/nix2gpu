@@ -1,5 +1,4 @@
 {
-  inputs,
   config,
   lib,
   flake-parts-lib,
@@ -48,7 +47,12 @@ in
           types.submodule (
             { name, ... }:
             {
-              imports = [ (inputs.import-tree ../config) ];
+              imports = lib.pipe ../config [
+                builtins.readDir
+                (lib.filterAttrs (_name: type: type == "regular"))
+                builtins.attrNames
+                (map (file: ../config/${file}))
+              ];
 
               options = {
                 name = mkOption {

@@ -9,8 +9,10 @@ let
   inherit (lib) types mkOption;
   inherit (inputs) home-manager;
 in
-{
-  options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
+lib.optionalAttrs (inputs ? home-manager) {
+  imports = [ home-manager.flakeModules.default ];
+
+  options.perSystem = flake-parts-lib.mkPerSystemOption {
     options.nix2gpuHomeConfigurations = mkOption {
       description = ''
         nix2gpu default home configuration.
@@ -31,30 +33,26 @@ in
         };
       }
     );
-  });
-
-  imports = [ home-manager.flakeModules.default ];
-
-  config = {
-    perSystem =
-      { pkgs, ... }:
-      {
-        nix2gpuHomeConfigurations.default = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = { inherit inputs; };
-          modules = [
-            ./_tmux
-            ./_starship
-            ./_bash
-            ./_config.nix
-          ];
-        };
-
-        perContainer =
-          { container, ... }:
-          {
-            homeConfigurations."${container.name}-home" = container.options.home;
-          };
-      };
   };
+
+  config.perSystem =
+    { pkgs, ... }:
+    {
+      nix2gpuHomeConfigurations.default = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        extraSpecialArgs = { inherit inputs; };
+        modules = [
+          ./_tmux
+          ./_starship
+          ./_bash
+          ./_config.nix
+        ];
+      };
+
+      perContainer =
+        { container, ... }:
+        {
+          homeConfigurations."${container.name}-home" = container.options.home;
+        };
+    };
 }
