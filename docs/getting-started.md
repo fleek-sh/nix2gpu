@@ -40,6 +40,13 @@ nix2gpu.url = "github:weyl-ai/nix2gpu?ref=baileylu/public-api";
 systems.url = "github:nix-systems/default";
 
 flake-parts.url = "github:hercules-ci/flake-parts";
+
+# Enable services integration
+services-flake.url = "github:juspay/services-flake";
+process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
+
+# Build containers faster
+nix2container.url = "github:nlewo/nix2container";
 ```
 
 Into the `inputs` section.

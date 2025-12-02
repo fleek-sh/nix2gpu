@@ -11,6 +11,7 @@ ______________________________________________________________________
 - **[architecture](architecture.md)** — how it works internally
 - **[services & runtime](services.md)** — process-compose, startup sequence
 - **[secrets & agenix](secrets.md)** — keys never touch the nix store
+- **[integrations](integrations.md)** — integrations with the nix ecosystem
 
 ______________________________________________________________________
 
