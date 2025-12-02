@@ -8,7 +8,7 @@ ______________________________________________________________________
 
 ## // `nix2container` //
 
-`nix2container` is an archive-less `dockerTools.buildImage` implementation which provides an efficient container workflow for building containers with Nix.
+[`nix2container`](https://github.com/nlewo/nix2container) is an archive-less `dockerTools.buildImage` implementation which provides an efficient container workflow for building containers with Nix.
 
 You may use it to generate your `nix2gpu` containers instead optionally by adding it to your `flake.nix`:
 
@@ -20,7 +20,7 @@ ______________________________________________________________________
 
 ## // `services-flake` //
 
-`services-flake` provides declarative, composable and reproducible services for Nix development environments. `nix2gpu` has an optional extension to allow:
+[`services-flake`](https://github.com/juspay/services-flake) provides declarative, composable and reproducible services for Nix development environments. `nix2gpu` has an optional extension to allow:
 
 - Managing in container services with `process-compose` as a lightweight alternative to `systemd`.
 - Usage of custom AI related services like `ComfyUI`.
@@ -32,13 +32,13 @@ inputs.services-flake.url = "github:juspay/services-flake";
 inputs.process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
 ```
 
-To configure your services, see the [services option](./options.md#persystemnix2vastcontainerservices) for more details.
+To configure your services, see the [services option](./options.md#persystemnix2gpucontainerservices) for more details.
 
 ______________________________________________________________________
 
 ## // `home-manager` //
 
-`home-manager` allows you to manage a user environment using Nix, which might be useful for adding various tools and programs to a `nix2gpu` container in a
+[`home-manager`](https://github.com/nix-community/home-manager) allows you to manage a user environment using Nix, which might be useful for adding various tools and programs to a `nix2gpu` container in a
 modular, declarative way.
 
 You may use it to manage your `nix2gpu` containers' home directory by adding it to your `flake.nix`:
@@ -50,4 +50,4 @@ inputs.home-manager = {
 };
 ```
 
-To configure your services, see the [home option](./options.md#persystemnix2vastcontainerhome) for more details.
+To configure your services, see the [home option](./options.md#persystemnix2gpucontainerhome) for more details.
