@@ -17,6 +17,18 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
+## // enabling services generation //
+
+To enable generation and spawning of services from inside your `nix2gpu` container,
+add the following to your `flake.nix`:
+
+```nix
+inputs.services-flake.url = "github:juspay/services-flake";
+inputs.process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
+```
+
+______________________________________________________________________
+
 ## // basic service configuration //
 
 ### **web server example**
