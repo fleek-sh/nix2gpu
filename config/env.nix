@@ -1,6 +1,6 @@
 { config, lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption literalExpression;
   inherit (config) pkgs;
 in
 {
@@ -21,7 +21,7 @@ in
       > This is a direct mapping to the `Env` attribute of the [oci container
       > spec](https://github.com/opencontainers/image-spec/blob/8b9d41f48198a7d6d0a5c1a12dc2d1f7f47fc97f/specs-go/v1/config.go#L23). 
     '';
-    example = ''
+    example = literalExpression ''
       env = {
         MY_CUSTOM_VARIABLE = "hello";
         ANOTHER_VARIABLE = "world";
@@ -48,7 +48,7 @@ in
       TERM = "xterm-256color";
       USER = "root";
     };
-    defaultText = ''
+    defaultText = literalExpression ''
       CUDA_VERSION = "The cuda version from cuda packages";
       CURL_CA_BUNDLE = "/etc/ssl/certs/ca-bundle.crt";
       HOME = "/root";

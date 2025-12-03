@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption literalExpression;
 in
 {
   options.tag = mkOption {
@@ -15,7 +15,7 @@ in
       recent build. However, it is highly recommended to use more descriptive
       tags for production images, such as version numbers or git commit hashes.
     '';
-    example = ''
+    example = literalExpression ''
       tag = "v1.2.3";
     '';
     type = types.str;

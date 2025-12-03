@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption literalExpression;
 in
 {
   options.maxLayers = mkOption {
@@ -18,7 +18,7 @@ in
       > [`maxLayers`](https://github.com/nlewo/nix2container?tab=readme-ov-file#nix2containerbuildimage)
       > attribute from [`nix2container`](https://github.com/nlewo/nix2container).
     '';
-    example = ''
+    example = literalExpression ''
       maxLayers = 100;
     '';
     type = types.int;

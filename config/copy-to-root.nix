@@ -1,6 +1,11 @@
 { config, lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib)
+    types
+    mkOption
+    literalExpression
+    literalMD
+    ;
   inherit (config) systemConfig name;
 in
 {
@@ -23,7 +28,7 @@ in
       > [`copyToRoot`](https://github.com/nlewo/nix2container?tab=readme-ov-file#nix2containerbuildimage)
       > attribute from [`nix2container`](https://github.com/nlewo/nix2container).
     '';
-    example = ''
+    example = literalExpression ''
       copyToRoot = with pkgs; [
         coreutils
         git
@@ -35,7 +40,7 @@ in
       allContainers.${name}.profile
       nix2gpuNixStoreProfile
     ];
-    defaultText = ''
+    defaultText = literalMD ''
       The generated base system from the other config options
     '';
   };

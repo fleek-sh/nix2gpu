@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption literalExpression;
 in
 {
   options.extraStartupScript = mkOption {
@@ -14,7 +14,7 @@ in
       This is useful for tasks such as starting services, running background
       processes, or printing diagnostic information.
     '';
-    example = ''
+    example = literalExpression ''
       extraStartupScript = '''
         echo "Launching custom startup script process..."
         # Start a background service

@@ -2544,16 +2544,16 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1763211878,
-        "narHash": "sha256-q0+4iTYKkRu5WmveMXwMFF8Ld4kZVykdb6dt4xRrXw8=",
-        "owner": "baileyluTCD",
+        "lastModified": 1764785507,
+        "narHash": "sha256-vA+7Ae7FRL1rpsLWjUtv5hdk3bkdUIMiRtTAzaehhLk=",
+        "owner": "weyl-ai",
         "repo": "nixpkgs",
-        "rev": "d37eea6b6e1a2a8e8be76b7fd299ab030713a917",
+        "rev": "88486cb70b9014229f61a14f5e12c1f1331a603e",
         "type": "github"
       },
       "original": {
-        "owner": "baileyluTCD",
-        "ref": "init-vastcli",
+        "owner": "weyl-ai",
+        "ref": "handle-code-nixos-render-doc",
         "repo": "nixpkgs",
         "type": "github"
       }

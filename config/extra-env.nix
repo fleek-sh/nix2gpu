@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption literalExpression;
 in
 {
   options.extraEnv = mkOption {
@@ -13,7 +13,7 @@ in
 
       This is the recommended way to add your own custom environment variables.
     '';
-    example = ''
+    example = literalExpression ''
       extraEnv = {
         DATABASE_URL = "postgres://user:password@host:port/db";
         NIXPKGS_ALLOW_UNFREE = "1";

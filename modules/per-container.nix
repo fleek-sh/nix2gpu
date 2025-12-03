@@ -1,6 +1,6 @@
 { lib, flake-parts-lib, ... }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption types literalExpression;
 
   throwShouldBeTopError =
     param:
@@ -101,7 +101,7 @@ in
           };
         });
         apply = evaluteModulesPerContainer;
-        example = ''
+        example = literalExpression ''
           { flake-parts-lib, lib, inputs, ...}:
           let
             inherit (lib) types mkOption;
