@@ -14,7 +14,7 @@ in
     example = ''
       registries = [ "ghcr.io/my-org/my-image" ];
     '';
-    type = types.str;
+    type = types.listOf types.str;
     default = [ ];
   };
 }
