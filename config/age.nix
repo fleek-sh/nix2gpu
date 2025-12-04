@@ -166,39 +166,41 @@ let
     '';
 
   ageType = types.submodule {
-    package = mkPackageOption pkgs "age" { };
+    options = {
+      package = mkPackageOption pkgs "age" { };
 
-    secrets = mkOption {
-      type = types.attrsOf secretType;
-      default = { };
-      description = ''
-        Attrset of secrets.
-      '';
-    };
+      secrets = mkOption {
+        type = types.attrsOf secretType;
+        default = { };
+        description = ''
+          Attrset of secrets.
+        '';
+      };
 
-    identityPaths = mkOption {
-      type = types.listOf types.path;
-      default = [ ];
-      description = ''
-        Paths to SSH keys to be used as identities in age decryption.
-      '';
-    };
+      identityPaths = mkOption {
+        type = types.listOf types.path;
+        default = [ ];
+        description = ''
+          Paths to SSH keys to be used as identities in age decryption.
+        '';
+      };
 
-    secretsDir = mkOption {
-      type = types.str;
-      default = userDirectory "agenix";
-      defaultText = userDirectoryDescription "agenix";
-      description = ''
-        Folder where secrets are symlinked to
-      '';
-    };
+      secretsDir = mkOption {
+        type = types.str;
+        default = userDirectory "agenix";
+        defaultText = userDirectoryDescription "agenix";
+        description = ''
+          Folder where secrets are symlinked to
+        '';
+      };
 
-    secretsMountPoint = mkOption {
-      default = userDirectory "agenix.d";
-      defaultText = userDirectoryDescription "agenix.d";
-      description = ''
-        Where secrets are created before they are symlinked to ''${cfg.secretsDir}
-      '';
+      secretsMountPoint = mkOption {
+        default = userDirectory "agenix.d";
+        defaultText = userDirectoryDescription "agenix.d";
+        description = ''
+          Where secrets are created before they are symlinked to ''${cfg.secretsDir}
+        '';
+      };
     };
   };
 in

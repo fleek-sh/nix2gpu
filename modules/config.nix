@@ -2,10 +2,11 @@
   config,
   lib,
   flake-parts-lib,
+  inputs,
   ...
 }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption literalExpression;
   inherit (flake-parts-lib) mkPerSystemOption;
 
   rootConfig = config;
@@ -40,7 +41,7 @@ in
           configuration options:
           take a look at config options for individual containers inside ${../config}
         '';
-        example = ''
+        example = literalExpression ''
           perSystem.nix2gpu.sample = { };
         '';
         type = containerAttrsOf (
@@ -73,6 +74,8 @@ in
                   default = pkgs;
                 };
               };
+
+              config._module.args = { inherit inputs; };
             }
           )
         );
