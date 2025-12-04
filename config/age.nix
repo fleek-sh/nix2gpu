@@ -223,17 +223,13 @@ in
     type = ageType;
   };
 
-  config = mkIf (cfg.secrets != { } && inputs ? agenix) {
-    assertions = [
-      {
-        assertion = cfg.identityPaths != [ ];
-        message = "age.identityPaths must be set.";
-      }
-    ];
-
-    extraStartupScript = config.extraStartupScript ++ ''
-      echo [nix2gpu] Running agenix mounting script:
-      ${mountingScript}
-    '';
-  };
+  config = mkIf (cfg.secrets != { } && inputs ? agenix) (
+    assert lib.assertMsg (cfg.identityPaths != [ ]) "age.identityPaths must be set.";
+    {
+      extraStartupScript = config.extraStartupScript ++ ''
+        echo [nix2gpu] Running agenix mounting script:
+        ${mountingScript}
+      '';
+    }
+  );
 }
