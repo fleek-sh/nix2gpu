@@ -327,15 +327,12 @@ ______________________________________________________________________
 ### **agenix integration**
 
 ```nix
-# host system (NixOS)
-age.secrets.tailscale-key = {
-  file = ./secrets/ts-key.age;
-  path = "/run/secrets/ts-key";  # decrypted here
-};
-
-# container config
 nix2gpu."my-container" = {
-  secrets.tailscale-auth.path = "/run/secrets/ts-key";  # reference path
+  age.secrets.tailscale-key = {
+    file = ./secrets/ts-key.age;
+    path = "/run/secrets/ts-key";
+  };
+
   tailscale.authKeyFile = config.secrets.tailscale-auth.path;
 };
 ```
