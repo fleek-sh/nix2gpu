@@ -179,7 +179,10 @@ let
 
       identityPaths = mkOption {
         type = types.listOf types.path;
-        default = [ ];
+        default = [
+          "/home/${config.user}/.ssh/id_ed25519"
+          "/home/${config.user}/.ssh/id_rsa"
+        ];
         description = ''
           Paths to SSH keys to be used as identities in age decryption.
         '';
@@ -229,8 +232,7 @@ in
   config = mkIf (cfg.secrets != { } && inputs ? agenix) {
     extraStartupScript =
       assert lib.assertMsg (cfg.identityPaths != [ ]) "age.identityPaths must be set.";
-      config.extraStartupScript
-      ++ ''
+      ''
         echo [nix2gpu] Running agenix mounting script:
         ${mountingScript}
       '';

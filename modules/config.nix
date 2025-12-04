@@ -75,7 +75,7 @@ in
                 };
               };
 
-              config._module.args = { inherit inputs; };
+              config._module.args = { inherit inputs pkgs; };
             }
           )
         );

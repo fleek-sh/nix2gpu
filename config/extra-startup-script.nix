@@ -1,6 +1,6 @@
-{ lib, ... }:
+{ lib, config, ... }:
 let
-  inherit (lib) types mkOption literalExpression;
+  inherit (lib) mkOption literalExpression mkOptionType;
 in
 {
   options.extraStartupScript = mkOption {
@@ -21,7 +21,12 @@ in
         my-service &
       ''';
     '';
-    type = types.str;
+    type = mkOptionType {
+      name = "concatable-str";
+      description = "string (concatenated when merged)";
+      check = lib.isString;
+      merge = loc: defs: lib.concatStrings (map (d: d.value) defs);
+    };
     default = "";
   };
 }

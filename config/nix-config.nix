@@ -6,6 +6,8 @@ let
     literalExpression
     literalMD
     ;
+
+  defaultContents = builtins.readFile ../modules/container/config/nix.conf;
 in
 {
   options.nixConfig = mkOption {
@@ -28,9 +30,10 @@ in
       ''';
     '';
     type = types.str;
-    default = literalMD ''
+    default = defaultContents;
+    defaultText = literalMD ''
       ```
-      ${builtins.readFile ../modules/container/config/nix.conf}
+      ${defaultContents}
       ```
     '';
   };
