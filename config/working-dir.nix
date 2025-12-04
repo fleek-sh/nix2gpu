@@ -24,6 +24,7 @@ in
       workingDir = "/app";
     '';
     type = types.str;
-    default = literalMD "`/root`";
+    default = "`/root`";
+    defaultText = literalMD "`/root`";
   };
 }

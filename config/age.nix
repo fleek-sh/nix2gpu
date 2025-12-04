@@ -221,15 +221,16 @@ in
       };
     '';
     type = ageType;
+    default = { };
   };
 
-  config = mkIf (cfg.secrets != { } && inputs ? agenix) (
-    assert lib.assertMsg (cfg.identityPaths != [ ]) "age.identityPaths must be set.";
-    {
-      extraStartupScript = config.extraStartupScript ++ ''
+  config = mkIf (cfg.secrets != { } && inputs ? agenix) {
+    extraStartupScript =
+      assert lib.assertMsg (cfg.identityPaths != [ ]) "age.identityPaths must be set.";
+      config.extraStartupScript
+      ++ ''
         echo [nix2gpu] Running agenix mounting script:
         ${mountingScript}
       '';
-    }
-  );
+  };
 }
