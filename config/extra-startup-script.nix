@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, ... }:
 let
   inherit (lib) mkOption literalExpression mkOptionType;
 in
@@ -25,7 +25,7 @@ in
       name = "concatable-str";
       description = "string (concatenated when merged)";
       check = lib.isString;
-      merge = loc: defs: lib.concatStrings (map (d: d.value) defs);
+      merge = _loc: defs: lib.concatStrings (map (d: d.value) defs);
     };
     default = "";
   };

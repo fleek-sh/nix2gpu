@@ -7,8 +7,5 @@
       file = ./example.age;
       path = "/run/secrets/example";
     };
-    extraStartupScript = ''
-      hello world!
-    '';
   };
 }
