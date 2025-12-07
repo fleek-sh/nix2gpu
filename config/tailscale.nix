@@ -10,12 +10,28 @@ let
     mkEnableOption
     mkOption
     literalExpression
+    literalMD
     mkIf
     ;
 
-  cfg = config.age;
+  cfg = config.tailscale;
 
-  tailscaleType = types.submodule { enable = mkEnableOption "enable the tailscale daemon"; };
+  tailscaleType = types.submodule {
+    options = {
+      enable = mkEnableOption "enable the tailscale daemon";
+
+      authKey = mkOption {
+        description = ''
+          Runtime path to valid tailscale auth key
+        '';
+        example = literalMD ''
+          `/etc/default/tailscaled`
+        '';
+        type = types.str;
+        default = "";
+      };
+    };
+  };
 in
 {
   options.tailscale = mkOption {
@@ -38,6 +54,12 @@ in
     extraCopyToRoot = with pkgs; [ tailscale ];
 
     extraStartupScript = ''
+      if [[ -f "${cfg.authKey}" ]]; then
+        export TAILSCALE_AUTHKEY="${cfg.authKey}"
+      else
+        printf '\033[33mWarning:\033[0m %s.\n' 'Path "${cfg.authKey}" does not exist (set via "cfg.authKey"), TAILSCALE_AUTHKEY will not be set'
+      fi
+
       mkdir -p /var/lib/tailscale
 
       echo "[nix2gpu] Starting Tailscale daemon..."
