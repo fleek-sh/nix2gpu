@@ -33,12 +33,13 @@ in
     }:
     let
       outerConfig = config;
-
-      hasServices = inputs ? services-flake && inputs ? process-compose-flake;
     in
     {
       perContainer =
         { container, config, ... }:
+        let
+          hasServices = inputs ? services-flake && inputs ? process-compose-flake && container ? services;
+        in
         {
           startupScript =
             let
@@ -52,11 +53,11 @@ in
 
                 ${outerConfig.nix2gpu.${container.name}.extraStartupScript}
 
-                if [[ $- != *i* ]] || ! [ -t 0 ]; then
-                  export PC_DISABLE_TUI=true
-                fi
-
                 ${lib.optionalString hasServices ''
+                  if [[ $- != *i* ]] || ! [ -t 0 ]; then
+                    export PC_DISABLE_TUI=true
+                  fi
+
                   echo "[nix2gpu] starting services..."
                   ${container.name}-services
                 ''}
