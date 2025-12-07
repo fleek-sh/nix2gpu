@@ -138,19 +138,15 @@ let
     }
   );
 
-  mountingScript =
-    let
-      app = pkgs.writeShellApplication {
-        name = "agenix-nix2gpu-mount-secrets";
-        runtimeInputs = with pkgs; [ coreutils ];
-        text = ''
-          ${newGeneration}
-          ${installSecrets}
-          exit 0
-        '';
-      };
-    in
-    lib.getExe app;
+  mountingScript = pkgs.writeShellApplication {
+    name = "agenix-nix2gpu-mount-secrets";
+    runtimeInputs = with pkgs; [ coreutils ];
+    text = ''
+      ${newGeneration}
+      ${installSecrets}
+      exit 0
+    '';
+  };
 
   userDirectory =
     dir:
@@ -230,11 +226,13 @@ in
   };
 
   config = mkIf (cfg.secrets != { } && inputs ? agenix) {
+    extraCopyToRoot = [ mountingScript ];
+
     extraStartupScript =
       assert lib.assertMsg (cfg.identityPaths != [ ]) "age.identityPaths must be set.";
       ''
         echo [nix2gpu] Running agenix mounting script:
-        ${mountingScript} || printf '\033[33mWarning:\033[0m %s.\n' 'Failed to decrypt your agenix secrets, this may cause errors down the line'
+        ${lib.getExe mountingScript} || printf '\033[33mWarning:\033[0m %s.\n' 'Failed to decrypt your agenix secrets, this may cause errors down the line'
       '';
   };
 }
