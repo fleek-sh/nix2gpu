@@ -1,4 +1,10 @@
+# shellcheck shell=bash
 set -euo pipefail
+
+if ! [ -v out ]; then
+  printf '\033[31mError:\033[0m %s.\n' "'out' was not defined, please make sure you are running this in a nix build script"
+  exit 1
+fi
 
 # // FHS // directories
 mkdir -p \
