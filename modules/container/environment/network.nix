@@ -14,7 +14,6 @@
             netcat-gnu
             openssh
             rclone
-            tailscale
             wget
           ];
         };
