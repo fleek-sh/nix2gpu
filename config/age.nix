@@ -141,7 +141,7 @@ let
   mountingScript =
     let
       app = pkgs.writeShellApplication {
-        name = "agenix-home-manager-mount-secrets";
+        name = "agenix-nix2gpu-mount-secrets";
         runtimeInputs = with pkgs; [ coreutils ];
         text = ''
           ${newGeneration}
@@ -167,7 +167,7 @@ let
 
   ageType = types.submodule {
     options = {
-      package = mkPackageOption pkgs "age" { };
+      package = mkPackageOption pkgs "rage" { };
 
       secrets = mkOption {
         type = types.attrsOf secretType;
@@ -179,9 +179,9 @@ let
 
       identityPaths = mkOption {
         type = types.listOf types.path;
-        default = [
-          "/home/${config.user}/.ssh/id_ed25519"
-          "/home/${config.user}/.ssh/id_rsa"
+        default = map (type: "/etc/ssh/ssh_host_${type}_key") [
+          "rsa"
+          "ed25519"
         ];
         description = ''
           Paths to SSH keys to be used as identities in age decryption.
@@ -234,7 +234,7 @@ in
       assert lib.assertMsg (cfg.identityPaths != [ ]) "age.identityPaths must be set.";
       ''
         echo [nix2gpu] Running agenix mounting script:
-        ${mountingScript}
+        ${mountingScript} || printf '\033[33mWarning:\033[0m %s.\n' 'Failed to decrypt your agenix secrets, this may cause errors down the line'
       '';
   };
 }

@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 echo "[nix2gpu] Container initialization starting..."
 
 # // critical // runtime directories
@@ -87,7 +88,7 @@ if [ -e /usr/bin/nvidia-smi ]; then
   fi
 fi
 
-for type in rsa ecdsa ed25519; do
+for type in rsa ed25519; do
   key="/etc/ssh/ssh_host_${type}_key"
   [ ! -f "$key" ] && ssh-keygen -t "$type" -f "$key" -N "" >/dev/null 2>&1
 done
@@ -104,13 +105,20 @@ else
   echo "[nix2gpu] Tailscale running (no authkey provided)"
 fi
 
-echo "[nix2gpu] activating home-manager..."
-home-manager-generation
-
 # // ssh // daemon
+mkdir -p "$HOME/.ssh"
 echo "[nix2gpu] starting ssh daemon..."
 $(which sshd) -t || exit 1
 $(which sshd) -D -e &
+
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_DATA_DIRS="/usr/local/share:/usr/share"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CONFIG_DIRS="/etc/xdg"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_RUNTIME_DIR="/run/user/$UID"
+export XDG_BIN_HOME="$HOME/.local/bin"
 
 # // config // extra startup script
 echo "[nix2gpu] running extra startup script..."
