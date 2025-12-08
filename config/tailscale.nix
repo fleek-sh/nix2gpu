@@ -57,7 +57,7 @@ in
       if [[ -f "${cfg.authKey}" ]]; then
         export TAILSCALE_AUTHKEY="${cfg.authKey}"
       else
-        printf '\033[33mWarning:\033[0m %s.\n' 'Path "${cfg.authKey}" does not exist (set via "cfg.authKey"), TAILSCALE_AUTHKEY will not be set'
+        printf '\033[33m[nix2gpu] warning:\033[0m %s.\n' 'Path "${cfg.authKey}" does not exist (set via "cfg.authKey"), TAILSCALE_AUTHKEY will not be set'
       fi
 
       mkdir -p /var/lib/tailscale
