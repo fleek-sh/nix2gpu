@@ -57,6 +57,7 @@ in
       if [[ -f "${cfg.authKey}" ]]; then
         export TAILSCALE_AUTHKEY="${cfg.authKey}"
       else
+        # shellcheck disable=SC2016
         printf '\033[33m[nix2gpu] warning:\033[0m %s.\n' 'Path "${cfg.authKey}" does not exist (set via "cfg.authKey"), TAILSCALE_AUTHKEY will not be set'
       fi
 
