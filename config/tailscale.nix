@@ -51,7 +51,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    extraCopyToRoot = with pkgs; [ tailscale ];
+    systemPackages = with pkgs; [ tailscale ];
 
     extraStartupScript = ''
       if [[ -f "${cfg.authKey}" ]]; then

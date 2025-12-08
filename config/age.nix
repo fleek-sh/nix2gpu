@@ -226,7 +226,7 @@ in
   };
 
   config = mkIf (cfg.secrets != { } && inputs ? agenix) {
-    extraCopyToRoot = [ mountingScript ];
+    systemPackages = [ mountingScript ];
 
     extraStartupScript =
       assert lib.assertMsg (cfg.identityPaths != [ ]) "age.identityPaths must be set.";
