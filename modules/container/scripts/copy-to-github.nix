@@ -28,6 +28,7 @@
                 exit 1
               ''}
 
+              # shellcheck disable=SC2043,SC2016
               for registry in ${builtins.concatStringsSep " " container.options.registries}; do
                 IMAGE="${container.name}:${container.options.tag}"
 
