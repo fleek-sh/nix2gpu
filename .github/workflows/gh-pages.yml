@@ -1,8 +1,8 @@
-name: Deploy nix2vast documentation
+name: Deploy nix2gpu documentation
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 permissions:
   contents: read
@@ -23,7 +23,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: result/share/nix2vast/site/
+          path: result/share/nix2gpu/site/
   deploy:
     needs: build-config
     environment:
