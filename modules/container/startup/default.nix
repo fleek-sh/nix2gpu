@@ -38,7 +38,8 @@ in
       perContainer =
         { container, config, ... }:
         let
-          hasServices = inputs ? services-flake && inputs ? process-compose-flake && container ? services;
+          hasServices =
+            inputs ? services-flake && inputs ? process-compose-flake && container.options ? services;
         in
         {
           startupScript =
