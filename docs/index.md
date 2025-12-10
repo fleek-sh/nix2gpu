@@ -10,6 +10,8 @@ ______________________________________________________________________
 - **[options reference](options.md)** — all the knobs
 - **[architecture](architecture.md)** — how it works internally
 - **[services & runtime](services.md)** — process-compose, startup sequence
+- **[defining custom services](custom-service.md)** — add your own service
+  modules
 - **[secrets & agenix](secrets.md)** — keys never touch the nix store
 - **[integrations](integrations.md)** — integrations with the nix ecosystem
 
