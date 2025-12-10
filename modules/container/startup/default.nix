@@ -53,17 +53,22 @@ in
 
                 ${outerConfig.nix2gpu.${container.name}.extraStartupScript}
 
-                ${if hasServices then ''
-                  if [[ $- != *i* ]] || ! [ -t 0 ]; then
-                    export PC_DISABLE_TUI=true
-                  fi
+                ${
+                  if hasServices then
+                    ''
+                      if [[ $- != *i* ]] || ! [ -t 0 ]; then
+                        export PC_DISABLE_TUI=true
+                      fi
 
-                  echo "[nix2gpu] starting services..."
-                  ${container.name}-services
-                '' else ''
-                  echo "[nix2gpu] entering interactive terminal..."
-                  sleep infinity
-                ''}
+                      echo "[nix2gpu] starting services..."
+                      ${container.name}-services
+                    ''
+                  else
+                    ''
+                      echo "[nix2gpu] entering interactive terminal..."
+                      sleep infinity
+                    ''
+                }
               '';
             in
             pkgs.writeShellApplication {
