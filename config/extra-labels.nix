@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption literalExpression;
 in
 {
   options.extraLabels = mkOption {
@@ -17,7 +17,7 @@ in
       This is the recommended way to add more labels to your project 
       rather than overriding labels.
     '';
-    example = ''
+    example = literalExpression ''
       extraLabels = {
         "com.example.vendor" = "My Company";
         "com.example.project" = "My Project";

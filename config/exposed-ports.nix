@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption literalExpression;
 in
 {
   options.exposedPorts = mkOption {
@@ -16,7 +16,7 @@ in
       > This is a direct mapping to the `ExposedPorts` attribute of the [oci container
       > spec](https://github.com/opencontainers/image-spec/blob/8b9d41f48198a7d6d0a5c1a12dc2d1f7f47fc97f/specs-go/v1/config.go#L23). 
     '';
-    example = ''
+    example = literalExpression ''
       exposedPorts = {
         "8080/tcp" = {};
         "443/tcp" = {};

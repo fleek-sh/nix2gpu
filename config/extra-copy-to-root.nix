@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption literalExpression;
 in
 {
   options.extraCopyToRoot = mkOption {
@@ -14,7 +14,7 @@ in
       This is the recommended way to add your own packages to the container's
       root directory.
     '';
-    example = ''
+    example = literalExpression ''
       extraCopyToRoot = with pkgs; [
         btop
         neovim

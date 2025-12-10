@@ -1,6 +1,6 @@
 { config, lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption literalExpression;
   inherit (config) systemConfig name;
 in
 {
@@ -23,7 +23,7 @@ in
       > spec](https://github.com/opencontainers/image-spec/blob/8b9d41f48198a7d6d0a5c1a12dc2d1f7f47fc97f/specs-go/v1/config.go#L23). 
     '';
 
-    example = ''
+    example = literalExpression ''
       labels = {
         "my.custom.label" = "some-value";
         "another.label" = "another-value";
@@ -38,7 +38,7 @@ in
       "org.opencontainers.image.source" = "https://github.com/weyl-ai/nix2gpu";
       "org.opencontainers.image.description" = "Nix-based GPU container with Tailscale mesh";
     };
-    defaultText = ''
+    defaultText = literalExpression ''
       "ai.vast.gpu" = "required";
       "ai.vast.runtime" = "nix2gpu";
       "com.nvidia.volumes.needed" = "nvidia_driver";

@@ -1,6 +1,6 @@
 { config, lib, ... }:
 let
-  inherit (lib) mkOption;
+  inherit (lib) mkOption literalExpression;
   inherit (config) rootConfig pkgs;
 in
 {
@@ -16,11 +16,11 @@ in
       The value should be a package set from `pkgs.cudaPackages`. You can find
       available versions by [searching for `cudaPackages` in Nixpkgs](https://ryantm.github.io/nixpkgs/languages-frameworks/cuda/).
     '';
-    example = ''
+    example = literalExpression ''
       cudaPackages = pkgs.cudaPackages_11_8;
     '';
     type = rootConfig.nix2gpuTypes.cudaPackageSet;
     default = pkgs.cudaPackages_12_8;
-    defaultText = "pkgs.cudaPackages_12_8";
+    defaultText = literalExpression "pkgs.cudaPackages_12_8";
   };
 }

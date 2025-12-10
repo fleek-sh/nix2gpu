@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption literalExpression;
 in
 {
   options.services = mkOption {
@@ -26,7 +26,7 @@ in
       inputs.services-flake.url = "github:juspay/services-flake";
       inputs.process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
     '';
-    example = ''
+    example = literalExpression ''
       exposedPorts = {
         "22/tcp" = { };
         "8888/tcp" = { };

@@ -1,6 +1,11 @@
 { lib, config, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib)
+    types
+    mkOption
+    literalExpression
+    literalMD
+    ;
   inherit (config) systemConfig;
 in
 {
@@ -27,7 +32,7 @@ in
       };
       ```
     '';
-    example = ''
+    example = literalExpression ''
       home = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = { inherit inputs; };
@@ -38,7 +43,7 @@ in
     '';
     type = types.lazyAttrsOf types.raw;
     inherit (systemConfig.homeConfigurations) default;
-    defaultText = ''
+    defaultText = literalMD ''
       A sample home manager config with some nice defaults
       from nix2gpu
     '';

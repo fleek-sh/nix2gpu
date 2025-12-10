@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption literalExpression;
 in
 {
   options.registries = mkOption {
@@ -11,10 +11,10 @@ in
       and image name, where the container image will be pushed. This is a
       mandatory field if you intend to publish your images via `<container>.copyToGithub`.
     '';
-    example = ''
+    example = literalExpression ''
       registries = [ "ghcr.io/my-org/my-image" ];
     '';
-    type = types.str;
+    type = types.listOf types.str;
     default = [ ];
   };
 }

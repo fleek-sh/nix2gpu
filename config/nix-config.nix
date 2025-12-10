@@ -1,6 +1,13 @@
 { lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib)
+    types
+    mkOption
+    literalExpression
+    literalMD
+    ;
+
+  defaultContents = builtins.readFile ../modules/container/config/nix.conf;
 in
 {
   options.nixConfig = mkOption {
@@ -15,13 +22,19 @@ in
       By default, a standard `nix.conf` is provided which is suitable for most
       use cases.
     '';
-    example = ''
+    example = literalExpression ''
       nixConfig = '''
         experimental-features = nix-command flakes
         substituters = https://cache.nixos.org/ https://my-cache.example.org
         trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= my-cache.example.org-1:abcdef...
+      ''';
     '';
     type = types.str;
-    default = builtins.readFile ../modules/container/config/nix.conf;
+    default = defaultContents;
+    defaultText = literalMD ''
+      ```
+      ${defaultContents}
+      ```
+    '';
   };
 }

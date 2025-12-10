@@ -1,6 +1,11 @@
 { lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib)
+    types
+    mkOption
+    literalExpression
+    literalMD
+    ;
 in
 {
   options.workingDir = mkOption {
@@ -15,10 +20,11 @@ in
       more appropriate directory for your application, such as `/app` or
       `/srv`.
     '';
-    example = ''
+    example = literalExpression ''
       workingDir = "/app";
     '';
     type = types.str;
-    default = "/root";
+    default = "`/root`";
+    defaultText = literalMD "`/root`";
   };
 }

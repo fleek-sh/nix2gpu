@@ -1,6 +1,11 @@
 { lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib)
+    types
+    mkOption
+    literalExpression
+    literalMD
+    ;
 in
 {
   options.user = mkOption {
@@ -16,10 +21,11 @@ in
       and groups using the `users` and `groups` options in your `home-manager`
       configuration.
     '';
-    example = ''
+    example = literalExpression ''
       user = "appuser";
     '';
     type = types.str;
     default = "root";
+    defaultText = literalMD "root";
   };
 }

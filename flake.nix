@@ -3,7 +3,7 @@
 
   inputs = {
     # TODO: Return to actual nixpkgs once this is merged
-    nixpkgs.url = "github:baileyluTCD/nixpkgs?ref=init-vastcli";
+    nixpkgs.url = "github:weyl-ai/nixpkgs?ref=handle-code-nixos-render-doc";
 
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -32,6 +32,13 @@
       url = "github:nixified-ai/flake";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
+    };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems";
+      inputs.home-manager.follows = "home-manager";
     };
 
     flake-parts-website = {

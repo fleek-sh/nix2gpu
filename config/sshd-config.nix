@@ -1,6 +1,11 @@
 { config, lib, ... }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib)
+    types
+    mkOption
+    literalExpression
+    literalMD
+    ;
   inherit (config) pkgs;
 
   sshdConf = pkgs.replaceVars ../modules/container/config/sshd_config { inherit (pkgs) openssh; };
@@ -19,12 +24,12 @@ in
       use cases, with password authentication disabled in favor of public key
       authentication.
     '';
-    example = ''
+    example = literalExpression ''
       sshdConfig = builtins.readFile ./my-sshd-config;
     '';
     type = types.str;
     default = builtins.readFile sshdConf;
-    defaultText = ''
+    defaultText = literalMD ''
       nix2gpu generated sshd config
     '';
   };
