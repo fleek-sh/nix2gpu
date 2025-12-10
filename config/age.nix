@@ -226,13 +226,13 @@ in
   };
 
   config = mkIf (cfg.secrets != { } && inputs ? agenix) {
-    extraCopyToRoot = [ mountingScript ];
+    systemPackages = [ mountingScript ];
 
     extraStartupScript =
       assert lib.assertMsg (cfg.identityPaths != [ ]) "age.identityPaths must be set.";
       ''
         echo [nix2gpu] Running agenix mounting script:
-        ${lib.getExe mountingScript} || printf '\033[33mWarning:\033[0m %s.\n' 'Failed to decrypt your agenix secrets, this may cause errors down the line'
+        ${lib.getExe mountingScript} || printf '\033[33m[nix2gpu] warning:\033[0m %s.\n' 'Failed to decrypt your agenix secrets, this may cause errors down the line'
       '';
   };
 }

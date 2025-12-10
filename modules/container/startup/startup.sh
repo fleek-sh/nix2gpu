@@ -2,7 +2,7 @@
 echo "[nix2gpu] Container initialization starting..."
 
 # // critical // runtime directories
-mkdir -p /tmp /var/tmp /run /run/sshd /var/log /var/empty /var/lib/tailscale
+mkdir -p /tmp /var/tmp /run /run/sshd /var/log /var/empty
 chmod 1777 /tmp /var/tmp
 chmod 755 /run/sshd
 export TMPDIR=/tmp
@@ -92,18 +92,6 @@ for type in rsa ed25519; do
   key="/etc/ssh/ssh_host_${type}_key"
   [ ! -f "$key" ] && ssh-keygen -t "$type" -f "$key" -N "" >/dev/null 2>&1
 done
-
-# // `tailscaled` // userspace
-echo "[nix2gpu] Starting Tailscale daemon..."
-tailscaled --tun=userspace-networking --socket=/var/run/tailscale/tailscaled.sock 2>&1 &
-
-if [ -n "${TAILSCALE_AUTHKEY:-}" ]; then
-  echo "[nix2gpu] authenticating tailscale..."
-  sleep 3
-  tailscale up --authkey="$TAILSCALE_AUTHKEY" --ssh &
-else
-  echo "[nix2gpu] Tailscale running (no authkey provided)"
-fi
 
 # // ssh // daemon
 mkdir -p "$HOME/.ssh"

@@ -21,7 +21,7 @@ in
         {
           environment.allPkgs = pkgs.symlinkJoin {
             name = "all-pkgs";
-            paths = includedEnv ++ includedPkgs;
+            paths = includedEnv ++ includedPkgs ++ container.options.systemPackages;
           };
         };
     };
