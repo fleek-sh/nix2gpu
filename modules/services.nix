@@ -16,17 +16,20 @@ lib.optionalAttrs (inputs ? services-flake && inputs ? process-compose-flake) {
     in
     {
       process-compose = lib.mergeAttrsList (
-        builtins.map (name: {
+        builtins.map (name: let
+          cfg = config.nix2gpu.${name};
+        in {
           "${name}-services" = {
             imports = [
               servicesProcessComposeModule
             ]
             ++ lib.pipe ../services [
               (import-tree.withLib lib).leafs
+              (internalServices: internalServices ++ cfg.serviceModules)
               (map multiService)
             ];
 
-            inherit (config.nix2gpu.${name}) services;
+            inherit (cfg) services;
           };
         }) containers
       );
