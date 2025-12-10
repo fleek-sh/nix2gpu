@@ -11,7 +11,7 @@
           models = [ pkgs.nixified-ai.models.stable-diffusion-v1-5 ];
         };
 
-        registry = "ghcr.io/fleek-platform";
+        registries = [ "ghcr.io/weyl-ai" ];
 
         exposedPorts = {
           "22/tcp" = { };

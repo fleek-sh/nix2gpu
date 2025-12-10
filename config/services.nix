@@ -18,6 +18,13 @@ in
 
       > If this option is left blank no services will be started and 
       > an interactive bash session will open instead.
+
+      To use this, you must first enable the optional `services-flake` 
+      integration by adding it to your flake inputs:
+
+      ```nix
+      inputs.services-flake.url = "github:juspay/services-flake";
+      inputs.process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
     '';
     example = ''
       exposedPorts = {

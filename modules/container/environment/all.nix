@@ -1,3 +1,7 @@
+{ lib, inputs, ... }:
+let
+  hasServices = inputs ? services-flake && inputs ? process-compose-flake;
+in
 {
   perSystem =
     { self', pkgs, ... }:
@@ -12,7 +16,7 @@
             cudaEnv
           ];
 
-          includedPkgs = [ self'.packages."${container.name}-services" ];
+          includedPkgs = lib.optionals hasServices [ self'.packages."${container.name}-services" ];
         in
         {
           environment.allPkgs = pkgs.symlinkJoin {

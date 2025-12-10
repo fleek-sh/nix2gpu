@@ -39,8 +39,8 @@ in
     }:
     {
       render.inputs.self = {
-        baseUrl = "https://github.com/fleek-platform/nix2gpu/blob/main";
-        title = "// nix2gpu // options";
+        baseUrl = "https://github.com/weyl-ai/nix2gpu/blob/main";
+        title = "// options //";
         sourceName = "nix2gpu";
         intro = ''
           `nixos` containers for cost-effective and capable gpu compute. [vast.ai](https://vast.ai) is the first target, there will be many more.
@@ -63,6 +63,7 @@ in
         nativeBuildInputs = [
           config.pythonWithMkdocs
           pkgs.mkdocs
+          pkgs.makeWrapper
         ];
 
         preBuild = ''
@@ -90,8 +91,13 @@ in
 
           cp -r site/. "$out/share/nix2gpu/site"
 
+          makeWrapper "${lib.getExe pkgs.http-server}" "$out/bin/nix2gpu-docs" \
+            --chdir "$out/share/nix2gpu/site"
+
           runHook postInstall
         '';
+
+        meta.mainProgram = "nix2gpu-docs";
       };
     };
 }

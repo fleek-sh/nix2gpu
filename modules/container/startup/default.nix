@@ -2,13 +2,14 @@
   config,
   lib,
   flake-parts-lib,
+  inputs,
   ...
 }:
 let
   inherit (lib) types mkOption;
 in
 {
-  options.perSystem = flake-parts-lib.mkPerSystemOption (_: {
+  options.perSystem = flake-parts-lib.mkPerSystemOption {
     options.perContainer = config.flake.lib.mkPerContainerOption (
       { container, ... }:
       {
@@ -21,7 +22,7 @@ in
         };
       }
     );
-  });
+  };
 
   config.perSystem =
     {
@@ -32,6 +33,8 @@ in
     }:
     let
       outerConfig = config;
+
+      hasServices = inputs ? services-flake && inputs ? process-compose-flake;
     in
     {
       perContainer =
@@ -41,14 +44,22 @@ in
             let
               scriptText = ''
                 ${builtins.readFile ./startup.sh}
+
+                ${lib.optionalString (inputs ? home-manager) ''
+                  echo "[nix2gpu] activating home-manager..."
+                  home-manager-generation
+                ''}
+
                 ${outerConfig.nix2gpu.${container.name}.extraStartupScript}
 
                 if [[ $- != *i* ]] || ! [ -t 0 ]; then
                   export PC_DISABLE_TUI=true
                 fi
 
-                echo "[nix2gpu] starting services..."
-                ${container.name}-services
+                ${lib.optionalString hasServices ''
+                  echo "[nix2gpu] starting services..."
+                  ${container.name}-services
+                ''}
 
                 echo "[nix2gpu] entering interactive terminal..."
                 exec bash
@@ -58,12 +69,16 @@ in
               name = "${container.name}-startup.sh";
               text = scriptText;
 
-              runtimeInputs = with config; [
-                environment.corePkgs
-                environment.networkPkgs
-                outerConfig.nix2gpuHomeConfigurations.default.activationPackage
-                self'.packages."${container.name}-services"
-              ];
+              runtimeInputs =
+                with config;
+                [
+                  environment.corePkgs
+                  environment.networkPkgs
+                ]
+                ++ lib.optionals hasServices [ self'.packages."${container.name}-services" ]
+                ++ lib.optionals (inputs ? home-manager) [
+                  outerConfig.nix2gpuHomeConfigurations.default.activationPackage
+                ];
             };
         };
     };

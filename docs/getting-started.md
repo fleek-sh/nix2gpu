@@ -1,4 +1,4 @@
-# // `nix2gpu` // `ComfyUI` setup guide
+# // `ComfyUI` setup guide //
 
 This guide covers a walk through of setting up `ComfyUI` inside a `nix2gpu` container, and then deploying it to `vast.ai`. It should hopefully also provide useful information to others trying to deploy different pieces of software too.
 
@@ -35,11 +35,18 @@ git commit -m "nix flake init"
 You will now have a new git repository with an empty `flake.nix`. Edit this to add
 
 ```nix
-nix2gpu.url = "github:fleek-platform/nix2gpu?ref=baileylu/public-api";
+nix2gpu.url = "github:weyl-ai/nix2gpu?ref=baileylu/public-api";
 
 systems.url = "github:nix-systems/default";
 
 flake-parts.url = "github:hercules-ci/flake-parts";
+
+# Enable services integration
+services-flake.url = "github:juspay/services-flake";
+process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
+
+# Build containers faster
+nix2container.url = "github:nlewo/nix2container";
 ```
 
 Into the `inputs` section.
@@ -64,7 +71,7 @@ outputs =
 
 # Select a `nix2gpu` starter config to use
 
-Take a look in the [examples folder](https://github.com/fleek-platform/nix2gpu/tree/baileylu/public-api/examples) and pick one which looks useful.
+Take a look in the [examples folder](https://github.com/weyl-ai/nix2gpu/tree/baileylu/public-api/examples) and pick one which looks useful.
 
 Going forward, we will use the `comfyui.nix` example.
 
@@ -81,7 +88,7 @@ We can run this in `nix2gpu` like (replacing the `perSystem.nix2gpu` from earlie
         models = [ pkgs.nixified-ai.models.stable-diffusion-v1-5 ];
       };
 
-      registry = "ghcr.io/fleek-platform";
+      registries = [ "ghcr.io/weyl-ai" ];
 
       exposedPorts = {
         "22/tcp" = { };

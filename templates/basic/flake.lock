@@ -3,14 +3,17 @@
     "actions-nix": {
       "inputs": {
         "flake-parts": [
+          "nix2gpu",
           "flake-parts-website",
           "flake-parts"
         ],
         "git-hooks": [
+          "nix2gpu",
           "flake-parts-website",
           "git-hooks-nix"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ]
@@ -32,12 +35,14 @@
     "agenix-rekey": {
       "inputs": {
         "devshell": "devshell",
-        "flake-parts": "flake-parts_2",
+        "flake-parts": "flake-parts_3",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
         "pre-commit-hooks": [
+          "nix2gpu",
           "flake-parts-website",
           "git-hooks-nix"
         ],
@@ -59,14 +64,16 @@
     },
     "agenix-shell": {
       "inputs": {
-        "flake-parts": "flake-parts_3",
+        "flake-parts": "flake-parts_4",
         "flake-root": "flake-root",
         "git-hooks-nix": [
+          "nix2gpu",
           "flake-parts-website",
           "git-hooks-nix"
         ],
         "nix-github-actions": "nix-github-actions",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
@@ -121,20 +128,24 @@
     "cachix": {
       "inputs": {
         "devenv": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv"
         ],
         "flake-compat": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv",
           "flake-compat"
         ],
         "git-hooks": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv",
           "git-hooks"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv",
           "nixpkgs"
@@ -272,10 +283,11 @@
       "inputs": {
         "cachix": "cachix",
         "flake-compat": "flake-compat",
-        "flake-parts": "flake-parts_4",
+        "flake-parts": "flake-parts_5",
         "git-hooks": "git-hooks",
         "nix": "nix",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ]
@@ -297,6 +309,7 @@
     "devshell": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "agenix-rekey",
           "nixpkgs"
@@ -319,6 +332,7 @@
     "devshell_2": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ]
@@ -356,6 +370,7 @@
     "devshell_4": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nix-topology",
           "nixpkgs"
@@ -378,6 +393,7 @@
     "disko": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ]
@@ -399,16 +415,19 @@
     "dmerge": {
       "inputs": {
         "haumea": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "haumea"
         ],
         "nixlib": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "lib"
         ],
         "yants": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "yants"
@@ -436,19 +455,21 @@
         "devshell": "devshell_3",
         "drv-parts": "drv-parts",
         "flake-compat": "flake-compat_2",
-        "flake-parts": "flake-parts_5",
+        "flake-parts": "flake-parts_6",
         "flake-utils-pre-commit": "flake-utils-pre-commit",
         "ghc-utils": "ghc-utils",
         "gomod2nix": "gomod2nix",
         "mach-nix": "mach-nix",
         "nix-pypi-fetcher": "nix-pypi-fetcher",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
         "nixpkgsV1": "nixpkgsV1",
         "poetry2nix": "poetry2nix",
         "pre-commit-hooks": [
+          "nix2gpu",
           "flake-parts-website",
           "git-hooks-nix"
         ],
@@ -472,16 +493,19 @@
     "drv-parts": {
       "inputs": {
         "flake-compat": [
+          "nix2gpu",
           "flake-parts-website",
           "dream2nix_legacy",
           "flake-compat"
         ],
         "flake-parts": [
+          "nix2gpu",
           "flake-parts-website",
           "dream2nix_legacy",
           "flake-parts"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "dream2nix_legacy",
           "nixpkgs"
@@ -521,10 +545,11 @@
         "commonmark-simple": "commonmark-simple",
         "commonmark-wikilink": "commonmark-wikilink",
         "ema": [
+          "nix2gpu",
           "flake-parts-website"
         ],
         "emanote-template": "emanote-template",
-        "flake-parts": "flake-parts_6",
+        "flake-parts": "flake-parts_7",
         "fourmolu-nix": "fourmolu-nix",
         "git-hooks": "git-hooks_2",
         "haskell-flake": "haskell-flake",
@@ -532,6 +557,7 @@
         "lvar": "lvar",
         "nixos-unified": "nixos-unified",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
@@ -569,8 +595,9 @@
     },
     "ez-configs": {
       "inputs": {
-        "flake-parts": "flake-parts_7",
+        "flake-parts": "flake-parts_8",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ]
@@ -748,6 +775,7 @@
         "ez-configs": "ez-configs",
         "files": "files",
         "flake-parts": [
+          "nix2gpu",
           "flake-parts"
         ],
         "git-hooks-nix": "git-hooks-nix",
@@ -755,6 +783,7 @@
         "haskell-flake": "haskell-flake_2",
         "hercules-ci-effects": "hercules-ci-effects",
         "home-manager": [
+          "nix2gpu",
           "home-manager"
         ],
         "input-branches": "input-branches",
@@ -768,12 +797,14 @@
         "nixops4": "nixops4",
         "nixos-healthchecks": "nixos-healthchecks",
         "nixpkgs": [
+          "nix2gpu",
           "nixpkgs"
         ],
         "ocaml-flake": "ocaml-flake",
         "pkgs-by-name-for-flake-parts": "pkgs-by-name-for-flake-parts",
         "proc-flake": "proc-flake",
         "process-compose-flake": [
+          "nix2gpu",
           "process-compose-flake"
         ],
         "pydev": "pydev",
@@ -781,6 +812,7 @@
         "std": "std",
         "terranix": "terranix",
         "treefmt-nix": [
+          "nix2gpu",
           "treefmt-nix"
         ]
       },
@@ -802,18 +834,18 @@
     "flake-parts_10": {
       "inputs": {
         "nixpkgs-lib": [
+          "nix2gpu",
           "flake-parts-website",
-          "nix-bindings-rust",
-          "nix",
+          "mkdocs-flake",
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1733312601,
-        "narHash": "sha256-4pDvzqnegAfRkPwO3wmwBhVi/Sye1mzps0zHWYnP88c=",
+        "lastModified": 1756770412,
+        "narHash": "sha256-+uWLQZccFHwqpGqr2Yt5VsW/PbeJVTn9Dk6SHWhNRPw=",
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "rev": "205b12d8b7cd4802fbcb8e8ef6a0f1408781a4f9",
+        "rev": "4524271976b625a4a605beefd893f270620fd751",
         "type": "github"
       },
       "original": {
@@ -825,8 +857,8 @@
     "flake-parts_11": {
       "inputs": {
         "nixpkgs-lib": [
+          "nix2gpu",
           "flake-parts-website",
-          "nixops4",
           "nix-bindings-rust",
           "nix",
           "nixpkgs"
@@ -849,6 +881,32 @@
     "flake-parts_12": {
       "inputs": {
         "nixpkgs-lib": [
+          "nix2gpu",
+          "flake-parts-website",
+          "nixops4",
+          "nix-bindings-rust",
+          "nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1733312601,
+        "narHash": "sha256-4pDvzqnegAfRkPwO3wmwBhVi/Sye1mzps0zHWYnP88c=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "205b12d8b7cd4802fbcb8e8ef6a0f1408781a4f9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "flake-parts_13": {
+      "inputs": {
+        "nixpkgs-lib": [
+          "nix2gpu",
           "flake-parts-website",
           "ocaml-flake",
           "nixpkgs"
@@ -868,9 +926,9 @@
         "type": "github"
       }
     },
-    "flake-parts_13": {
+    "flake-parts_14": {
       "inputs": {
-        "nixpkgs-lib": "nixpkgs-lib_4"
+        "nixpkgs-lib": "nixpkgs-lib_5"
       },
       "locked": {
         "lastModified": 1696343447,
@@ -885,9 +943,10 @@
         "type": "indirect"
       }
     },
-    "flake-parts_14": {
+    "flake-parts_15": {
       "inputs": {
         "nixpkgs-lib": [
+          "nix2gpu",
           "nixified-ai",
           "hercules-ci-effects",
           "nixpkgs"
@@ -908,7 +967,26 @@
     },
     "flake-parts_2": {
       "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib_2"
+      },
+      "locked": {
+        "lastModified": 1763759067,
+        "narHash": "sha256-LlLt2Jo/gMNYAwOgdRQBrsRoOz7BPRkzvNaI/fzXi2Q=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "2cccadc7357c0ba201788ae99c4dfa90728ef5e0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "flake-parts_3": {
+      "inputs": {
         "nixpkgs-lib": [
+          "nix2gpu",
           "flake-parts-website",
           "agenix-rekey",
           "nixpkgs"
@@ -928,9 +1006,9 @@
         "type": "github"
       }
     },
-    "flake-parts_3": {
+    "flake-parts_4": {
       "inputs": {
-        "nixpkgs-lib": "nixpkgs-lib_2"
+        "nixpkgs-lib": "nixpkgs-lib_3"
       },
       "locked": {
         "lastModified": 1743550720,
@@ -946,9 +1024,10 @@
         "type": "github"
       }
     },
-    "flake-parts_4": {
+    "flake-parts_5": {
       "inputs": {
         "nixpkgs-lib": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv",
           "nixpkgs"
@@ -968,9 +1047,10 @@
         "type": "github"
       }
     },
-    "flake-parts_5": {
+    "flake-parts_6": {
       "inputs": {
         "nixpkgs-lib": [
+          "nix2gpu",
           "flake-parts-website",
           "dream2nix_legacy",
           "nixpkgs"
@@ -990,9 +1070,10 @@
         "type": "github"
       }
     },
-    "flake-parts_6": {
+    "flake-parts_7": {
       "inputs": {
         "nixpkgs-lib": [
+          "nix2gpu",
           "flake-parts-website",
           "emanote",
           "nixpkgs"
@@ -1012,9 +1093,10 @@
         "type": "github"
       }
     },
-    "flake-parts_7": {
+    "flake-parts_8": {
       "inputs": {
         "nixpkgs-lib": [
+          "nix2gpu",
           "flake-parts-website",
           "ez-configs",
           "nixpkgs"
@@ -1034,9 +1116,10 @@
         "type": "github"
       }
     },
-    "flake-parts_8": {
+    "flake-parts_9": {
       "inputs": {
         "nixpkgs-lib": [
+          "nix2gpu",
           "flake-parts-website",
           "input-branches",
           "nixpkgs-lib"
@@ -1048,28 +1131,6 @@
         "owner": "hercules-ci",
         "repo": "flake-parts",
         "rev": "77826244401ea9de6e3bac47c2db46005e1f30b5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "type": "github"
-      }
-    },
-    "flake-parts_9": {
-      "inputs": {
-        "nixpkgs-lib": [
-          "flake-parts-website",
-          "mkdocs-flake",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1756770412,
-        "narHash": "sha256-+uWLQZccFHwqpGqr2Yt5VsW/PbeJVTn9Dk6SHWhNRPw=",
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "rev": "4524271976b625a4a605beefd893f270620fd751",
         "type": "github"
       },
       "original": {
@@ -1226,12 +1287,14 @@
     "git-hooks": {
       "inputs": {
         "flake-compat": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv",
           "flake-compat"
         ],
         "gitignore": "gitignore",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv",
           "nixpkgs"
@@ -1256,6 +1319,7 @@
         "flake-compat": "flake-compat_3",
         "gitignore": "gitignore_2",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ]
@@ -1277,22 +1341,26 @@
     "git-hooks-nix_2": {
       "inputs": {
         "flake-compat": [
+          "nix2gpu",
           "flake-parts-website",
           "nix-bindings-rust",
           "nix"
         ],
         "gitignore": [
+          "nix2gpu",
           "flake-parts-website",
           "nix-bindings-rust",
           "nix"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nix-bindings-rust",
           "nix",
           "nixpkgs"
         ],
         "nixpkgs-stable": [
+          "nix2gpu",
           "flake-parts-website",
           "nix-bindings-rust",
           "nix",
@@ -1316,18 +1384,21 @@
     "git-hooks-nix_3": {
       "inputs": {
         "flake-compat": [
+          "nix2gpu",
           "flake-parts-website",
           "nixops4",
           "nix-bindings-rust",
           "nix"
         ],
         "gitignore": [
+          "nix2gpu",
           "flake-parts-website",
           "nixops4",
           "nix-bindings-rust",
           "nix"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixops4",
           "nix-bindings-rust",
@@ -1335,6 +1406,7 @@
           "nixpkgs"
         ],
         "nixpkgs-stable": [
+          "nix2gpu",
           "flake-parts-website",
           "nixops4",
           "nix-bindings-rust",
@@ -1375,6 +1447,7 @@
     "gitignore": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv",
           "git-hooks",
@@ -1398,6 +1471,7 @@
     "gitignore_2": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "git-hooks-nix",
           "nixpkgs"
@@ -1420,15 +1494,18 @@
     "gitlab-ci": {
       "inputs": {
         "flake-parts": [
+          "nix2gpu",
           "flake-parts-website",
           "flake-parts"
         ],
         "import-tree": "import-tree",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
         "treefmt-nix": [
+          "nix2gpu",
           "flake-parts-website",
           "treefmt-nix"
         ]
@@ -1496,6 +1573,7 @@
     "haumea": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "ocaml-flake",
           "nixpkgs"
@@ -1518,6 +1596,7 @@
     "haumea_2": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "lib"
@@ -1558,10 +1637,12 @@
     "hercules-ci-effects": {
       "inputs": {
         "flake-parts": [
+          "nix2gpu",
           "flake-parts-website",
           "flake-parts"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ]
@@ -1582,8 +1663,9 @@
     },
     "hercules-ci-effects_2": {
       "inputs": {
-        "flake-parts": "flake-parts_14",
+        "flake-parts": "flake-parts_15",
         "nixpkgs": [
+          "nix2gpu",
           "nixified-ai",
           "nixpkgs"
         ]
@@ -1605,6 +1687,7 @@
     "home-manager": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "nixpkgs"
         ]
       },
@@ -1655,6 +1738,7 @@
     "incl": {
       "inputs": {
         "nixlib": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "lib"
@@ -1676,8 +1760,8 @@
     },
     "input-branches": {
       "inputs": {
-        "flake-parts": "flake-parts_8",
-        "nixpkgs-lib": "nixpkgs-lib_3"
+        "flake-parts": "flake-parts_9",
+        "nixpkgs-lib": "nixpkgs-lib_4"
       },
       "locked": {
         "lastModified": 1753162131,
@@ -1807,8 +1891,9 @@
     },
     "mkdocs-flake": {
       "inputs": {
-        "flake-parts": "flake-parts_9",
+        "flake-parts": "flake-parts_10",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
@@ -1834,11 +1919,13 @@
     "namaka": {
       "inputs": {
         "haumea": [
+          "nix2gpu",
           "flake-parts-website",
           "ocaml-flake",
           "haumea"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "ocaml-flake",
           "nixpkgs"
@@ -1861,30 +1948,36 @@
     "nix": {
       "inputs": {
         "flake-compat": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv",
           "flake-compat"
         ],
         "flake-parts": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv",
           "flake-parts"
         ],
         "git-hooks-nix": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv",
           "git-hooks"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv",
           "nixpkgs"
         ],
         "nixpkgs-23-11": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv"
         ],
         "nixpkgs-regression": [
+          "nix2gpu",
           "flake-parts-website",
           "devenv"
         ]
@@ -1907,15 +2000,18 @@
     "nix-bindings-rust": {
       "inputs": {
         "flake-parts": [
+          "nix2gpu",
           "flake-parts-website",
           "flake-parts"
         ],
         "nix": "nix_2",
         "nix-cargo-integration": [
+          "nix2gpu",
           "flake-parts-website",
           "nix-cargo-integration"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ]
@@ -1937,17 +2033,20 @@
     "nix-bindings-rust_2": {
       "inputs": {
         "flake-parts": [
+          "nix2gpu",
           "flake-parts-website",
           "nixops4",
           "flake-parts"
         ],
         "nix": "nix_3",
         "nix-cargo-integration": [
+          "nix2gpu",
           "flake-parts-website",
           "nixops4",
           "nix-cargo-integration"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixops4",
           "nixpkgs"
@@ -1971,11 +2070,13 @@
       "inputs": {
         "crane": "crane_2",
         "dream2nix": [
+          "nix2gpu",
           "flake-parts-website",
           "dream2nix_legacy"
         ],
         "mk-naked-shell": "mk-naked-shell",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
@@ -2000,6 +2101,7 @@
     "nix-github-actions": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "agenix-shell",
           "nixpkgs"
@@ -2022,6 +2124,7 @@
     "nix-github-actions_2": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "mkdocs-flake",
           "poetry2nix",
@@ -2045,6 +2148,7 @@
     "nix-github-actions_3": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nix-unit",
           "nixpkgs"
@@ -2067,6 +2171,7 @@
     "nix-github-actions_4": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "pydev",
           "poetry2nix",
@@ -2108,10 +2213,12 @@
         "devshell": "devshell_4",
         "flake-utils": "flake-utils_2",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
         "pre-commit-hooks": [
+          "nix2gpu",
           "flake-parts-website",
           "git-hooks-nix"
         ]
@@ -2133,15 +2240,18 @@
     "nix-unit": {
       "inputs": {
         "flake-parts": [
+          "nix2gpu",
           "flake-parts-website",
           "flake-parts"
         ],
         "nix-github-actions": "nix-github-actions_3",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
         "treefmt-nix": [
+          "nix2gpu",
           "flake-parts-website",
           "treefmt-nix"
         ]
@@ -2163,6 +2273,7 @@
     "nix2container": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "nixpkgs"
         ]
       },
@@ -2181,12 +2292,37 @@
         "type": "github"
       }
     },
+    "nix2gpu": {
+      "inputs": {
+        "flake-parts": "flake-parts_2",
+        "flake-parts-website": "flake-parts-website",
+        "home-manager": "home-manager",
+        "import-tree": "import-tree_2",
+        "nix2container": "nix2container",
+        "nixified-ai": "nixified-ai",
+        "nixpkgs": "nixpkgs_2",
+        "process-compose-flake": "process-compose-flake",
+        "services-flake": "services-flake",
+        "systems": "systems_6",
+        "treefmt-nix": "treefmt-nix_5"
+      },
+      "locked": {
+        "path": "../..",
+        "type": "path"
+      },
+      "original": {
+        "path": "../..",
+        "type": "path"
+      },
+      "parent": []
+    },
     "nix_2": {
       "inputs": {
         "flake-compat": "flake-compat_5",
-        "flake-parts": "flake-parts_10",
+        "flake-parts": "flake-parts_11",
         "git-hooks-nix": "git-hooks-nix_2",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nix-bindings-rust",
           "nixpkgs"
@@ -2211,9 +2347,10 @@
     "nix_3": {
       "inputs": {
         "flake-compat": "flake-compat_6",
-        "flake-parts": "flake-parts_11",
+        "flake-parts": "flake-parts_12",
         "git-hooks-nix": "git-hooks-nix_3",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixops4",
           "nix-bindings-rust",
@@ -2239,10 +2376,12 @@
     "nixified-ai": {
       "inputs": {
         "flake-parts": [
+          "nix2gpu",
           "flake-parts"
         ],
         "hercules-ci-effects": "hercules-ci-effects_2",
         "nixpkgs": [
+          "nix2gpu",
           "nixpkgs"
         ]
       },
@@ -2263,18 +2402,22 @@
     "nixops4": {
       "inputs": {
         "flake-parts": [
+          "nix2gpu",
           "flake-parts-website",
           "flake-parts"
         ],
         "nix": [
+          "nix2gpu",
           "flake-parts-website"
         ],
         "nix-bindings-rust": "nix-bindings-rust_2",
         "nix-cargo-integration": [
+          "nix2gpu",
           "flake-parts-website",
           "nix-cargo-integration"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ]
@@ -2296,10 +2439,12 @@
     "nixos-healthchecks": {
       "inputs": {
         "flake-parts": [
+          "nix2gpu",
           "flake-parts-website",
           "flake-parts"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
@@ -2399,6 +2544,21 @@
     },
     "nixpkgs-lib_2": {
       "locked": {
+        "lastModified": 1761765539,
+        "narHash": "sha256-b0yj6kfvO8ApcSE+QmA6mUfu8IYG6/uU28OFn4PaC8M=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "719359f4562934ae99f5443f20aa06c2ffff91fc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
+    "nixpkgs-lib_3": {
+      "locked": {
         "lastModified": 1743296961,
         "narHash": "sha256-b1EdN3cULCqtorQ4QeWgLMrd5ZGOjLSLemfa00heasc=",
         "owner": "nix-community",
@@ -2412,7 +2572,7 @@
         "type": "github"
       }
     },
-    "nixpkgs-lib_3": {
+    "nixpkgs-lib_4": {
       "locked": {
         "lastModified": 1751949589,
         "narHash": "sha256-mgFxAPLWw0Kq+C8P3dRrZrOYEQXOtKuYVlo9xvPntt8=",
@@ -2428,7 +2588,7 @@
         "type": "github"
       }
     },
-    "nixpkgs-lib_4": {
+    "nixpkgs-lib_5": {
       "locked": {
         "dir": "lib",
         "lastModified": 1696019113,
@@ -2509,6 +2669,22 @@
         "type": "github"
       }
     },
+    "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1764517877,
+        "narHash": "sha256-pp3uT4hHijIC8JUK5MEqeAWmParJrgBVzHLNfJDZxg4=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "2d293cbfa5a793b4c50d17c05ef9e385b90edf6c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nosys": {
       "locked": {
         "lastModified": 1668010795,
@@ -2527,12 +2703,13 @@
     "ocaml-flake": {
       "inputs": {
         "call-flake": "call-flake",
-        "flake-parts": "flake-parts_12",
+        "flake-parts": "flake-parts_13",
         "flake-root": "flake-root_2",
         "haumea": "haumea",
         "mirage-opam-overlays": "mirage-opam-overlays",
         "namaka": "namaka",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
@@ -2541,6 +2718,7 @@
         "opam-repository": "opam-repository",
         "opam2json": "opam2json",
         "treefmt-nix": [
+          "nix2gpu",
           "flake-parts-website",
           "treefmt-nix"
         ]
@@ -2563,26 +2741,31 @@
         "flake-compat": "flake-compat_7",
         "flake-utils": "flake-utils_3",
         "mirage-opam-overlays": [
+          "nix2gpu",
           "flake-parts-website",
           "ocaml-flake",
           "mirage-opam-overlays"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "ocaml-flake",
           "nixpkgs"
         ],
         "opam-overlays": [
+          "nix2gpu",
           "flake-parts-website",
           "ocaml-flake",
           "opam-overlays"
         ],
         "opam-repository": [
+          "nix2gpu",
           "flake-parts-website",
           "ocaml-flake",
           "opam-repository"
         ],
         "opam2json": [
+          "nix2gpu",
           "flake-parts-website",
           "ocaml-flake",
           "opam2json"
@@ -2637,6 +2820,7 @@
     "opam2json": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "ocaml-flake",
           "nixpkgs"
@@ -2660,12 +2844,14 @@
       "inputs": {
         "call-flake": "call-flake_2",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "nixpkgs"
         ],
         "nosys": "nosys",
         "yants": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "yants"
@@ -2706,6 +2892,7 @@
     "parts": {
       "inputs": {
         "nixpkgs-lib": [
+          "nix2gpu",
           "flake-parts-website",
           "nix-cargo-integration",
           "nixpkgs"
@@ -2762,6 +2949,7 @@
         "flake-utils": "flake-utils",
         "nix-github-actions": "nix-github-actions_2",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "mkdocs-flake",
           "nixpkgs"
@@ -2788,6 +2976,7 @@
         "flake-utils": "flake-utils_4",
         "nix-github-actions": "nix-github-actions_4",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "pydev",
           "nixpkgs"
@@ -2856,13 +3045,15 @@
     },
     "pydev": {
       "inputs": {
-        "flake-parts": "flake-parts_13",
+        "flake-parts": "flake-parts_14",
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
         "poetry2nix": "poetry2nix_3",
         "pre-commit-hooks-nix": [
+          "nix2gpu",
           "flake-parts-website",
           "git-hooks-nix"
         ]
@@ -2884,16 +3075,19 @@
     "pyproject-build-systems": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "mkdocs-flake",
           "nixpkgs"
         ],
         "pyproject-nix": [
+          "nix2gpu",
           "flake-parts-website",
           "mkdocs-flake",
           "pyproject-nix"
         ],
         "uv2nix": [
+          "nix2gpu",
           "flake-parts-website",
           "mkdocs-flake",
           "uv2nix"
@@ -2916,6 +3110,7 @@
     "pyproject-nix": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "mkdocs-flake",
           "nixpkgs"
@@ -2938,16 +3133,9 @@
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
-        "flake-parts-website": "flake-parts-website",
-        "home-manager": "home-manager",
-        "import-tree": "import-tree_2",
-        "nix2container": "nix2container",
-        "nixified-ai": "nixified-ai",
-        "nixpkgs": "nixpkgs_2",
-        "process-compose-flake": "process-compose-flake",
-        "services-flake": "services-flake",
-        "systems": "systems_6",
-        "treefmt-nix": "treefmt-nix_5"
+        "nix2gpu": "nix2gpu",
+        "nixpkgs": "nixpkgs_3",
+        "systems": "systems_7"
       }
     },
     "rust-flake": {
@@ -2973,6 +3161,7 @@
     "rust-overlay": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nix-cargo-integration",
           "nixpkgs"
@@ -2995,6 +3184,7 @@
     "rust-overlay_2": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "rust-flake",
           "nixpkgs"
@@ -3032,12 +3222,14 @@
     "std": {
       "inputs": {
         "arion": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "blank"
         ],
         "blank": "blank",
         "devshell": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "blank"
@@ -3047,32 +3239,38 @@
         "incl": "incl",
         "lib": "lib",
         "makes": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "blank"
         ],
         "microvm": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "blank"
         ],
         "n2c": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "blank"
         ],
         "nixago": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "blank"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
         "paisano": "paisano",
         "paisano-tui": "paisano-tui",
         "terranix": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "blank"
@@ -3183,13 +3381,30 @@
         "type": "github"
       }
     },
+    "systems_7": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
     "terranix": {
       "inputs": {
         "flake-parts": [
+          "nix2gpu",
           "flake-parts-website",
           "flake-parts"
         ],
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixpkgs"
         ],
@@ -3212,6 +3427,7 @@
     "treefmt": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nix-cargo-integration",
           "nixpkgs"
@@ -3234,6 +3450,7 @@
     "treefmt-nix": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "agenix-rekey",
           "nixpkgs"
@@ -3256,6 +3473,7 @@
     "treefmt-nix_2": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "agenix-shell",
           "nixpkgs"
@@ -3278,6 +3496,7 @@
     "treefmt-nix_3": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "mkdocs-flake",
           "poetry2nix",
@@ -3301,6 +3520,7 @@
     "treefmt-nix_4": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "nixos-healthchecks",
           "nixpkgs"
@@ -3323,6 +3543,7 @@
     "treefmt-nix_5": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "nixpkgs"
         ]
       },
@@ -3360,11 +3581,13 @@
     "uv2nix": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "mkdocs-flake",
           "nixpkgs"
         ],
         "pyproject-nix": [
+          "nix2gpu",
           "flake-parts-website",
           "mkdocs-flake",
           "pyproject-nix"
@@ -3387,6 +3610,7 @@
     "yants": {
       "inputs": {
         "nixpkgs": [
+          "nix2gpu",
           "flake-parts-website",
           "std",
           "lib"

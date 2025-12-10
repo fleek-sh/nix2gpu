@@ -6,7 +6,7 @@ let
   processComposeFlakeModule = process-compose-flake.flakeModule;
   servicesProcessComposeModule = services-flake.processComposeModules.default;
 in
-{
+lib.optionalAttrs (inputs ? services-flake && inputs ? process-compose-flake) {
   imports = [ processComposeFlakeModule ];
 
   config.perSystem =
