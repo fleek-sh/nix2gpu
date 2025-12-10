@@ -20,7 +20,7 @@ in
       cudaPackages = pkgs.cudaPackages_11_8;
     '';
     type = rootConfig.nix2gpuTypes.cudaPackageSet;
-    default = pkgs.cudaPackages_12_8;
-    defaultText = literalExpression "pkgs.cudaPackages_12_8";
+    default = pkgs.cudaPackages_13_0;
+    defaultText = literalExpression "pkgs.cudaPackages_13_0";
   };
 }
