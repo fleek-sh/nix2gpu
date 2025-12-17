@@ -50,4 +50,19 @@ inputs.home-manager = {
 };
 ```
 
-To configure your services, see the [home option](./options.md#persystemnix2gpucontainerhome) for more details.
+To configure your home, see the [home option](./options.md#persystemnix2gpucontainerhome) for more details.
+
+Since external home manager configurations often use an arbitrarily named user (i.e. `john` and not `root`), `nix2gpu` provides a convenient home manager module you can use to port an existing user's config to the `root` user, which is more common for use in containers:
+
+```nix
+nix2gpu."overridden-root" = {
+  home = home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      extraSpecialArgs = { inherit inputs; };
+      modules = [
+        inputs.exampleHomeSource.homeModules.john
+        inputs.nix2gpu.homeModules.force-root-user # Force the `john` specific module above to apply to root too
+      ];
+    };
+};
+```
