@@ -5,7 +5,7 @@
     # TODO: Return to actual nixpkgs once this is merged
     nixpkgs.url = "github:weyl-ai/nixpkgs?ref=handle-code-nixos-render-doc";
 
-    systems.url = "github:nix-systems/default";
+    systems.url = "github:nix-systems/x86_64-linux";
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:vic/import-tree";
 
