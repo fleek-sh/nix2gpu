@@ -13,12 +13,21 @@ in
     options.perContainer = config.flake.lib.mkPerContainerOption (
       { container, ... }:
       {
-        options.packages = mkOption {
-          description = ''
-            nix2gpu packages for ${container.name}.
-          '';
-          type = types.lazyAttrsOf types.raw;
-          internal = true;
+        options = {
+          packages = mkOption {
+            description = ''
+              nix2gpu packages for ${container.name}.
+            '';
+            type = types.lazyAttrsOf types.raw;
+            internal = true;
+          };
+          checks = mkOption {
+            description = ''
+              `nix flake check` bindings for ${container.name}
+            '';
+            type = types.lazyAttrsOf types.raw;
+            internal = true;
+          };
         };
       }
     );
@@ -40,6 +49,7 @@ in
     in
     {
       packages = builtins.mapAttrs (name: value: value.packages.${name}) config.allContainers;
+      checks = builtins.mapAttrs (name: value: value.checks."is-valid-${name}") config.allContainers;
 
       perContainer =
         { container, config, ... }:
@@ -66,7 +76,7 @@ in
           The `tag` option for container `${name}` must be a non-empty string.
         '';
 
-        {
+        rec {
           packages."${name}" =
             (buildImage (
               (lib.optionalAttrs (inputs' ? nix2container) {
@@ -100,6 +110,8 @@ in
               (oldAttrs: {
                 passthru = (oldAttrs.passthru or { }) // config.scripts;
               });
+
+          checks."is-valid-${name}" = packages.${name};
         };
     };
 }
