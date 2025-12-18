@@ -49,15 +49,17 @@ if [ -n "${ROOT_PASSWORD:-}" ]; then
   echo "root:$ROOT_PASSWORD" | chpasswd
 else
   echo "[nix2gpu] Enabling passwordless root..."
-  passwd -d root
+  /run/current-system/sw/bin/passwd -d root
 fi
 
+export HOME="/root"
+
 # // ssh // keys
-mkdir -p /root/.ssh
-chmod 700 /root/.ssh
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
 if [ -n "${SSH_PUBLIC_KEYS:-}" ]; then
-  echo "$SSH_PUBLIC_KEYS" >/root/.ssh/authorized_keys
-  chmod 600 /root/.ssh/authorized_keys
+  echo "$SSH_PUBLIC_KEYS" >"$HOME/.ssh/authorized_keys"
+  chmod 600 "$HOME/.ssh/authorized_keys"
 fi
 
 # // nvidia-smi // validation
@@ -94,10 +96,10 @@ for type in rsa ed25519; do
 done
 
 # // ssh // daemon
-mkdir -p "$HOME/.ssh"
 echo "[nix2gpu] starting ssh daemon..."
-$(which sshd) -t || exit 1
-$(which sshd) -D -e &
+# Gets resholved to the absolute path
+sshd -t || exit 1
+sshd -D -e &
 
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_DATA_DIRS="/usr/local/share:/usr/share"

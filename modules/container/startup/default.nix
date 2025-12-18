@@ -43,8 +43,28 @@ in
         in
         {
           startupScript =
-            let
-              scriptText = ''
+            pkgs.resholve.writeScriptBin "${container.name}-startup.sh"
+              {
+                interpreter = lib.getExe pkgs.bash;
+                inputs =
+                  config.environment.allPkgs
+                  ++ lib.optionals (inputs ? home-manager) [
+                    outerConfig.nix2gpuHomeConfigurations.default.activationPackage
+                  ];
+                execer = [
+                  "cannot:${lib.getExe' pkgs.openssh "ssh-keygen"}"
+                  "cannot:${lib.getExe' pkgs.openssh "sshd"}"
+                  "cannot:${lib.getExe' pkgs.tailscale "tailscaled"}"
+                  "cannot:${lib.getExe' pkgs.tailscale "tailscale"}"
+                  "cannot:${lib.getExe' pkgs.glibc "ldd"}"
+                  "cannot:${lib.getExe self'.packages."${container.name}-services"}"
+                ];
+                keep = {
+                  "/usr/bin/nvidia-smi" = true;
+                  "/run/current-system/sw/bin/passwd" = true;
+                };
+              }
+              ''
                 ${builtins.readFile ./startup.sh}
 
                 ${lib.optionalString (inputs ? home-manager) ''
@@ -71,22 +91,6 @@ in
                     ''
                 }
               '';
-            in
-            pkgs.writeShellApplication {
-              name = "${container.name}-startup.sh";
-              text = scriptText;
-
-              runtimeInputs =
-                with config;
-                [
-                  environment.corePkgs
-                  environment.networkPkgs
-                ]
-                ++ lib.optionals hasServices [ self'.packages."${container.name}-services" ]
-                ++ lib.optionals (inputs ? home-manager) [
-                  outerConfig.nix2gpuHomeConfigurations.default.activationPackage
-                ];
-            };
         };
     };
 }
