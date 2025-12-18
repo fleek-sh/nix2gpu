@@ -107,7 +107,7 @@ EOF
 # // shell // compatibility
 ln -s @bashInteractive@/bin/bash "$out/bin/bash"
 ln -s @bashInteractive@/bin/bash "$out/bin/sh"
-ln -s @coreutils-full@/bin/env "$out/usr/bin/env"
+ln -s @coreutils@/bin/env "$out/usr/bin/env"
 
 # // nvidia-container-cli // ldconfig
 ln -s @glibcBin@/sbin/ldconfig "$out/sbin/ldconfig"

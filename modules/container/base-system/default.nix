@@ -36,7 +36,7 @@ in
 
             inherit (pkgs)
               bashInteractive
-              coreutils-full
+              coreutils
               glibc
               cacert
               ;
@@ -48,7 +48,7 @@ in
           baseSystem = pkgs.runCommandLocal "base-system" {
             nativeBuildInputs = with pkgs; [
               bashInteractive
-              coreutils-full
+              coreutils
               glibc
               cacert
             ];
