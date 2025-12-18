@@ -4,25 +4,21 @@ let
 in
 {
   perSystem =
-    { self', pkgs, ... }:
+    { self', ... }:
     {
       perContainer =
         { config, container, ... }:
         let
-          includedEnv = with config.environment; [
-            corePkgs
-            networkPkgs
-            devPkgs
-            cudaEnv
-          ];
-
           includedPkgs = lib.optionals hasServices [ self'.packages."${container.name}-services" ];
         in
         {
-          environment.allPkgs = pkgs.symlinkJoin {
-            name = "all-pkgs";
-            paths = includedEnv ++ includedPkgs ++ container.options.systemPackages;
-          };
+          environment.allPkgs =
+            config.environment.corePkgs
+            ++ config.environment.networkPkgs
+            ++ config.environment.devPkgs
+            ++ config.environment.cudaEnv
+            ++ includedPkgs
+            ++ container.options.systemPackages;
         };
     };
 }

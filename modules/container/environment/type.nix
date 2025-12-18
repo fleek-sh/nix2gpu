@@ -14,7 +14,7 @@ in
         description = ''
           nix2gpu environment packages.
         '';
-        type = types.attrsOf types.package;
+        type = types.lazyAttrsOf (types.listOf types.package);
         internal = true;
         default = { };
       };
