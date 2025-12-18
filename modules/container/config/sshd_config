@@ -11,5 +11,4 @@ AcceptEnv LANG LC_*
 Subsystem sftp @openssh@/libexec/sftp-server
 PidFile /run/sshd.pid
 HostKey /etc/ssh/ssh_host_rsa_key
-HostKey /etc/ssh/ssh_host_ecdsa_key
 HostKey /etc/ssh/ssh_host_ed25519_key
