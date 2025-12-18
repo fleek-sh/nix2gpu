@@ -43,6 +43,7 @@ in
 
                 exec ${shell} run --rm -it \
                   --gpus all \
+                  --cap-add=MKNOD \
                   -v "$(pwd):/workspace" \
                   -w /workspace \
                   ${container.name}:latest \

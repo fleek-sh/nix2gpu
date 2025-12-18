@@ -10,7 +10,14 @@ export NIX_BUILD_TOP=/tmp
 
 # // devices // userspace networking
 mkdir -p /dev/net
-[ ! -c /dev/net/tun ] && mknod /dev/net/tun c 10 200 && chmod 0666 /dev/net/tun
+
+if [ -c /dev/net/tun ]; then
+  if ! (exec 3<>/dev/net/tun) 2>/dev/null; then
+    echo "[nix2gpu] Warning: /dev/net/tun exists but cannot be opened (missing perms/caps/device policy?)"
+  fi
+else
+  echo "[nix2gpu] Warning: /dev/net/tun not present; TUN-based networking will be unavailable. Try running with --cap-add=MKNOD."
+fi
 
 # // ldconfig // regenerate cache with NVIDIA libs
 if [ -d /lib/x86_64-linux-gnu ] && [ "$(ls -A /lib/x86_64-linux-gnu/*.so* 2>/dev/null)" ]; then
