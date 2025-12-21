@@ -15,22 +15,12 @@ mkdir -p \
   "$out"/run/lock \
   "$out"/dev/dri
 
-cat >"$out/etc/passwd" <<'EOF'
-@nix2gpuPasswdContents@
-EOF
-
-cat >"$out/etc/group" <<'EOF'
-@nix2gpuGroupContents@
-EOF
-
-cat >"$out/etc/shadow" <<'EOF'
-@nix2gpuShadowContents@
-EOF
-
-mkdir -p "$out/etc/nix"
-cat >"$out/etc/nix/nix.conf" <<'EOF'
-@nixConfig@
-EOF
+write-passwd
+write-group
+write-shadow
+write-nix
+write-sshd
+write-ld
 
 # Nixpkgs config for unfree packages
 mkdir -p "$out/root/.config/nixpkgs"
@@ -39,11 +29,6 @@ cat >"$out/root/.config/nixpkgs/config.nix" <<'EOF'
   allowUnfree = true;
   cudaSupport = true;
 }
-EOF
-
-mkdir -p "$out/etc/ssh"
-cat >"$out/etc/ssh/sshd_config" <<'EOF'
-@sshdConfig@
 EOF
 
 # // nvidia-container-toolkit // paths
@@ -81,8 +66,8 @@ EOF
 
 # // ssl // certificates
 mkdir -p "$out/etc/ssl/certs"
-ln -s @cacert@/etc/ssl/certs/ca-bundle.crt "$out/etc/ssl/certs/ca-bundle.crt"
-ln -s @cacert@/etc/ssl/certs/ca-bundle.crt "$out/etc/ssl/certs/ca-certificates.crt"
+ln -s cacert/etc/ssl/certs/ca-bundle.crt "$out/etc/ssl/certs/ca-bundle.crt"
+ln -s cacert/etc/ssl/certs/ca-bundle.crt "$out/etc/ssl/certs/ca-certificates.crt"
 
 cat >"$out/etc/nsswitch.conf" <<'EOF'
 passwd:    files
@@ -105,18 +90,15 @@ PRETTY_NAME="nix2gpu GPU container"
 EOF
 
 # // shell // compatibility
-ln -s @bashInteractive@/bin/bash "$out/bin/bash"
-ln -s @bashInteractive@/bin/bash "$out/bin/sh"
-ln -s @coreutils@/bin/env "$out/usr/bin/env"
+bash_path="$(which bash)"
+ln -s "$bash_path" "$out/bin/bash"
+ln -s "$bash_path" "$out/bin/sh"
+ln -s "$(which env)" "$out/usr/bin/env"
 
 # // nvidia-container-cli // ldconfig
-ln -s @glibcBin@/sbin/ldconfig "$out/sbin/ldconfig"
-ln -s @glibcBin@/sbin/ldconfig.real "$out/sbin/ldconfig.real"
-
-# // dynamic linking // standard interpreter
-if [ -e @glibc@/lib/ld-linux-x86-64.so.2 ]; then
-  ln -s @glibc@/lib/ld-linux-x86-64.so.2 "$out/lib64/ld-linux-x86-64.so.2"
-fi
+ldconfig_path="$(which ldconfig)"
+ln -s "$ldconfig_path" "$out/sbin/ldconfig"
+ln -s "$ldconfig_path" "$out/sbin/ldconfig.real"
 
 # // locale
 cat >"$out/etc/locale.conf" <<'EOF'

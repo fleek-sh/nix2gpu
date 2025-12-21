@@ -24,35 +24,68 @@ in
   });
 
   config.perSystem =
-    { pkgs, config, ... }:
+    { config, pkgs, ... }:
+    let
+      mkFileCreator =
+        name: outLocation: contents:
+        pkgs.resholve.writeScriptBin name
+          {
+            interpreter = lib.getExe pkgs.bash;
+            inputs = [ pkgs.coreutils ];
+          }
+          ''
+            set -euo pipefail
+
+            mkdir -p "$(dirname ${outLocation})"
+
+            cat >${outLocation} <<'EOF'
+            ${contents}
+            EOF
+          '';
+
+      writeLd =
+        pkgs.resholve.writeScriptBin "write-ld"
+          {
+            interpreter = lib.getExe pkgs.bash;
+            inputs = [ pkgs.coreutils ];
+          }
+          ''
+            set -euo pipefail
+
+            mkdir -p "$out/lib64"
+
+            ln -s "${pkgs.glibc}/lib64/ld-linux-x86-64.so.2" "$out/lib64/ld-linux-x86-64.so.2"
+          '';
+    in
     {
       perContainer =
         { container, ... }:
         let
-          script = pkgs.replaceVars ./create-base-system.sh {
-            inherit (container.options) sshdConfig nixConfig;
-
-            inherit (config) nix2gpuPasswdContents nix2gpuGroupContents nix2gpuShadowContents;
-
-            inherit (pkgs)
-              bashInteractive
-              coreutils
-              glibc
-              cacert
-              ;
-
-            glibcBin = pkgs.glibc.bin;
-          };
+          script = pkgs.resholve.writeScriptBin "create-base-system" {
+            interpreter = lib.getExe pkgs.bash;
+            inputs =
+              with pkgs;
+              [
+                coreutils
+                which
+                plocate
+              ]
+              ++ [
+                (mkFileCreator "write-passwd" "$out/etc/passwd" config.nix2gpuPasswdContents)
+                (mkFileCreator "write-group" "$out/etc/group" config.nix2gpuGroupContents)
+                (mkFileCreator "write-shadow" "$out/etc/shadow" config.nix2gpuShadowContents)
+                (mkFileCreator "write-nix" "$out/etc/nix/nix.conf" container.options.nixConfig)
+                (mkFileCreator "write-sshd" "$out/etc/ssh/sshd_config" container.options.sshdConfig)
+                writeLd
+              ];
+            prologue =
+              (pkgs.writeText "setup-glibc" ''
+                export PATH="${pkgs.glibc.bin}/bin:$PATH"
+              '').outPath;
+          } (builtins.readFile ./create-base-system.sh);
         in
         {
-          baseSystem = pkgs.runCommandLocal "base-system" {
-            nativeBuildInputs = with pkgs; [
-              bashInteractive
-              coreutils
-              glibc
-              cacert
-            ];
-          } (builtins.readFile script);
+          baseSystem = pkgs.runCommandLocal "base-system" { } (lib.getExe script);
         };
     };
 }
