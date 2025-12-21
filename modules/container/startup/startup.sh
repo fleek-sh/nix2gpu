@@ -1,4 +1,5 @@
 # shellcheck shell=bash
+
 set -euo pipefail
 
 echo "[nix2gpu] Container initialization starting..."
@@ -58,7 +59,7 @@ if [ -n "${ROOT_PASSWORD:-}" ]; then
   echo "root:$ROOT_PASSWORD" | chpasswd
 else
   echo "[nix2gpu] Enabling passwordless root..."
-  /run/current-system/sw/bin/passwd -d root
+  passwd -d root
 fi
 
 export HOME="/root"

@@ -61,8 +61,14 @@ in
                 ];
                 keep = {
                   "/usr/bin/nvidia-smi" = true;
-                  "/run/current-system/sw/bin/passwd" = true;
                 };
+                fake = {
+                  external = [ "passwd" ];
+                };
+                prologue =
+                  (pkgs.writeText "setup-passwd" ''
+                    export PATH="${pkgs.shadow}/bin:$PATH"
+                  '').outPath;
               }
               ''
                 ${builtins.readFile ./startup.sh}
