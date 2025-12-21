@@ -82,6 +82,8 @@ in
                   ];
                 }
                 ''
+                  set -euo pipefail
+
                   if which podman &>/dev/null; then
                     exec podman-shell "$@"
                   fi
