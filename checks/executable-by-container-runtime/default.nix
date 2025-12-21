@@ -2,7 +2,7 @@
   perSystem =
     { self', pkgs, ... }:
     {
-      checks.executableByContainerRuntime = pkgs.testers.runNixOSTest {
+      checks.executable-by-container-runtime = pkgs.testers.runNixOSTest {
         name = "executable-by-container-runtime";
         nodes.containerRunner = _: {
           virtualisation = {

@@ -1,3 +1,4 @@
+{ lib, ... }:
 let
   noShellExecutorError = ''
     Neither `docker` or `podman` could be found on path.
@@ -35,10 +36,20 @@ in
         let
           mkShell =
             shell:
-            pkgs.writeShellApplication {
-              name = "${shell}-shell";
-              runtimeInputs = [ inputs'.nix2container.packages.skopeo-nix2container ];
-              text = ''
+            pkgs.resholve.writeScriptBin "${shell}-shell"
+              {
+                interpreter = lib.getExe pkgs.bash;
+                inputs = [ inputs'.nix2container.packages.skopeo-nix2container ];
+                fake = {
+                  external = [
+                    "docker"
+                    "podman"
+                  ];
+                };
+              }
+              ''
+                set -euo pipefail
+
                 echo "[nix2gpu] starting ${shell} shell..."
 
                 exec ${shell} run --rm -it \
@@ -50,33 +61,40 @@ in
                   /bin/bash \
                   "$@"
               '';
-            };
         in
         {
           scripts = rec {
             podmanShell = mkShell "podman";
             dockerShell = mkShell "docker";
-            shell = pkgs.writeShellApplication {
-              name = "shell";
-              runtimeInputs = [
-                podmanShell
-                dockerShell
-              ];
-              text = ''
-                if which podman &>/dev/null; then
-                  exec podman-shell "$@"
-                fi
+            shell =
+              pkgs.resholve.writeScriptBin "shell"
+                {
+                  interpreter = lib.getExe pkgs.bash;
+                  execer = [
+                    "cannot:${lib.getExe podmanShell}"
+                    "cannot:${lib.getExe dockerShell}"
+                  ];
+                  inputs = [
+                    podmanShell
+                    dockerShell
+                    pkgs.which
+                    pkgs.coreutils
+                  ];
+                }
+                ''
+                  if which podman &>/dev/null; then
+                    exec podman-shell "$@"
+                  fi
 
-                if which docker &>/dev/null; then
-                  exec docker-shell "$@"
-                fi
+                  if which docker &>/dev/null; then
+                    exec docker-shell "$@"
+                  fi
 
-                printf "\n\n\033[31mError:\033[0m %s\n\n\n" "$(cat <<'EOF'
-                ${noShellExecutorError}
-                EOF
-                )" >&2
-              '';
-            };
+                  printf "\n\n\033[31mError:\033[0m %s\n\n\n" "$(cat <<'EOF'
+                  ${noShellExecutorError}
+                  EOF
+                  )" >&2
+                '';
           };
         };
     };

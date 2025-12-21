@@ -46,10 +46,18 @@ in
           inputs'.nix2container.packages.nix2container.buildImage
         else
           pkgs.dockerTools.buildImage;
+
+      mkContainerChecks =
+        containerName: containerCfg:
+        lib.mapAttrs' (name: value: lib.nameValuePair "${containerName}-${name}" value) containerCfg.checks;
     in
     {
       packages = builtins.mapAttrs (name: value: value.packages.${name}) config.allContainers;
-      checks = builtins.mapAttrs (name: value: value.checks."is-valid-${name}") config.allContainers;
+      checks = lib.pipe config.allContainers [
+        (builtins.mapAttrs mkContainerChecks)
+        builtins.attrValues
+        lib.mergeAttrsList
+      ];
 
       perContainer =
         { container, config, ... }:
@@ -111,7 +119,7 @@ in
                 passthru = (oldAttrs.passthru or { }) // config.scripts;
               });
 
-          checks."is-valid-${name}" = packages.${name};
+          checks."is-valid" = packages.${name};
         };
     };
 }
