@@ -328,6 +328,7 @@ ______________________________________________________________________
 
 ```nix
 nix2gpu."my-container" = {
+  age.enable = true;
   age.secrets.tailscale-key = {
     file = ./secrets/ts-key.age;
     path = "/run/secrets/ts-key";

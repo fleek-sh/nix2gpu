@@ -5,6 +5,7 @@
   perSystem.nix2gpu."auth-key" =
     { config, ... }:
     {
+      age.enable = true;
       age.secrets.tailscale-key = {
         file = ./_secrets/example.age;
         path = "/run/secrets/example";

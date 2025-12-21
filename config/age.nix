@@ -163,6 +163,8 @@ let
 
   ageType = types.submodule {
     options = {
+      enable = mkEnableOption "enable agenix integration";
+
       package = mkPackageOption pkgs "rage" { };
 
       secrets = mkOption {
@@ -220,12 +222,18 @@ in
         url = "github:nix-community/agenix";
         inputs.nixpkgs.follows = "nixpkgs";
       };
+      ```
+
+      Then enable the module with:
+      ```nix
+      age.enable = true;
+      ```
     '';
     type = ageType;
     default = { };
   };
 
-  config = mkIf (cfg.secrets != { } && inputs ? agenix) {
+  config = mkIf (cfg.secrets != { } && inputs ? agenix && cfg.enable) {
     systemPackages = [ mountingScript ];
 
     extraStartupScript =
