@@ -1,3 +1,4 @@
+{ lib, ... }:
 let
   noRuntimeExecutorError = ''
     Neither `docker` or `podman` could be found on path.
@@ -34,14 +35,27 @@ in
       perContainer =
         { container, ... }:
         {
-          scripts = {
-            copyToContainerRuntime = pkgs.writeShellApplication {
-              name = "copy-to-container-runtime";
-              runtimeInputs = with self'.packages.${container.name}; [
-                copyToPodman
-                copyToDockerDaemon
-              ];
-              text = ''
+          scripts.copyToContainerRuntime =
+            pkgs.resholve.writeScriptBin "copy-to-container-runtime"
+              {
+                interpreter = lib.getExe pkgs.bash;
+                inputs =
+                  (with self'.packages.${container.name}; [
+                    copyToPodman
+                    copyToDockerDaemon
+                  ])
+                  ++ [
+                    pkgs.which
+                    pkgs.coreutils
+                  ];
+                execer = [
+                  "cannot:${lib.getExe self'.packages.${container.name}.copyToPodman}"
+                  "cannot:${lib.getExe self'.packages.${container.name}.copyToDockerDaemon}"
+                ];
+              }
+              ''
+                set -euo pipefail
+
                 if which podman &>/dev/null; then
                   exec copy-to-podman "$@"
                 fi
@@ -55,8 +69,6 @@ in
                 EOF
                 )" >&2
               '';
-            };
-          };
         };
     };
 }
