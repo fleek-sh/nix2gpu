@@ -48,9 +48,19 @@ in
                 interpreter = lib.getExe pkgs.bash;
                 inputs =
                   config.environment.allPkgs
-                  ++ lib.optionals (inputs ? home-manager) [
-                    outerConfig.nix2gpuHomeConfigurations.default.activationPackage
-                  ];
+                  ++ lib.optional (inputs ? home-manager) (
+                    pkgs.writeShellApplication {
+                      name = "safe-hm-activate";
+                      runtimeInputs = [
+                        pkgs.nix
+                        pkgs.coreutils
+                        outerConfig.nix2gpuHomeConfigurations.default.activationPackage
+                      ];
+                      text = ''
+                        home-manager-generation
+                      '';
+                    }
+                  );
                 execer = [
                   "cannot:${lib.getExe' pkgs.openssh "ssh-keygen"}"
                   "cannot:${lib.getExe' pkgs.openssh "sshd"}"
@@ -75,7 +85,7 @@ in
 
                 ${lib.optionalString (inputs ? home-manager) ''
                   echo "[nix2gpu] activating home-manager..."
-                  home-manager-generation
+                  safe-hm-activate
                 ''}
 
                 ${outerConfig.nix2gpu.${container.name}.extraStartupScript}
