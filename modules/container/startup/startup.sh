@@ -1,4 +1,6 @@
 # shellcheck shell=bash
+set -euo pipefail
+
 echo "[nix2gpu] Container initialization starting..."
 
 # // critical // runtime directories
