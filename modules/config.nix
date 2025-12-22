@@ -21,7 +21,12 @@ let
 in
 {
   options.perSystem = mkPerSystemOption (
-    { pkgs, config, ... }:
+    {
+      pkgs,
+      config,
+      self',
+      ...
+    }:
     {
       options.nix2gpu = mkOption {
         description = ''
@@ -75,7 +80,7 @@ in
                 };
               };
 
-              config._module.args = { inherit inputs pkgs; };
+              config._module.args = { inherit inputs pkgs self'; };
             }
           )
         );

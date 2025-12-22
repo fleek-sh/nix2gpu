@@ -2,7 +2,6 @@
   config,
   lib,
   flake-parts-lib,
-  inputs,
   ...
 }:
 let
@@ -43,9 +42,6 @@ in
             runtimeInputs = container.options.systemPackages;
             text = outerConfig.nix2gpu.${container.name}.extraStartupScript;
           };
-
-          hasServices =
-            inputs ? services-flake && inputs ? process-compose-flake && container.options ? services;
         in
         {
           startupScript =
@@ -76,23 +72,6 @@ in
                 ${builtins.readFile ./startup.sh}
 
                 extra-startup-script
-
-                ${
-                  if hasServices then
-                    ''
-                      if [[ $- != *i* ]] || ! [ -t 0 ]; then
-                        export PC_DISABLE_TUI=true
-                      fi
-
-                      echo "[nix2gpu] starting services..."
-                      ${container.name}-services
-                    ''
-                  else
-                    ''
-                      echo "[nix2gpu] entering interactive terminal..."
-                      sleep infinity
-                    ''
-                }
               '';
         };
     };

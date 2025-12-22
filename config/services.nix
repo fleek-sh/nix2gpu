@@ -1,6 +1,21 @@
-{ lib, ... }:
+{
+  lib,
+  config,
+  self',
+  name,
+  ...
+}:
 let
   inherit (lib) types mkOption literalExpression;
+
+  mkIfElse =
+    cond: do: otherwise:
+    lib.mkMerge [
+      (lib.mkIf cond do)
+      (lib.mkIf (!cond) otherwise)
+    ];
+
+  cfg = config.services;
 in
 {
   options.services = mkOption {
@@ -45,4 +60,25 @@ in
     type = types.lazyAttrsOf types.raw;
     default = { };
   };
+
+  config =
+    mkIfElse (cfg != { })
+      {
+        systemPackages = [ self'.packages."${name}-services" ];
+
+        extraStartupScript = ''
+          if [[ $- != *i* ]] || ! [ -t 0 ]; then
+            export PC_DISABLE_TUI=true
+          fi
+
+          echo "[nix2gpu] starting services..."
+          ${name}-services
+        '';
+      }
+      {
+        extraStartupScript = ''
+          echo "[nix2gpu] waiting for user interaction over ssh..."
+          sleep infinity
+        '';
+      };
 }
