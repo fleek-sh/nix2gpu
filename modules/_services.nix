@@ -1,12 +1,13 @@
-{ inputs, lib, ... }:
+{ rootInputs, ... }:
+{ lib, ... }:
 let
-  inherit (inputs) services-flake process-compose-flake import-tree;
-  inherit (inputs.services-flake.lib) multiService;
+  inherit (rootInputs) services-flake process-compose-flake import-tree;
+  inherit (rootInputs.services-flake.lib) multiService;
 
   processComposeFlakeModule = process-compose-flake.flakeModule;
   servicesProcessComposeModule = services-flake.processComposeModules.default;
 in
-lib.optionalAttrs (inputs ? services-flake && inputs ? process-compose-flake) {
+{
   imports = [ processComposeFlakeModule ];
 
   config.perSystem =

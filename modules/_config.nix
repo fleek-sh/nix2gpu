@@ -1,3 +1,4 @@
+{ rootInputs, ... }:
 {
   config,
   lib,
@@ -80,7 +81,14 @@ in
                 };
               };
 
-              config._module.args = { inherit inputs pkgs self'; };
+              config._module.args = {
+                inherit
+                  inputs
+                  pkgs
+                  self'
+                  rootInputs
+                  ;
+              };
             }
           )
         );

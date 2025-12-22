@@ -1,3 +1,4 @@
+{ rootInputs, ... }:
 {
   config,
   lib,
@@ -37,15 +38,11 @@ in
     {
       config,
       pkgs,
-      inputs',
+      system,
       ...
     }:
     let
-      buildImage =
-        if (inputs' ? nix2container) then
-          inputs'.nix2container.packages.nix2container.buildImage
-        else
-          pkgs.dockerTools.buildImage;
+      inherit (rootInputs.nix2container.packages.${system}.nix2container) buildImage;
 
       mkContainerChecks =
         containerName: containerCfg:
@@ -86,35 +83,32 @@ in
 
         rec {
           packages."${name}" =
-            (buildImage (
-              (lib.optionalAttrs (inputs' ? nix2container) {
-                inherit (options) maxLayers;
-                initializeNixDatabase = true;
-              })
-              // {
-                inherit name;
-                inherit (options) tag;
+            (buildImage {
+              inherit name;
+              inherit (options) tag;
 
-                copyToRoot = options.copyToRoot ++ options.extraCopyToRoot;
+              inherit (options) maxLayers;
+              initializeNixDatabase = true;
 
-                config = {
-                  entrypoint = [
-                    "${pkgs.tini}/bin/tini"
-                    "--"
-                    "${config.startupScript}/bin/${container.name}-startup.sh"
-                  ];
+              copyToRoot = options.copyToRoot ++ options.extraCopyToRoot;
 
-                  Env = (toEnvStrings options.env) ++ (toEnvStrings options.extraEnv);
+              config = {
+                entrypoint = [
+                  "${pkgs.tini}/bin/tini"
+                  "--"
+                  "${config.startupScript}/bin/${container.name}-startup.sh"
+                ];
 
-                  WorkingDir = options.workingDir;
-                  User = options.user;
+                Env = (toEnvStrings options.env) ++ (toEnvStrings options.extraEnv);
 
-                  ExposedPorts = options.exposedPorts;
+                WorkingDir = options.workingDir;
+                User = options.user;
 
-                  Labels = options.labels // options.extraLabels;
-                };
-              }
-            )).overrideAttrs
+                ExposedPorts = options.exposedPorts;
+
+                Labels = options.labels // options.extraLabels;
+              };
+            }).overrideAttrs
               (oldAttrs: {
                 passthru = (oldAttrs.passthru or { }) // config.scripts;
               });

@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 let
@@ -214,15 +213,8 @@ in
       `nix2gpu`, and allows simplified management of age encrypted secrets in
       nix.
 
-      To use this, you must first enable the optional `home-manager` 
-      integration by adding it to your flake inputs:
-
-      ```nix
-      inputs.agenix = {
-        url = "github:nix-community/agenix";
-        inputs.nixpkgs.follows = "nixpkgs";
-      };
-      ```
+      To use this, you must first enable the optional `agenix` 
+      integration:
 
       Then enable the module with:
       ```nix
@@ -233,7 +225,7 @@ in
     default = { };
   };
 
-  config = mkIf (cfg.secrets != { } && inputs ? agenix && cfg.enable) {
+  config = mkIf cfg.enable {
     systemPackages = [ mountingScript ];
 
     extraStartupScript =

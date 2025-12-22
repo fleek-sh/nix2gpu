@@ -76,7 +76,16 @@
     { flake-parts, import-tree, ... }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } (
       let
-        module = import-tree ./modules;
+        module = {
+          imports = [
+            (import-tree ./modules)
+            (importApplyRoot ./modules/_config.nix)
+            (importApplyRoot ./modules/_services.nix)
+            (importApplyRoot ./modules/container/_package.nix)
+          ];
+        };
+
+        importApplyRoot = file: flake-parts.lib.importApply file { rootInputs = inputs; };
       in
       {
         flake.flakeModule = module;
