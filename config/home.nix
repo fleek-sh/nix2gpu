@@ -1,12 +1,20 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  inputs,
+  pkgs,
+  ...
+}:
 let
+  inherit (inputs) home-manager;
   inherit (lib)
     types
     mkOption
     literalExpression
     literalMD
     ;
-  inherit (config) systemConfig;
+
+  cfg = config.home;
 in
 {
   options.home = mkOption {
@@ -42,10 +50,32 @@ in
       };
     '';
     type = types.lazyAttrsOf types.raw;
-    inherit (systemConfig.homeConfigurations) default;
+    default = home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      extraSpecialArgs = { inherit inputs; };
+      modules = [
+        ./home/_tmux
+        ./home/_starship
+        ./home/_bash
+        ./home/_config.nix
+      ];
+    };
     defaultText = literalMD ''
       A sample home manager config with some nice defaults
       from nix2gpu
+    '';
+  };
+
+  config = {
+    systemPackages = [
+      pkgs.nix
+      pkgs.coreutils
+      cfg.activationPackage
+    ];
+
+    extraStartupScript = ''
+      echo "[nix2gpu] activating home-manager..."
+      home-manager-generation
     '';
   };
 }

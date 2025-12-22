@@ -38,6 +38,12 @@ in
       perContainer =
         { container, config, ... }:
         let
+          extraStartupScript = pkgs.writeShellApplication {
+            name = "extra-startup-script";
+            runtimeInputs = container.options.systemPackages;
+            text = outerConfig.nix2gpu.${container.name}.extraStartupScript;
+          };
+
           hasServices =
             inputs ? services-flake && inputs ? process-compose-flake && container.options ? services;
         in
@@ -46,21 +52,7 @@ in
             pkgs.resholve.writeScriptBin "${container.name}-startup.sh"
               {
                 interpreter = lib.getExe pkgs.bash;
-                inputs =
-                  config.environment.allPkgs
-                  ++ lib.optional (inputs ? home-manager) (
-                    pkgs.writeShellApplication {
-                      name = "safe-hm-activate";
-                      runtimeInputs = [
-                        pkgs.nix
-                        pkgs.coreutils
-                        outerConfig.nix2gpuHomeConfigurations.default.activationPackage
-                      ];
-                      text = ''
-                        home-manager-generation
-                      '';
-                    }
-                  );
+                inputs = config.environment.allPkgs ++ [ extraStartupScript ];
                 execer = [
                   "cannot:${lib.getExe' pkgs.openssh "ssh-keygen"}"
                   "cannot:${lib.getExe' pkgs.openssh "sshd"}"
@@ -83,12 +75,7 @@ in
               ''
                 ${builtins.readFile ./startup.sh}
 
-                ${lib.optionalString (inputs ? home-manager) ''
-                  echo "[nix2gpu] activating home-manager..."
-                  safe-hm-activate
-                ''}
-
-                ${outerConfig.nix2gpu.${container.name}.extraStartupScript}
+                extra-startup-script
 
                 ${
                   if hasServices then
