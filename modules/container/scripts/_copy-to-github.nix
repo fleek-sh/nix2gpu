@@ -1,4 +1,4 @@
-{ rootInputs, ... }:
+{ nix2gpuInputs, ... }:
 { lib, ... }:
 {
   perSystem =
@@ -9,7 +9,7 @@
       ...
     }:
     let
-      skopeo = rootInputs.nix2container.packages.${system}.skopeo-nix2container;
+      skopeo = nix2gpuInputs.nix2container.packages.${system}.skopeo-nix2container;
     in
     {
       perContainer =

@@ -87,7 +87,7 @@
           ];
         };
 
-        importApplyRoot = file: flake-parts.lib.importApply file { rootInputs = inputs; };
+        importApplyRoot = file: flake-parts.lib.importApply file { nix2gpuInputs = inputs; };
       in
       {
         flake.flakeModule = module;

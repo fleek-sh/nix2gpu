@@ -1,4 +1,4 @@
-{ rootInputs, ... }:
+{ nix2gpuInputs, ... }:
 {
   config,
   lib,
@@ -42,7 +42,7 @@ in
       ...
     }:
     let
-      inherit (rootInputs.nix2container.packages.${system}.nix2container) buildImage;
+      inherit (nix2gpuInputs.nix2container.packages.${system}.nix2container) buildImage;
 
       mkContainerChecks =
         containerName: containerCfg:

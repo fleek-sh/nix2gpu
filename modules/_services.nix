@@ -1,8 +1,8 @@
-{ rootInputs, ... }:
+{ nix2gpuInputs, ... }:
 { lib, ... }:
 let
-  inherit (rootInputs) services-flake process-compose-flake import-tree;
-  inherit (rootInputs.services-flake.lib) multiService;
+  inherit (nix2gpuInputs) services-flake process-compose-flake import-tree;
+  inherit (nix2gpuInputs.services-flake.lib) multiService;
 
   processComposeFlakeModule = process-compose-flake.flakeModule;
   servicesProcessComposeModule = services-flake.processComposeModules.default;

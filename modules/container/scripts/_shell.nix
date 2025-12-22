@@ -1,4 +1,4 @@
-{ rootInputs, ... }:
+{ nix2gpuInputs, ... }:
 { lib, ... }:
 let
   noShellExecutorError = ''
@@ -25,7 +25,7 @@ let
 
     For other systems please consult your own documentation.
 
-    Source: `${./shell.nix}`
+    Source: `${./_shell.nix}`
   '';
 in
 {
@@ -40,7 +40,7 @@ in
             pkgs.resholve.writeScriptBin "${shell}-shell"
               {
                 interpreter = lib.getExe pkgs.bash;
-                inputs = [ rootInputs.nix2container.packages.${system}.skopeo-nix2container ];
+                inputs = [ nix2gpuInputs.nix2container.packages.${system}.skopeo-nix2container ];
                 fake = {
                   external = [
                     "docker"

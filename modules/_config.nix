@@ -1,4 +1,4 @@
-{ rootInputs, ... }:
+{ nix2gpuInputs, ... }:
 {
   config,
   lib,
@@ -86,7 +86,7 @@ in
                   inputs
                   pkgs
                   self'
-                  rootInputs
+                  nix2gpuInputs
                   ;
               };
             }
