@@ -82,6 +82,8 @@
             (importApplyRoot ./modules/_config.nix)
             (importApplyRoot ./modules/_services.nix)
             (importApplyRoot ./modules/container/_package.nix)
+            (importApplyRoot ./modules/container/scripts/_copy-to-github.nix)
+            (importApplyRoot ./modules/container/scripts/_shell.nix)
           ];
         };
 

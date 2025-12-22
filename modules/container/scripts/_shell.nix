@@ -1,3 +1,4 @@
+{ rootInputs, ... }:
 { lib, ... }:
 let
   noShellExecutorError = ''
@@ -29,7 +30,7 @@ let
 in
 {
   perSystem =
-    { pkgs, inputs', ... }:
+    { pkgs, system, ... }:
     {
       perContainer =
         { container, ... }:
@@ -39,7 +40,7 @@ in
             pkgs.resholve.writeScriptBin "${shell}-shell"
               {
                 interpreter = lib.getExe pkgs.bash;
-                inputs = [ inputs'.nix2container.packages.skopeo-nix2container ];
+                inputs = [ rootInputs.nix2container.packages.${system}.skopeo-nix2container ];
                 fake = {
                   external = [
                     "docker"

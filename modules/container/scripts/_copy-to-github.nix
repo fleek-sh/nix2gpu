@@ -1,12 +1,16 @@
+{ rootInputs, ... }:
 { lib, ... }:
 {
   perSystem =
     {
       pkgs,
-      inputs',
+      system,
       self',
       ...
     }:
+    let
+      skopeo = rootInputs.nix2container.packages.${system}.skopeo-nix2container;
+    in
     {
       perContainer =
         { container, ... }:
@@ -15,14 +19,14 @@
             pkgs.resholve.writeScriptBin "${container.name}-copy-to-github-registry"
               {
                 interpreter = lib.getExe pkgs.bash;
-                inputs = with pkgs; [
-                  gh
-                  inputs'.nix2container.packages.skopeo-nix2container
-                  coreutils
+                inputs = [
+                  pkgs.gh
+                  pkgs.coreutils
+                  skopeo
                 ];
                 execer = [
                   "cannot:${lib.getExe pkgs.gh}"
-                  "cannot:${lib.getExe inputs'.nix2container.packages.skopeo-nix2container}"
+                  "cannot:${lib.getExe skopeo}"
                 ];
               }
               ''
