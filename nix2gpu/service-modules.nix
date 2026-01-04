@@ -3,6 +3,8 @@ let
   inherit (lib) types mkOption literalExpression;
 in
 {
+  _class = "nix2gpu";
+
   options.serviceModules = mkOption {
     description = ''
       Extra `services-flake` compatible modules to use in your container.

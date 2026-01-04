@@ -3,6 +3,8 @@ let
   inherit (lib) types mkOption literalExpression;
 in
 {
+  _class = "nix2gpu";
+
   options.extraCopyToRoot = mkOption {
     description = ''
       A list of extra packages to be copied to the root of the container.

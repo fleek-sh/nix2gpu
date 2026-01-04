@@ -3,6 +3,8 @@ let
   inherit (lib) types mkOption literalExpression;
 in
 {
+  _class = "nix2gpu";
+
   options.systemPackages = mkOption {
     description = ''
       A list of system packages to be copied into the container.

@@ -205,6 +205,8 @@ let
   };
 in
 {
+  _class = "nix2gpu";
+
   options.age = mkOption {
     description = ''
       The `agenix` configuration for the container's user environment.

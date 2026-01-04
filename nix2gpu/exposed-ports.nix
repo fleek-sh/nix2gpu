@@ -3,6 +3,8 @@ let
   inherit (lib) types mkOption literalExpression;
 in
 {
+  _class = "nix2gpu";
+
   options.exposedPorts = mkOption {
     description = ''
       A set of ports to expose from the container.

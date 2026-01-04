@@ -4,6 +4,8 @@ let
   inherit (config) systemConfig name;
 in
 {
+  _class = "nix2gpu";
+
   options.labels = mkOption {
     description = ''
       A set of labels to apply to the container.
