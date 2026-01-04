@@ -3,6 +3,8 @@ let
   inherit (lib) types mkOption literalExpression;
 in
 {
+  _class = "nix2gpu";
+
   options.maxLayers = mkOption {
     description = ''
       The maximum number of layers to use when creating the container image.

@@ -4,6 +4,8 @@ let
   inherit (config) pkgs;
 in
 {
+  _class = "nix2gpu";
+
   options.env = mkOption {
     description = ''
       A list of environment variables to set inside the container.

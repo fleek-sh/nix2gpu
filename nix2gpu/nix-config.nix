@@ -10,6 +10,8 @@ let
   defaultContents = builtins.readFile ../modules/container/config/nix.conf;
 in
 {
+  _class = "nix2gpu";
+
   options.nixConfig = mkOption {
     description = ''
       The content of the [`nix.conf`](https://nix.dev/manual/nix/2.31/command-ref/conf-file.html) file to be used inside the container.

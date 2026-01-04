@@ -3,6 +3,8 @@ let
   inherit (lib) types mkOption literalExpression;
 in
 {
+  _class = "nix2gpu";
+
   options.tag = mkOption {
     description = ''
       The tag to use for your container image.

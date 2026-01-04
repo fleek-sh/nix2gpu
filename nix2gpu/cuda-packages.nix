@@ -4,6 +4,8 @@ let
   inherit (config) rootConfig pkgs;
 in
 {
+  _class = "nix2gpu";
+
   options.cudaPackages = mkOption {
     description = ''
       The set of CUDA packages to be used in the container.

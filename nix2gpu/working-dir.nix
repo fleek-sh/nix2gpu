@@ -8,6 +8,8 @@ let
     ;
 in
 {
+  _class = "nix2gpu";
+
   options.workingDir = mkOption {
     description = ''
       The working directory for the container.

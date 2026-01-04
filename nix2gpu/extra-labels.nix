@@ -3,6 +3,8 @@ let
   inherit (lib) types mkOption literalExpression;
 in
 {
+  _class = "nix2gpu";
+
   options.extraLabels = mkOption {
     description = ''
       A set of extra labels to apply to the container.

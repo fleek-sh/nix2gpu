@@ -3,6 +3,8 @@ let
   inherit (lib) types mkOption literalExpression;
 in
 {
+  _class = "nix2gpu";
+
   options.registries = mkOption {
     description = ''
       The container registries to push your images to.

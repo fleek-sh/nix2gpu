@@ -3,6 +3,8 @@ let
   inherit (lib) mkOption literalExpression mkOptionType;
 in
 {
+  _class = "nix2gpu";
+
   options.extraStartupScript = mkOption {
     description = ''
       A string of shell commands to be executed at the end of the container's startup script.

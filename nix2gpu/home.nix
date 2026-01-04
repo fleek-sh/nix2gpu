@@ -17,6 +17,8 @@ let
   cfg = config.home;
 in
 {
+  _class = "nix2gpu";
+
   options.home = mkOption {
     description = ''
       The `home-manager` configuration for the container's user environment.

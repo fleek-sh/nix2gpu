@@ -18,6 +18,8 @@ let
   cfg = config.services;
 in
 {
+  _class = "nix2gpu";
+
   options.services = mkOption {
     description = ''
       The `services-flake` configuration for the container.

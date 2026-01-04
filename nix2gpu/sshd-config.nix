@@ -11,6 +11,8 @@ let
   sshdConf = pkgs.replaceVars ../modules/container/config/sshd_config { inherit (pkgs) openssh; };
 in
 {
+  _class = "nix2gpu";
+
   options.sshdConfig = mkOption {
     description = ''
       The content of the `sshd_config` file to be used inside the container.

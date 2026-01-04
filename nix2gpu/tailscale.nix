@@ -34,6 +34,8 @@ let
   };
 in
 {
+  _class = "nix2gpu";
+
   options.tailscale = mkOption {
     description = ''
       The tailscale configuration to use for your `nix2gpu` container.

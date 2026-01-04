@@ -8,6 +8,8 @@ let
     ;
 in
 {
+  _class = "nix2gpu";
+
   options.user = mkOption {
     description = ''
       The default user for the container.

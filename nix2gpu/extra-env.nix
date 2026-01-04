@@ -3,6 +3,8 @@ let
   inherit (lib) types mkOption literalExpression;
 in
 {
+  _class = "nix2gpu";
+
   options.extraEnv = mkOption {
     description = ''
       A list of extra environment variables to set inside the container.

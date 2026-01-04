@@ -9,6 +9,8 @@ let
   inherit (config) systemConfig name;
 in
 {
+  _class = "nix2gpu";
+
   options.copyToRoot = mkOption {
     description = ''
       A list of packages to be copied to the root of the container.
