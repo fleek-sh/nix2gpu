@@ -9,15 +9,6 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:vic/import-tree";
 
-    nix2container = {
-      # TODO: Return to actual nix2container once this is merged
-      url = "github:baileylutcd/nix2container?ref=add-passthru-attribute";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    services-flake.url = "github:juspay/services-flake";
-    process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -41,66 +32,36 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    flake-parts-website = {
-      url = "github:baileylutcd/flake.parts-website?ref=expose-render-module";
+    ndg = {
+      url = "github:feel-co/ndg";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-parts.follows = "flake-parts";
-      inputs.treefmt-nix.follows = "treefmt-nix";
-      inputs.process-compose-flake.follows = "process-compose-flake";
+    };
+
+    nimi = {
+      url = "git+ssh://git@github.com/weyl-ai/nimi.git?ref=baileylu/nixos-home-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
+      inputs.systems.follows = "systems";
+      inputs.treefmt-nix.follows = "treefmt-nix";
+      inputs.ndg.follows = "ndg";
     };
   };
 
   nixConfig = {
     extra-substituters = [
-      "https://ai.cachix.org"
-      "https://cache.garnix.io"
-      "https://cache.nixos.org"
-      "https://cuda-maintainers.cachix.org"
-      "https://huggingface.cachix.org"
-      "https://nix-community.cachix.org"
-      "https://numtide.cachix.org"
+      "https://weyl-ai.cachix.org"
     ];
     extra-trusted-public-keys = [
-      "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="
-      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
-      "huggingface.cachix.org-1:ynTPbLS0W8ofXd9fDjk1KvoFky9K2jhxe6r4nXAkc/o="
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+      "weyl-ai.cachix.org-1:cR0SpSAPw7wejZ21ep4SLojE77gp5F2os260eEWqTTw="
     ];
   };
 
   outputs =
     { flake-parts, import-tree, ... }@inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } (
-      let
-        module = {
-          imports = [
-            (import-tree ./modules)
-            (importApplyRoot ./modules/_config.nix)
-            (importApplyRoot ./modules/_services.nix)
-            (importApplyRoot ./modules/container/_package.nix)
-            (importApplyRoot ./modules/container/scripts/_copy-to-github.nix)
-            (importApplyRoot ./modules/container/scripts/_shell.nix)
-          ];
-        };
-
-        importApplyRoot = file: flake-parts.lib.importApply file { nix2gpuInputs = inputs; };
-      in
-      {
-        flake.flakeModule = module;
-
-        systems = import inputs.systems;
-        debug = true;
-
-        imports = [
-          module
-          (import-tree ./examples)
-          (import-tree ./dev)
-          (import-tree ./checks)
-        ];
-      }
-    );
+    flake-parts.lib.mkFlake { inherit inputs; } (import-tree [
+      ./examples
+      ./dev
+      ./checks
+      ./modules
+    ]);
 }
