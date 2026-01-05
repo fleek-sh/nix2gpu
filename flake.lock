@@ -220,11 +220,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1767290620,
-        "narHash": "sha256-x8r2skroZgaUDLHyWf5EkxiAIJdPsYZAeJMny5vVi3M=",
+        "lastModified": 1767628515,
+        "narHash": "sha256-bHijdLZEdiwpkVEsz47YQnd3y0Moz/SQtis2el+4yOk=",
         "ref": "baileylu/nixos-home-modules",
-        "rev": "d4015847ac77cb2c9a56aad9544bd66871f38b20",
-        "revCount": 97,
+        "rev": "e60b4620d4c879708b6e5077372c86c10ff81af1",
+        "revCount": 100,
         "type": "git",
         "url": "ssh://git@github.com/weyl-ai/nimi.git"
       },
@@ -334,6 +334,10 @@
         "import-tree": "import-tree",
         "ndg": "ndg",
         "nimi": "nimi",
+        "nix2container": [
+          "nimi",
+          "nix2container"
+        ],
         "nixified-ai": "nixified-ai",
         "nixpkgs": "nixpkgs",
         "systems": "systems",
