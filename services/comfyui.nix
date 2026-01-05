@@ -1,12 +1,7 @@
-{
-  lib,
-  name,
-  config,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
+{ lib, config, ... }:
 let
-  inherit (lib) types;
+  inherit (lib) mkOption mkPackageOption types;
 
   comfyuiPackage = config.package.override {
     withModels = config.models;
@@ -14,10 +9,12 @@ let
   };
 in
 {
-  options = {
-    package = lib.mkPackageOption pkgs "comfyui" { };
+  _class = "service";
 
-    listen = lib.mkOption {
+  options.comfyui = {
+    package = mkPackageOption pkgs "comfyui" { };
+
+    listen = mkOption {
       type = types.nullOr types.str;
       default = "127.0.0.1";
       description = ''
@@ -26,7 +23,7 @@ in
       example = "127.0.0.1";
     };
 
-    port = lib.mkOption {
+    port = mkOption {
       type = types.port;
       default = 8188;
       description = ''
@@ -34,7 +31,7 @@ in
       '';
     };
 
-    databasePath = lib.mkOption {
+    databasePath = mkOption {
       type = types.str;
       default = "${config.dataDir}/comfyui.db";
       example = "/home/my-user/comfyui/comfyui.db";
@@ -44,7 +41,7 @@ in
       apply = x: if (lib.hasPrefix "sqlite:///" x) then x else "sqlite:///${x}";
     };
 
-    extraFlags = lib.mkOption {
+    extraFlags = mkOption {
       type = types.listOf types.str;
       default = [ ];
       example = [
@@ -56,7 +53,7 @@ in
       '';
     };
 
-    models = lib.mkOption {
+    models = mkOption {
       type = types.listOf types.attrs;
       default = [ ];
       defaultText = [ ];
@@ -66,7 +63,7 @@ in
       '';
     };
 
-    customNodes = lib.mkOption {
+    customNodes = mkOption {
       type = types.listOf types.attrs;
       default = [ ];
       defaultText = [ ];
@@ -76,7 +73,7 @@ in
       '';
     };
 
-    environmentVariables = lib.mkOption {
+    environmentVariables = mkOption {
       type = types.attrsOf types.str;
       default = { };
       example = {
@@ -84,15 +81,11 @@ in
       };
       description = ''
         Set arbitrary environment variables for the comfyui service.
-
-        Be aware that these are only seen by the comfyui server (systemd service),
-        not normal invocations like `comfyui run`.
-        Since `comfyui run` is mostly a shell around the comfyui server, this is usually sufficient.
       '';
     };
   };
 
-  config.outputs.settings.processes."${name}" =
+  config =
     let
       wrapper = pkgs.writeShellApplication {
         name = "comfyui";
@@ -109,21 +102,6 @@ in
       };
     in
     {
-      command = lib.getExe wrapper;
-      availability = {
-        restart = "on_failure";
-        max_restarts = 5;
-      };
-      readiness_probe = {
-        http_get = {
-          inherit (config) port;
-          host = config.listen;
-        };
-        initial_delay_seconds = 2;
-        period_seconds = 10;
-        timeout_seconds = 4;
-        success_threshold = 1;
-        failure_threshold = 5;
-      };
+      process.argv = [ wrapper ];
     };
 }
