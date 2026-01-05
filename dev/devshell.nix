@@ -1,11 +1,6 @@
 {
   perSystem =
-    {
-      pkgs,
-      inputs',
-      config,
-      ...
-    }:
+    { pkgs, inputs', ... }:
     {
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
@@ -14,13 +9,8 @@
           inputs'.nix2container.packages.skopeo-nix2container
           dive
 
-          mkdocs
-          config.pythonWithMkdocs
-
           # vast-cli
           gh
-
-          nix-fast-build
         ];
       };
     };

@@ -45,15 +45,13 @@
       inputs.treefmt-nix.follows = "treefmt-nix";
       inputs.ndg.follows = "ndg";
     };
+
+    nix2container.follows = "nimi/nix2container";
   };
 
   nixConfig = {
-    extra-substituters = [
-      "https://weyl-ai.cachix.org"
-    ];
-    extra-trusted-public-keys = [
-      "weyl-ai.cachix.org-1:cR0SpSAPw7wejZ21ep4SLojE77gp5F2os260eEWqTTw="
-    ];
+    extra-substituters = [ "https://weyl-ai.cachix.org" ];
+    extra-trusted-public-keys = [ "weyl-ai.cachix.org-1:cR0SpSAPw7wejZ21ep4SLojE77gp5F2os260eEWqTTw=" ];
   };
 
   outputs =
