@@ -1,3 +1,4 @@
+{ lib, ... }:
 {
   # This example shows how one may run
   # [comfyui](https://www.comfy.org/)
@@ -7,7 +8,7 @@
     {
       nix2gpu."comfyui-service" = {
         services.comfyui."comfyui-example" = {
-          enable = true;
+          imports = [ (lib.importApply ../services/comfyui.nix { inherit pkgs; }) ];
           models = [ pkgs.nixified-ai.models.stable-diffusion-v1-5 ];
         };
 

@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ lib, pkgs, ... }:
 let
   inherit (lib)
     types
@@ -6,9 +6,8 @@ let
     literalExpression
     literalMD
     ;
-  inherit (config) pkgs;
 
-  sshdConf = pkgs.replaceVars ../modules/container/config/sshd_config { inherit (pkgs) openssh; };
+  sshdConf = pkgs.replaceVars ./container/config/sshd_config { inherit (pkgs) openssh; };
 in
 {
   _class = "nix2gpu";

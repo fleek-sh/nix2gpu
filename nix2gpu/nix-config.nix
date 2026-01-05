@@ -7,7 +7,7 @@ let
     literalMD
     ;
 
-  defaultContents = builtins.readFile ../modules/container/config/nix.conf;
+  defaultContents = builtins.readFile ./container/config/nix.conf;
 in
 {
   _class = "nix2gpu";
