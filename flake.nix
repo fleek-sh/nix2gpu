@@ -25,13 +25,6 @@
       inputs.flake-parts.follows = "flake-parts";
     };
 
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.systems.follows = "systems";
-      inputs.home-manager.follows = "home-manager";
-    };
-
     ndg = {
       url = "github:feel-co/ndg";
       inputs.nixpkgs.follows = "nixpkgs";

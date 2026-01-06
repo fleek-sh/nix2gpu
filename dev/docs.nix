@@ -1,11 +1,23 @@
-{ self, ... }:
+{ self, inputs, ... }:
 {
   perSystem =
-    { inputs', pkgs, ... }:
+    { inputs', self', pkgs, ... }:
     {
       packages.docs =
         let
-          moduleOpts = pkgs.lib.evalModules { modules = [ self.modules.nix2gpu.default ]; };
+          moduleOpts = pkgs.lib.evalModules {
+            modules = [ self.modules.nix2gpu.default ];
+            specialArgs = {
+              inherit
+                pkgs
+                self'
+                inputs
+                inputs'
+                ;
+
+              name = "docs";
+            };
+          };
 
           moduleOptsDoc = pkgs.nixosOptionsDoc { options = moduleOpts; };
         in

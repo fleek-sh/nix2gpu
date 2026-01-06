@@ -18,12 +18,8 @@ in
     description = ''
       TODO
     '';
-    type = types.lazyAttrsOf (
-      types.submoduleWith {
-        class = "service";
-        modules = [ servicesModule ];
-      }
-    );
+    type = types.lazyAttrsOf types.deferredModule;
     default = { };
+    visible = "shallow";
   };
 }
