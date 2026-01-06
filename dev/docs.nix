@@ -1,7 +1,12 @@
 { self, inputs, ... }:
 {
   perSystem =
-    { inputs', self', pkgs, ... }:
+    {
+      inputs',
+      self',
+      pkgs,
+      ...
+    }:
     {
       packages.docs =
         let

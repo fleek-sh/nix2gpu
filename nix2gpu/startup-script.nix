@@ -23,7 +23,7 @@ in
     internal = true;
   };
 
-  config.startupScript =
+  config.nimiSettings.startup.runOnStartup =
     pkgs.resholve.writeScriptBin "${name}-startup.sh"
       {
         interpreter = lib.getExe pkgs.bash;

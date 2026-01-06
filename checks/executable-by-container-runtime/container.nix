@@ -1,7 +1,7 @@
-{ lib, ... }:
+_:
 {
   perSystem =
-    { pkgs, ... }:
+    _:
     {
       nix2gpu."nginx-test" = {
         # services."hello-world-server" = {

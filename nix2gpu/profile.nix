@@ -27,4 +27,6 @@ in
       "/share"
     ];
   };
+
+  config.nimiSettings.container.copyToRoot = config.profile;
 }

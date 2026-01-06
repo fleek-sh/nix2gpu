@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, config, ... }:
 let
   inherit (lib) types mkOption literalExpression;
 in
@@ -29,4 +29,6 @@ in
       "22/tcp" = { };
     };
   };
+
+  config.nimiSettings.container.config.ExposedPorts = config.exposedPorts;
 }

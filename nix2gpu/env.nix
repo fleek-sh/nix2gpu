@@ -71,4 +71,6 @@ in
       USER = "root";
     '';
   };
+
+  config.nimiSettings.container.config.Env = config.env // config.extraEnv;
 }
