@@ -9,7 +9,7 @@ in
       description = ''
         Build a `nix2gpu` container
       '';
-      type = types.functionTo types.package;
+      type = types.functionTo types.raw;
     };
   };
 
@@ -17,12 +17,12 @@ in
     { config, inputs', ... }:
     {
       mkNix2GpuContainer =
-        module:
+        name: module:
         let
-          evaluatedConfig = (config.evalNix2GpuModule module).config;
+          evaluatedConfig = (config.evalNix2GpuModule name module).config;
         in
         inputs'.nimi.packages.default.mkContainerImage {
-          inherit (evaluatedConfig) services;
+          inherit (evaluatedConfig) services passthru meta;
           settings = evaluatedConfig.nimiSettings;
         };
     };

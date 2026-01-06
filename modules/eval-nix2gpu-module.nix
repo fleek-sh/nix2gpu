@@ -2,6 +2,7 @@
   flake-parts-lib,
   lib,
   self,
+  inputs,
   ...
 }:
 let
@@ -27,13 +28,21 @@ in
     }:
     {
       evalNix2GpuModule =
-        module:
+        name: module:
         lib.evalModules {
           modules = [
             self.modules.nix2gpu.default
             module
           ];
-          specialArgs = { inherit pkgs self' inputs'; };
+          specialArgs = {
+            inherit
+              pkgs
+              self'
+              inputs
+              inputs'
+              name
+              ;
+          };
           class = "nix2gpu";
         };
     };
