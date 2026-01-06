@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, config, ... }:
 let
   inherit (lib) types mkOption literalExpression;
 in
@@ -26,4 +26,6 @@ in
     type = types.int;
     default = 50;
   };
+
+  config.nimiSettings.container.maxLayers = config.maxLayers;
 }

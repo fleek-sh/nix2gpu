@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, config, ... }:
 let
   inherit (lib) types mkOption literalExpression;
 in
@@ -23,4 +23,6 @@ in
     type = types.str;
     default = "latest";
   };
+
+  config.nimiSettings.container.tag = config.tag;
 }

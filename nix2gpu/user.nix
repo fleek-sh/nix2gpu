@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, config, ... }:
 let
   inherit (lib)
     types
@@ -30,4 +30,6 @@ in
     default = "root";
     defaultText = literalMD "root";
   };
+
+  config.nimiSettings.container.config.User = config.user;
 }

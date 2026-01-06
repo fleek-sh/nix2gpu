@@ -457,19 +457,19 @@ let
           '';
         };
 
-    sslCertificate = mkOption {
-      type = types.nullOr types.path;
-      default = null;
-      example = "/var/host.cert";
-      description = "Path to server SSL certificate.";
-    };
+        sslCertificate = mkOption {
+          type = types.nullOr types.path;
+          default = null;
+          example = "/var/host.cert";
+          description = "Path to server SSL certificate.";
+        };
 
-    sslCertificateKey = mkOption {
-      type = types.nullOr types.path;
-      default = null;
-      example = "/var/host.key";
-      description = "Path to server SSL certificate key.";
-    };
+        sslCertificateKey = mkOption {
+          type = types.nullOr types.path;
+          default = null;
+          example = "/var/host.key";
+          description = "Path to server SSL certificate key.";
+        };
 
         sslTrustedCertificate = mkOption {
           type = types.nullOr types.path;

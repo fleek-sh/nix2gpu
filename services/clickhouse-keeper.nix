@@ -45,9 +45,7 @@ in
   _class = "service";
 
   options.clickhouse-keeper = {
-    package = mkPackageOption pkgs "clickhouse" {
-      example = "pkgs.clickhouse-lts";
-    };
+    package = mkPackageOption pkgs "clickhouse" { example = "pkgs.clickhouse-lts"; };
 
     dataDir = mkOption {
       type = types.str;
@@ -91,22 +89,24 @@ in
     };
 
     raftServers = mkOption {
-      type = types.listOf (types.submodule {
-        options = {
-          id = mkOption {
-            type = types.ints.positive;
-            description = "Raft server ID.";
+      type = types.listOf (
+        types.submodule {
+          options = {
+            id = mkOption {
+              type = types.ints.positive;
+              description = "Raft server ID.";
+            };
+            host = mkOption {
+              type = types.str;
+              description = "Raft server hostname.";
+            };
+            port = mkOption {
+              type = types.port;
+              description = "Raft server port.";
+            };
           };
-          host = mkOption {
-            type = types.str;
-            description = "Raft server hostname.";
-          };
-          port = mkOption {
-            type = types.port;
-            description = "Raft server port.";
-          };
-        };
-      });
+        }
+      );
       default = [
         {
           id = cfg.serverId;

@@ -6,7 +6,6 @@ let
     literalExpression
     literalMD
     ;
-  inherit (config) systemConfig name;
 in
 {
   _class = "nix2gpu";
@@ -37,13 +36,11 @@ in
       ];
     '';
     type = types.listOf types.package;
-    default = with systemConfig; [
-      allContainers.${name}.baseSystem
-      allContainers.${name}.profile
-      nix2gpuNixStoreProfile
-    ];
+    default = [ ];
     defaultText = literalMD ''
       The generated base system from the other config options
     '';
   };
+
+  config.nimiSettings.container.copyToRoot = config.copyToRoot;
 }

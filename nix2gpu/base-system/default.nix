@@ -2,11 +2,9 @@
   config,
   lib,
   pkgs,
-  name,
   ...
 }:
 let
-  inherit (lib) types mkOption;
 
   mkFileCreator =
     name: outLocation: contents:
@@ -63,14 +61,7 @@ let
   } (builtins.readFile ./create-base-system.sh);
 in
 {
-  options.baseSystem = mkOption {
-    description = ''
-      nix2gpu generated baseSystem for ${name}.
-    '';
-    type = types.package;
-    internal = true;
-    default = pkgs.runCommandLocal "base-system" { } (lib.getExe script);
-  };
-
-  config.nimiSettings.container.copyToRoot = config.baseSystem;
+  config.nimiSettings.container.copyToRoot = pkgs.runCommandLocal "base-system" { } (
+    lib.getExe script
+  );
 }

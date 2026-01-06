@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, config, ... }:
 let
   inherit (lib) types mkOption literalExpression;
 in
@@ -20,5 +20,10 @@ in
     '';
     type = types.listOf types.package;
     default = [ ];
+  };
+
+  config = {
+    nimiSettings.container.copyToRoot = config.systemPackages;
+    extraEnv.PATH = lib.makeBinPath config.systemPackages;
   };
 }

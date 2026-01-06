@@ -49,4 +49,6 @@ in
       "org.opencontainers.image.description" = "Nix-based GPU container";
     '';
   };
+
+  config.nimiSettings.container.config.Labels = config.labels // config.extraLabels;
 }
