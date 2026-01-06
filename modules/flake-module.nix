@@ -34,7 +34,7 @@ let
       config.perSystem =
         { config, ... }:
         let
-          generatedNix2gpuPkgs = lib.mapAttrs (_: module: config.mkNix2GpuContainer module) config.nix2gpu;
+          generatedNix2gpuPkgs = lib.mapAttrs config.mkNix2GpuContainer config.nix2gpu;
         in
         {
           packages = generatedNix2gpuPkgs;

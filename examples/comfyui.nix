@@ -8,7 +8,7 @@
     {
       nix2gpu."comfyui-service" = {
         services.comfyui."comfyui-example" = {
-          imports = [ (lib.importApply ../services/comfyui.nix { inherit pkgs; }) ];
+          imports = [ (lib.modules.importApply ../services/comfyui.nix { inherit pkgs; }) ];
           models = [ pkgs.nixified-ai.models.stable-diffusion-v1-5 ];
         };
 
