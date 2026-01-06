@@ -15,7 +15,10 @@ in
     internal = true;
   };
 
-  config.passthru.tests = lib.mapAttrs' (
-    name: value: lib.nameValuePair ("is-valid-script-" + name) value
-  ) config.scripts;
+  config.passthru = {
+      tests = lib.mapAttrs' (
+        name: value: lib.nameValuePair ("is-valid-script-" + name) value
+      ) config.scripts;
+    }
+    // config.scripts;
 }

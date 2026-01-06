@@ -2,6 +2,8 @@
   lib,
   pkgs,
   config,
+  self',
+  name,
   ...
 }:
 let
@@ -39,7 +41,7 @@ in
       {
         interpreter = lib.getExe pkgs.bash;
         inputs =
-          (with config.scripts; [
+          (with self'.packages.${name}; [
             copyToPodman
             copyToDockerDaemon
           ])
@@ -48,8 +50,8 @@ in
             pkgs.coreutils
           ];
         execer = [
-          "cannot:${lib.getExe config.scripts.copyToPodman}"
-          "cannot:${lib.getExe config.scripts.copyToDockerDaemon}"
+          "cannot:${lib.getExe self'.packages.${name}.copyToPodman}"
+          "cannot:${lib.getExe self'.packages.${name}.copyToDockerDaemon}"
         ];
       }
       ''
