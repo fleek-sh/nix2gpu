@@ -20,10 +20,13 @@ in
         name: module:
         let
           evaluatedConfig = (config.evalNix2GpuModule name module).config;
+          image = inputs'.nimi.packages.default.mkContainerImage {
+            inherit (evaluatedConfig) services meta;
+            settings = evaluatedConfig.nimiSettings;
+          };
         in
-        inputs'.nimi.packages.default.mkContainerImage {
-          inherit (evaluatedConfig) services passthru meta;
-          settings = evaluatedConfig.nimiSettings;
-        };
+        image.overrideAttrs (old: {
+          passthru = (old.passthru or { }) // evaluatedConfig.passthru;
+        });
     };
 }

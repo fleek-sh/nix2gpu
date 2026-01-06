@@ -2,7 +2,7 @@
 let
   inherit (lib) types mkOption;
 
-  executablePackage = types.package // {
+  executablePackageType = types.package // {
     check = x: lib.isDerivation x && lib.hasAttr "mainProgram" x.meta;
   };
 in
@@ -11,7 +11,7 @@ in
     description = ''
       nix2gpu's scripts to attach to containers after generation.
     '';
-    type = types.attrsOf executablePackage;
+    type = types.lazyAttrsOf executablePackageType;
     internal = true;
   };
 
