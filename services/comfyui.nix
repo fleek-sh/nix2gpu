@@ -3,9 +3,11 @@
 let
   inherit (lib) mkOption mkPackageOption types;
 
-  comfyuiPackage = config.package.override {
-    withModels = config.models;
-    withCustomNodes = config.customNodes;
+  cfg = config.comfyui;
+
+  comfyuiPackage = cfg.package.override {
+    withModels = cfg.models;
+    withCustomNodes = cfg.customNodes;
   };
 in
 {
@@ -13,6 +15,15 @@ in
 
   options.comfyui = {
     package = mkPackageOption pkgs "comfyui" { };
+
+    dataDir = mkOption {
+      type = types.str;
+      default = "/workspace";
+      example = "/workspace/comfyui";
+      description = ''
+        Directory used for ComfyUI outputs and database storage.
+      '';
+    };
 
     listen = mkOption {
       type = types.nullOr types.str;
@@ -33,7 +44,7 @@ in
 
     databasePath = mkOption {
       type = types.str;
-      default = "${config.dataDir}/comfyui.db";
+      default = "${cfg.dataDir}/comfyui.db";
       example = "/home/my-user/comfyui/comfyui.db";
       description = ''
         SQL database URL. Passed as --database-url cli flag to comfyui. If it does not start with sqlite:/// it will be prepended automatically.
@@ -89,14 +100,14 @@ in
     let
       wrapper = pkgs.writeShellApplication {
         name = "comfyui";
-        runtimeEnv = config.environmentVariables;
+        runtimeEnv = cfg.environmentVariables;
         text = ''
           ${lib.getExe comfyuiPackage} \
-            --listen ${config.listen} \
-            --port ${toString config.port} \
-            --output-directory ${config.dataDir} \
-            --database-url ${config.databasePath} \
-            ${lib.concatStringsSep " " config.extraFlags} \
+            --listen ${cfg.listen} \
+            --port ${toString cfg.port} \
+            --output-directory ${cfg.dataDir} \
+            --database-url ${cfg.databasePath} \
+            ${lib.concatStringsSep " " cfg.extraFlags} \
             "$@"
         '';
       };
