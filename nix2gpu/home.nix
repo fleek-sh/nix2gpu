@@ -24,23 +24,16 @@ in
       The `home-manager` configuration for the container's user environment.
 
       This option allows you to define the user's home environment using
-      [`home-manager`](https://github.com/nix-community/home-manager)
-      .You can configure everything from shell aliases and environment
+      [`home-manager`](https://github.com/nix-community/home-manager).
+      You can configure everything from shell aliases and environment
       variables to user services and application settings.
 
       By default, a minimal set of useful modern shell packages
       is included to provide a comfortable and secure hacking
       environment on your machines.
 
-      To use this, you must first enable the optional `home-manager` 
-      integration by adding it to your flake inputs:
-
-      ```nix
-      inputs.home-manager = {
-        url = "github:nix-community/home-manager";
-        inputs.nixpkgs.follows = "nixpkgs";
-      };
-      ```
+      `home-manager` is bundled with `nix2gpu`, so no additional flake inputs
+      are required to use this option.
     '';
     example = literalExpression ''
       home = home-manager.lib.homeManagerConfiguration {
