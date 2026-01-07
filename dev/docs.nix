@@ -24,7 +24,7 @@
             };
           };
 
-          moduleOptsDoc = pkgs.nixosOptionsDoc { options = moduleOpts.options; };
+          moduleOptsDoc = pkgs.nixosOptionsDoc { inherit (moduleOpts) options; };
         in
         pkgs.runCommandLocal "nix2gpu-docs" { nativeBuildInputs = [ inputs'.ndg.packages.default ]; } ''
           mkdir -p "$out/share/nix2gpu/docs"
