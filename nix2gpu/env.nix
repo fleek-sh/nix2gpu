@@ -76,5 +76,11 @@ in
     '';
   };
 
-  config.nimiSettings.container.config.Env = config.env // config.extraEnv;
+  config.nimiSettings.container.imageConfig.Env =
+    let
+      translateToGoEnvString = var: value: "${var}=${value}";
+
+      totalEnv = config.env // config.extraEnv;
+    in
+    lib.mapAttrsToList translateToGoEnvString totalEnv;
 }

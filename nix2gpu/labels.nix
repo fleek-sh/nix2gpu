@@ -49,5 +49,5 @@ in
     '';
   };
 
-  config.nimiSettings.container.config.Labels = config.labels // config.extraLabels;
+  config.nimiSettings.container.imageConfig.Labels = config.labels // config.extraLabels;
 }

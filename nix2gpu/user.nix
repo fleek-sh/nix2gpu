@@ -31,5 +31,5 @@ in
     defaultText = literalMD "root";
   };
 
-  config.nimiSettings.container.config.User = config.user;
+  config.nimiSettings.container.imageConfig.User = config.user;
 }

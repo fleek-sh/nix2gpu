@@ -113,6 +113,6 @@ in
       };
     in
     {
-      process.argv = [ wrapper ];
+      process.argv = [ (lib.getExe wrapper) ];
     };
 }

@@ -30,5 +30,5 @@ in
     defaultText = literalMD "`/root`";
   };
 
-  config.nimiSettings.container.config.WorkingDir = config.workingDir;
+  config.nimiSettings.container.imageConfig.WorkingDir = config.workingDir;
 }

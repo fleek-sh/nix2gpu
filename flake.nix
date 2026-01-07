@@ -31,7 +31,7 @@
     };
 
     nimi = {
-      url = "git+ssh://git@github.com/weyl-ai/nimi.git";
+      url = "git+ssh://git@github.com/weyl-ai/nimi.git?ref=baileylu/random-fixes";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
       inputs.systems.follows = "systems";

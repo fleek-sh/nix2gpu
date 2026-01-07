@@ -14,30 +14,29 @@ in
   };
 
   config.perSystem =
-    { config, inputs', pkgs, ... }:
+    { config, inputs', ... }:
     {
       mkNix2GpuContainer =
         name: module:
         let
           nimi = inputs'.nimi.packages.default;
 
-          evaluatedConfig = (config.evalNix2GpuModule name module).config;
-
-          settings = (lib.evalModules {
-            modules = [
-              { _module.check = false; imports = [ evaluatedConfig.nimiSettings ]; }
-            ];
-            specialArgs = { inherit pkgs; };
-            class = "nimi";
-          }).config;
+          nix2gpuCfg = (config.evalNix2GpuModule name module).config;
 
           image = nimi.mkContainerImage {
-            inherit (evaluatedConfig) services meta;
-            inherit settings;
+            inherit (nix2gpuCfg) services meta;
+            imports = [
+              # TODO[baileylu] Find a way to do this transformation less manually
+              (lib.mkAliasOptionModule [ "container" ] [ "settings" "container" ])
+              (lib.mkAliasOptionModule [ "startup" ] [ "settings" "startup" ])
+              (lib.mkAliasOptionModule [ "logging" ] [ "settings" "logging" ])
+              (lib.mkAliasOptionModule [ "restart" ] [ "settings" "restart" ])
+              nix2gpuCfg.nimiSettings
+            ];
           };
         in
         image.overrideAttrs (old: {
-          passthru = (old.passthru or { }) // evaluatedConfig.passthru;
+          passthru = (old.passthru or { }) // nix2gpuCfg.passthru;
         });
     };
 }

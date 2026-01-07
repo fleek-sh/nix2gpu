@@ -23,11 +23,11 @@ in
     internal = true;
   };
 
-  config.nimiSettings.startup.runOnStartup =
+  config.nimiSettings.startup.runOnStartup = lib.getExe (
     pkgs.resholve.writeScriptBin "${name}-startup.sh"
       {
         interpreter = lib.getExe pkgs.bash;
-        inputs = config.environment.allPkgs ++ [ extraStartupScript ];
+        inputs = config.systemPackages ++ [ extraStartupScript ];
         execer = [
           "cannot:${lib.getExe' pkgs.openssh "ssh-keygen"}"
           "cannot:${lib.getExe' pkgs.openssh "sshd"}"
@@ -50,5 +50,6 @@ in
         ${builtins.readFile ./startup-script/startup.sh}
 
         extra-startup-script
-      '';
+      ''
+  );
 }
