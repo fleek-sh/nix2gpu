@@ -1,4 +1,3 @@
-{ lib, ... }:
 {
   # This example shows how one may use
   # NixOS modular services (Nix 25.11)
