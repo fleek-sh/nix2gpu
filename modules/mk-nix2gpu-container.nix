@@ -14,15 +14,26 @@ in
   };
 
   config.perSystem =
-    { config, inputs', ... }:
+    { config, inputs', pkgs, ... }:
     {
       mkNix2GpuContainer =
         name: module:
         let
+          nimi = inputs'.nimi.packages.default;
+
           evaluatedConfig = (config.evalNix2GpuModule name module).config;
-          image = inputs'.nimi.packages.default.mkContainerImage {
+
+          settings = (lib.evalModules {
+            modules = [
+              { _module.check = false; imports = [ evaluatedConfig.nimiSettings ]; }
+            ];
+            specialArgs = { inherit pkgs; };
+            class = "nimi";
+          }).config;
+
+          image = nimi.mkContainerImage {
             inherit (evaluatedConfig) services meta;
-            settings = evaluatedConfig.nimiSettings;
+            inherit settings;
           };
         in
         image.overrideAttrs (old: {

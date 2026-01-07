@@ -171,16 +171,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1767628515,
+        "lastModified": 1767733180,
         "narHash": "sha256-bHijdLZEdiwpkVEsz47YQnd3y0Moz/SQtis2el+4yOk=",
-        "ref": "baileylu/nixos-home-modules",
-        "rev": "e60b4620d4c879708b6e5077372c86c10ff81af1",
-        "revCount": 100,
+        "ref": "refs/heads/master",
+        "rev": "7fd6c39c6d9868ff7046905c13d1620592018db5",
+        "revCount": 104,
         "type": "git",
         "url": "ssh://git@github.com/weyl-ai/nimi.git"
       },
       "original": {
-        "ref": "baileylu/nixos-home-modules",
         "type": "git",
         "url": "ssh://git@github.com/weyl-ai/nimi.git"
       }

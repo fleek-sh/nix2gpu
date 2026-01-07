@@ -1,7 +1,11 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) types mkOption literalExpression;
-  inherit (config) pkgs;
 in
 {
   _class = "nix2gpu";
