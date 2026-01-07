@@ -78,7 +78,17 @@ in
 
   config.nimiSettings.container.imageConfig.Env =
     let
-      translateToGoEnvString = var: value: "${var}=${value}";
+      translateToGoEnvString =
+        var: value:
+
+        assert lib.assertMsg (lib.toUpper var == var) ''
+          `nix2gpu` env var names should be uppercase 
+          in order to be properly recognized.
+
+          The failing attribute name is `${var}`.
+        '';
+
+        "${var}=${value}";
 
       totalEnv = config.env // config.extraEnv;
     in
