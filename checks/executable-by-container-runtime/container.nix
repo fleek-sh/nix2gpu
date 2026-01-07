@@ -1,12 +1,11 @@
 { lib, ... }:
 {
-  perSystem = { pkgs, ... }:
+  perSystem =
+    { pkgs, ... }:
     {
       nix2gpu."http-test" = {
         services."hello-world-server" = {
-          process.argv = [
-            (lib.getExe pkgs.http-server)
-          ];
+          process.argv = [ (lib.getExe pkgs.http-server) ];
         };
 
         exposedPorts = {

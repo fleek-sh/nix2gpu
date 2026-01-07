@@ -4,8 +4,7 @@ let
 in
 {
   # This example shows how one may use
-  # [custom home manager](https://github.com/juspay/services-flake)
-  # config options via the `home` attribute
+  # home-manager config options via the `home` attribute
   perSystem =
     { pkgs, ... }:
     {

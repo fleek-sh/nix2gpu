@@ -17,7 +17,7 @@ a nix-based container runtime that makes distributed gpu compute actually work. 
 ├── config       # avalible `nix2gpu` config options
 ├── dev          # `flake-parts` config for development of this repo
 ├── examples     # working `nix2gpu` examples
-├── services     # extra `services-flake` compatible services
+├── services     # extra modular service definitions
 └── modules      # implementation of `nix2gpu`
 ```
 

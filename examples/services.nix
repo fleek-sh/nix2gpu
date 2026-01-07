@@ -1,7 +1,7 @@
 {
   # This example shows how one may use
-  # [services-flake](https://github.com/juspay/services-flake)
-  # config options via the `services` attribute
+  # NixOS modular services (Nix 25.11)
+  # via the `services` attribute
   perSystem =
     { pkgs, ... }:
     {
