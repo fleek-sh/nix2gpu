@@ -171,15 +171,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1767733180,
-        "narHash": "sha256-bHijdLZEdiwpkVEsz47YQnd3y0Moz/SQtis2el+4yOk=",
-        "ref": "refs/heads/master",
-        "rev": "7fd6c39c6d9868ff7046905c13d1620592018db5",
-        "revCount": 104,
+        "lastModified": 1767801464,
+        "narHash": "sha256-mWpxrBMCZs4EgrMILVtLoTQREUMy9VoV75Rc7rQFfhY=",
+        "ref": "baileylu/random-fixes",
+        "rev": "c4c1d0dd46d2861571f598bf28ceed3d97e94d26",
+        "revCount": 110,
         "type": "git",
         "url": "ssh://git@github.com/weyl-ai/nimi.git"
       },
       "original": {
+        "ref": "baileylu/random-fixes",
         "type": "git",
         "url": "ssh://git@github.com/weyl-ai/nimi.git"
       }

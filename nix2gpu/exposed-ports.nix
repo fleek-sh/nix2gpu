@@ -30,5 +30,5 @@ in
     };
   };
 
-  config.nimiSettings.container.config.ExposedPorts = config.exposedPorts;
+  config.nimiSettings.container.imageConfig.ExposedPorts = config.exposedPorts;
 }

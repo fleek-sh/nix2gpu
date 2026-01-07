@@ -18,7 +18,7 @@ in
 
   config.profile = pkgs.buildEnv {
     name = "nix2gpu-profile";
-    paths = [ config.environment.allPkgs ];
+    paths = [ config.systemPackages ];
     pathsToLink = [
       "/bin"
       "/sbin"

@@ -23,7 +23,7 @@ in
   };
 
   config = {
-    nimiSettings.container.copyToRoot = config.systemPackages;
     extraEnv.PATH = lib.makeBinPath config.systemPackages;
+    nimiSettings.container.initializeNixDatabase = true;
   };
 }
