@@ -1,16 +1,22 @@
-_:
 {
   # This example shows how one may use
   # [services-flake](https://github.com/juspay/services-flake)
   # config options via the `services` attribute
   perSystem =
-    _:
+    { pkgs, ... }:
     {
       nix2gpu."with-services" = {
-        # services."clickhouse-example" = {
-        #   imports = [ (lib.modules.importApply ../services/clickhouse-keeper.nix { inherit pkgs; }) ];
-        #   clickhouse-keeper.tcpPort = 9050;
-        # };
+        services."ghostunnel-example" = {
+          imports = [ pkgs.ghostunnel.services ];
+          ghostunnel = {
+            listen = "0.0.0.0:443";
+            cert = "/root/service-cert.pem";
+            key = "/root/service-key.pem";
+            disableAuthentication = true;
+            target = "backend:80";
+            unsafeTarget = true;
+          };
+        };
 
         exposedPorts = {
           "9050/tcp" = { };
