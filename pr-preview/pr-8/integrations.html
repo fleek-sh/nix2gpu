@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>// integrations //</title>
+     
+    <script>
+      // Apply sidebar state immediately to prevent flash
+      (function () {
+        if (localStorage.getItem("sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-collapsed");
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="assets/style.css" />
+    <script defer src="assets/main.js"></script>
+    
+    <script>
+      window.searchNamespace = window.searchNamespace || {};
+      window.searchNamespace.rootPath = "";
+    </script>
+    <script defer src="assets/search.js"></script>
+    
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-left">
+          <h1 class="site-title">
+            <a href="index.html"> Documentation</a>
+          </h1>
+
+          <nav class="header-nav">
+  <ul>
+    <li >
+      <a href="options.html">Options</a>
+    </li>
+    
+    <li><a href="search.html">Search</a></li>
+    
+  </ul>
+</nav>
+
+        </div>
+        
+        <div class="search-container">
+          <input type="text" id="search-input" placeholder="Search..." />
+          <div id="search-results" class="search-results"></div>
+        </div>
+        
+      </header>
+
+      <div class="layout">
+        <div class="sidebar-toggle" aria-label="Toggle sidebar">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+          >
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+          </svg>
+        </div>
+        <nav class="sidebar">
+          <details class="sidebar-section" data-section="docs" open>
+            <summary>Documents</summary>
+            <div class="sidebar-section-content">
+              <ul>
+                <li><a href="index.html">// index //</a></li>
+<li><a href="getting-started.html">// `ComfyUI` setup guide //</a></li>
+<li><a href="architecture.html">// architecture overview //</a></li>
+<li><a href="custom-service.html">// defining a custom service //</a></li>
+<li><a href="integrations.html">// integrations //</a></li>
+<li><a href="services.html">// services & runtime //</a></li>
+<li><a href="search.html">Search</a></li>
+
+              </ul>
+            </div>
+          </details>
+
+          <details class="sidebar-section" data-section="toc" open>
+            <summary>Contents</summary>
+            <div class="sidebar-section-content">
+              <ul class="toc-list">
+                <li><a href="#integrations">// integrations //</a>
+<ul><li><a href="#nimi--modular-services">// Nimi (modular services) //</a>
+<li><a href="#nix2container">// nix2container //</a>
+<li><a href="#home-manager">// home-manager //</a>
+</li></ul></li>
+              </ul>
+            </div>
+          </details>
+        </nav>
+
+        <main class="content"><html><head></head><body><h1 id="integrations">// integrations //</h1>
+<p><code>nix2gpu</code> ships its integrations as part of the flake. You do not enable them by
+adding extra inputs upstream; if you are using the <code>nix2gpu</code> flake, they are
+already available.</p>
+<hr>
+<h2 id="nimi--modular-services">// <code>Nimi</code> (modular services) //</h2>
+<p><a href="https://github.com/weyl-ai/nimi"><code>Nimi</code></a> is the runtime that powers services in
+<code>nix2gpu</code>. It runs <a href="https://nixos.org/manual/nixos/unstable/#modular-services">NixOS modular services</a>
+(Nix 25.11) without requiring a full init system.</p>
+<ul>
+<li>Define services under <code>services.&lt;name&gt;</code> using modular service modules.</li>
+<li>Tune runtime behavior with <code>nimiSettings</code> (restart, logging, startup).</li>
+</ul>
+<p>See <a href="./services.md">services &amp; runtime</a> for the workflow and examples.</p>
+<hr>
+<h2 id="nix2container">// <code>nix2container</code> //</h2>
+<p><code>nix2gpu</code> builds OCI images through <code>Nimi</code>'s <code>mkContainerImage</code>, which uses
+<a href="https://github.com/nlewo/nix2container"><code>nix2container</code></a> under the hood. You do
+not need to add a separate <code>nix2container</code> input to use <code>nix2gpu</code> containers.</p>
+<hr>
+<h2 id="home-manager">// <code>home-manager</code> //</h2>
+<p><a href="https://github.com/nix-community/home-manager"><code>home-manager</code></a> is integrated
+for user environment configuration. Use the <code>home</code> option to describe shell
+configuration, tools, and dotfiles in a modular way.</p>
+<p>If you are porting an existing home-manager config that targets a non-root user,
+<code>nix2gpu</code> includes a convenience module:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">inputs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nix2gpu</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">homeModules</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">force-root-user</span><br></code></pre>
+<p>See the <a href="./options.md#persystemnix2gpucontainerhome">home option</a> for details.</p>
+</body></html></main>
+      </div>
+
+      <aside class="page-toc">
+        <nav class="page-toc-nav">
+          <h3>On this page</h3>
+          <ul class="page-toc-list">
+            <li><a href="#integrations">// integrations //</a>
+<ul><li><a href="#nimi--modular-services">// Nimi (modular services) //</a>
+<li><a href="#nix2container">// nix2container //</a>
+<li><a href="#home-manager">// home-manager //</a>
+</li></ul></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <footer>
+  <p>Generated with ndg</p>
+</footer>
+
+    </div>
+
+    
+  </body>
+</html>

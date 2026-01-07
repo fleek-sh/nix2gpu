@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>// architecture overview //</title>
+     
+    <script>
+      // Apply sidebar state immediately to prevent flash
+      (function () {
+        if (localStorage.getItem("sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-collapsed");
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="assets/style.css" />
+    <script defer src="assets/main.js"></script>
+    
+    <script>
+      window.searchNamespace = window.searchNamespace || {};
+      window.searchNamespace.rootPath = "";
+    </script>
+    <script defer src="assets/search.js"></script>
+    
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-left">
+          <h1 class="site-title">
+            <a href="index.html"> Documentation</a>
+          </h1>
+
+          <nav class="header-nav">
+  <ul>
+    <li >
+      <a href="options.html">Options</a>
+    </li>
+    
+    <li><a href="search.html">Search</a></li>
+    
+  </ul>
+</nav>
+
+        </div>
+        
+        <div class="search-container">
+          <input type="text" id="search-input" placeholder="Search..." />
+          <div id="search-results" class="search-results"></div>
+        </div>
+        
+      </header>
+
+      <div class="layout">
+        <div class="sidebar-toggle" aria-label="Toggle sidebar">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+          >
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+          </svg>
+        </div>
+        <nav class="sidebar">
+          <details class="sidebar-section" data-section="docs" open>
+            <summary>Documents</summary>
+            <div class="sidebar-section-content">
+              <ul>
+                <li><a href="index.html">// index //</a></li>
+<li><a href="getting-started.html">// `ComfyUI` setup guide //</a></li>
+<li><a href="architecture.html">// architecture overview //</a></li>
+<li><a href="custom-service.html">// defining a custom service //</a></li>
+<li><a href="integrations.html">// integrations //</a></li>
+<li><a href="services.html">// services & runtime //</a></li>
+<li><a href="search.html">Search</a></li>
+
+              </ul>
+            </div>
+          </details>
+
+          <details class="sidebar-section" data-section="toc" open>
+            <summary>Contents</summary>
+            <div class="sidebar-section-content">
+              <ul class="toc-list">
+                <li><a href="#architecture-overview">// architecture overview //</a>
+<ul><li><a href="#the-big-picture">// the big picture //</a>
+<li><a href="#build-pipeline">// build pipeline //</a>
+<ul><li><a href="#1--nix-evaluation">1. nix evaluation</a>
+<li><a href="#2--dependency-resolution">2. dependency resolution</a>
+<li><a href="#3--image-assembly">3. image assembly</a>
+<li><a href="#4--container-execution">4. container execution</a>
+</ul><li><a href="#filesystem-layout">// filesystem layout //</a>
+<li><a href="#startup-sequence">// startup sequence //</a>
+<ul><li><a href="#1--environment-setup">1. environment setup</a>
+<li><a href="#2--runtime-detection">2. runtime detection</a>
+<li><a href="#3--gpu-initialization">3. GPU initialization</a>
+<li><a href="#4--network-setup">4. network setup</a>
+<li><a href="#5--service-orchestration">5. service orchestration</a>
+</ul><li><a href="#service-management">// service management //</a>
+<ul><li><a href="#nimi">Nimi</a>
+<li><a href="#service-lifecycle">service lifecycle</a>
+</ul><li><a href="#networking-architecture">// networking architecture //</a>
+<ul><li><a href="#standard-mode--docker-podman">standard mode (docker/podman)</a>
+<li><a href="#tailscale-mode--mesh-networking">tailscale mode (mesh networking)</a>
+</ul><li><a href="#gpu-integration">// GPU integration //</a>
+<ul><li><a href="#driver-compatibility">driver compatibility</a>
+<li><a href="#cloud-provider-adaptations">cloud provider adaptations</a>
+</ul><li><a href="#secret-management">// secret management //</a>
+<ul><li><a href="#security-principles">security principles</a>
+<li><a href="#agenix-integration">agenix integration</a>
+</ul><li><a href="#caching---performance">// caching &amp; performance //</a>
+<ul><li><a href="#layer-optimization">layer optimization</a>
+<li><a href="#build-caching">build caching</a>
+<li><a href="#registry-layer-sharing">registry layer sharing</a>
+</ul><li><a href="#extending-the-system">// extending the system //</a>
+<ul><li><a href="#custom-services">custom services</a>
+<li><a href="#custom-cloud-targets">custom cloud targets</a>
+</li></ul></li></ul></li>
+              </ul>
+            </div>
+          </details>
+        </nav>
+
+        <main class="content"><html><head></head><body><h1 id="architecture-overview">// architecture overview //</h1>
+<p>how <code>nix2gpu</code> works under the hood.</p>
+<hr>
+<h2 id="the-big-picture">// the big picture //</h2>
+<pre><code>┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   nix flake     │────│      Nimi       │────│   OCI image     │
+│   definition    │    │ mkContainerImage│    │   (layered)     │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                        │                        │
+         ▼                        ▼                        ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│ container config│    │  startup script │    │ docker/podman   │
+│   (nix modules) │    │ + Nimi runtime  │    │    runtime      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+</code></pre>
+<p><strong>nix2gpu</strong> transforms declarative nix configurations into reproducible GPU containers through a multi-stage build process.</p>
+<hr>
+<h2 id="build-pipeline">// build pipeline //</h2>
+<h3 id="1--nix-evaluation">1. <strong>nix evaluation</strong></h3>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">perSystem</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nix2gpu</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">my-container</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">cudaPackages</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">cudaPackages_12_8</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">tailscale</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">api</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">process</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">argv</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">(</span><span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">getExe</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">my-api</span><span style="color:rgb(132,139,152);">)</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">--port</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">8080</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<p>The nix module system processes your configuration, applying defaults, validating options, and computing the final container specification.</p>
+<h3 id="2--dependency-resolution">2. <strong>dependency resolution</strong></h3>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(97,175,239);">nix</span>&nbsp;<span style="color:rgb(232,102,113);">build</span>&nbsp;<span style="color:rgb(232,102,113);">.#my-container</span><br></code></pre>
+<p>Nix builds the entire dependency graph:</p>
+<ul>
+<li>Base system packages (bash, coreutils, etc.)</li>
+<li>CUDA toolkit and drivers</li>
+<li>Your application packages</li>
+<li>Service configurations</li>
+<li>Startup scripts</li>
+</ul>
+<h3 id="3--image-assembly">3. <strong>image assembly</strong></h3>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">nimi</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">mkContainerImage</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">name</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">my-container</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">copyToRoot</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">baseSystem</span>&nbsp;<span style="color:rgb(171,178,191);">cudaPackages</span>&nbsp;<span style="color:rgb(171,178,191);">userPackages</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
+<p>Nimi builds the OCI image (via <code>nix2container</code>) with:</p>
+<ul>
+<li>Layered filesystem for efficient caching</li>
+<li>Only necessary dependencies included</li>
+<li>Reproducible layer ordering</li>
+</ul>
+<h3 id="4--container-execution">4. <strong>container execution</strong></h3>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(97,175,239);">docker</span>&nbsp;<span style="color:rgb(232,102,113);">run</span>&nbsp;<span style="color:rgb(232,102,113);">--gpus</span>&nbsp;<span style="color:rgb(232,102,113);">all</span>&nbsp;<span style="color:rgb(232,102,113);">my-container:latest</span><br></code></pre>
+<p>The startup script orchestrates initialization, then Nimi runs services.</p>
+<hr>
+<h2 id="filesystem-layout">// filesystem layout //</h2>
+<pre><code>/
+├── nix/
+│   └── store/          # immutable package store
+│       ├── cuda-*      # CUDA toolkit
+│       ├── startup-*   # initialization script  
+│       └── packages-*  # your applications
+├── etc/
+│   ├── ssh/            # SSH daemon config
+│   └── ld.so.conf.d/   # library search paths
+├── run/
+│   └── secrets/        # mounted secret files
+├── workspace/          # default working directory
+└── tmp/                # temporary files
+</code></pre>
+<p><strong>Key principles:</strong></p>
+<ul>
+<li><strong>Immutable system</strong>: <code>/nix/store</code> contains all software, never modified at runtime</li>
+<li><strong>Mutable state</strong>: <code>/workspace</code>, <code>/tmp</code>, <code>/run</code> for runtime data</li>
+<li><strong>Secrets</strong>: mounted at <code>/run/secrets</code> from external sources</li>
+<li><strong>Library paths</strong>: dynamic loader configured for both nix store and host-mounted drivers</li>
+</ul>
+<hr>
+<h2 id="startup-sequence">// startup sequence //</h2>
+<p>The container initialization follows a precise sequence:</p>
+<h3 id="1--environment-setup">1. <strong>environment setup</strong></h3>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;startup.sh</span><br><span style="color:rgb(198,120,221);">export</span>&nbsp;<span style="color:rgb(232,102,113);">PATH</span><span style="color:rgb(171,178,191);">=</span><span style="color:rgb(152,195,121);">"/nix/store/.../bin:</span><span style="color:rgb(232,102,113);">$</span><span style="color:rgb(232,102,113);">PATH</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(198,120,221);">export</span>&nbsp;<span style="color:rgb(209,154,102);">LD_LIBRARY_PATH</span><span style="color:rgb(171,178,191);">=</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(232,102,113);">$</span><span style="color:rgb(209,154,102);">LD_LIBRARY_PATH</span><span style="color:rgb(152,195,121);">:/lib/x86_64-linux-gnu"</span><br><span style="color:rgb(198,120,221);">export</span>&nbsp;<span style="color:rgb(209,154,102);">CUDA_PATH</span><span style="color:rgb(171,178,191);">=</span><span style="color:rgb(152,195,121);">"/nix/store/...-cuda-toolkit"</span><br></code></pre>
+<ul>
+<li>Sets up PATH for nix store binaries</li>
+<li>Configures library search for both nix store and host-mounted NVIDIA drivers</li>
+<li>Establishes CUDA environment</li>
+</ul>
+<h3 id="2--runtime-detection">2. <strong>runtime detection</strong></h3>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(198,120,221);">if</span>&nbsp;<span style="color:rgb(132,139,152);">[[</span>&nbsp;<span style="color:rgb(171,178,191);">-d</span>&nbsp;<span style="color:rgb(152,195,121);">"/lib/x86_64-linux-gnu"</span>&nbsp;<span style="color:rgb(132,139,152);">]]</span><span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(198,120,221);">then</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">echo</span>&nbsp;<span style="color:rgb(152,195,121);">"vast.ai&nbsp;runtime&nbsp;detected"</span><br>&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;patch&nbsp;nvidia&nbsp;utilities&nbsp;for&nbsp;host&nbsp;drivers</span><br><span style="color:rgb(198,120,221);">elif</span>&nbsp;<span style="color:rgb(132,139,152);">[[</span>&nbsp;<span style="color:rgb(171,178,191);">-n</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(232,102,113);">$</span><span style="color:rgb(209,154,102);">RUNPOD_POD_ID</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(132,139,152);">]]</span><span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(198,120,221);">then</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">echo</span>&nbsp;<span style="color:rgb(152,195,121);">"runpod&nbsp;runtime&nbsp;detected"</span>&nbsp;&nbsp;<br>&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;configure&nbsp;network&nbsp;volumes</span><br><span style="color:rgb(198,120,221);">else</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">echo</span>&nbsp;<span style="color:rgb(152,195,121);">"bare-metal/docker&nbsp;runtime&nbsp;detected"</span><br><span style="color:rgb(198,120,221);">fi</span><br></code></pre>
+<p>Adapts configuration based on detected cloud provider or bare-metal environment.</p>
+<h3 id="3--gpu-initialization">3. <strong>GPU initialization</strong></h3>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;link&nbsp;host&nbsp;drivers&nbsp;to&nbsp;expected&nbsp;locations</span><br><span style="color:rgb(97,175,239);">ldconfig</span><br><br><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;test&nbsp;GPU&nbsp;access</span><br><span style="color:rgb(97,175,239);">nvidia-smi</span>&nbsp;<span style="color:rgb(171,178,191);">||</span>&nbsp;<span style="color:rgb(86,182,194);">echo</span>&nbsp;<span style="color:rgb(152,195,121);">"GPU&nbsp;not&nbsp;available"</span><br></code></pre>
+<p>Ensures GPU toolchain works with both nix store CUDA and host-mounted drivers.</p>
+<h3 id="4--network-setup">4. <strong>network setup</strong></h3>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;tailscale&nbsp;daemon&nbsp;(if&nbsp;enabled)</span><br><span style="color:rgb(198,120,221);">if</span>&nbsp;<span style="color:rgb(132,139,152);">[[</span>&nbsp;<span style="color:rgb(171,178,191);">-n</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(232,102,113);">$</span><span style="color:rgb(209,154,102);">TAILSCALE_AUTHKEY_FILE</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(132,139,152);">]]</span><span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(198,120,221);">then</span><br>&nbsp;&nbsp;<span style="color:rgb(97,175,239);">tailscaled</span>&nbsp;<span style="color:rgb(232,102,113);">--state-dir=/tmp/tailscale</span>&nbsp;<span style="color:rgb(132,139,152);">&amp;</span><br>&nbsp;&nbsp;<span style="color:rgb(97,175,239);">tailscale</span>&nbsp;<span style="color:rgb(232,102,113);">up</span>&nbsp;<span style="color:rgb(232,102,113);">--authkey=</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(232,102,113);">$(</span><span style="color:rgb(97,175,239);">cat</span><span style="color:rgb(152,195,121);">&nbsp;</span><span style="color:rgb(232,102,113);">$</span><span style="color:rgb(209,154,102);">TAILSCALE_AUTHKEY_FILE</span><span style="color:rgb(232,102,113);">)</span><span style="color:rgb(152,195,121);">"</span><br><span style="color:rgb(198,120,221);">fi</span><br><br><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;SSH&nbsp;daemon</span><br><span style="color:rgb(97,175,239);">mkdir</span>&nbsp;<span style="color:rgb(232,102,113);">-p</span>&nbsp;<span style="color:rgb(232,102,113);">/var/empty</span>&nbsp;<span style="color:rgb(232,102,113);">/var/log</span><br><span style="color:rgb(97,175,239);">sshd</span><br></code></pre>
+<p>Starts networking services: Tailscale for mesh networking, SSH for remote access.</p>
+<h3 id="5--service-orchestration">5. <strong>service orchestration</strong></h3>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;Nimi&nbsp;is&nbsp;the&nbsp;container&nbsp;entrypoint</span><br><span style="color:rgb(97,175,239);">nimi</span>&nbsp;<span style="color:rgb(232,102,113);">--config</span>&nbsp;<span style="color:rgb(232,102,113);">/nix/store/.../nimi.json</span><br></code></pre>
+<p>Nimi runs the startup hook and then launches your modular services.</p>
+<hr>
+<h2 id="service-management">// service management //</h2>
+<h3 id="nimi"><strong>Nimi</strong></h3>
+<p><code>nix2gpu</code> uses <a href="https://github.com/weyl-ai/nimi">Nimi</a>, a tiny process manager for NixOS modular services (Nix 25.11):</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">api</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">process</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">argv</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">(</span><span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">getExe</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">my-api</span><span style="color:rgb(132,139,152);">)</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">--port</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">8080</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><br><span style="color:rgb(171,178,191);">nimiSettings</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">restart</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">mode</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">up-to-count</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<p><strong>Benefits over systemd:</strong></p>
+<ul>
+<li>No init system complexity</li>
+<li>Modular service definitions</li>
+<li>JSON config generated by Nix</li>
+<li>Predictable restart behavior</li>
+</ul>
+<h3 id="service-lifecycle"><strong>service lifecycle</strong></h3>
+<ol>
+<li><strong>Dependency resolution</strong>: services start in correct order</li>
+<li><strong>Health monitoring</strong>: automatic restart on failure</li>
+<li><strong>Log aggregation</strong>: all service logs to stdout for <code>docker logs</code></li>
+<li><strong>Graceful shutdown</strong>: proper signal handling for container stops</li>
+</ol>
+<hr>
+<h2 id="networking-architecture">// networking architecture //</h2>
+<h3 id="standard-mode--docker-podman"><strong>standard mode</strong> (docker/podman)</h3>
+<pre><code>┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│    host     │────│  container  │────│   service   │
+│ localhost:* │    │   bridge    │    │ localhost:* │
+└─────────────┘    └─────────────┘    └─────────────┘
+</code></pre>
+<p>Standard container networking with port forwarding.</p>
+<h3 id="tailscale-mode--mesh-networking"><strong>tailscale mode</strong> (mesh networking)</h3>
+<pre><code>┌─────────────┐    ┌─────────────────┐    ┌─────────────┐
+│   host-a    │    │   tailscale     │    │   host-b    │
+│ container-a ├────┤  mesh network   ├────┤ container-b │
+│10.0.0.100:22│    │                 │    │10.0.0.101:22│
+└─────────────┘    └─────────────────┘    └─────────────┘
+</code></pre>
+<p>Direct container-to-container communication across hosts via Tailscale.</p>
+<p><strong>Key advantages:</strong></p>
+<ul>
+<li>No port forwarding needed</li>
+<li>Works across clouds and networks</li>
+<li>End-to-end encryption</li>
+<li>DNS-based service discovery</li>
+<li>ACL-based access control</li>
+</ul>
+<hr>
+<h2 id="gpu-integration">// GPU integration //</h2>
+<h3 id="driver-compatibility"><strong>driver compatibility</strong></h3>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;nix&nbsp;store&nbsp;CUDA&nbsp;toolkit</span><br><span style="color:rgb(97,175,239);">/nix/store/...-cuda-toolkit/</span><br><span style="color:rgb(97,175,239);">├──</span>&nbsp;<span style="color:rgb(232,102,113);">bin/nvcc</span><br><span style="color:rgb(97,175,239);">├──</span>&nbsp;<span style="color:rgb(232,102,113);">lib/libcuda.so</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;stub&nbsp;library</span><br><span style="color:rgb(97,175,239);">└──</span>&nbsp;<span style="color:rgb(232,102,113);">include/cuda.h</span><br><br><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;host-mounted&nbsp;real&nbsp;drivers&nbsp;&nbsp;</span><br><span style="color:rgb(97,175,239);">/lib/x86_64-linux-gnu/</span><br><span style="color:rgb(97,175,239);">├──</span>&nbsp;<span style="color:rgb(232,102,113);">libcuda.so.1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;actual&nbsp;GPU&nbsp;driver</span><br><span style="color:rgb(97,175,239);">├──</span>&nbsp;<span style="color:rgb(232,102,113);">libnvidia-ml.so.1</span><br><span style="color:rgb(97,175,239);">└──</span>&nbsp;<span style="color:rgb(232,102,113);">libnvidia-encode.so.1</span><br></code></pre>
+<p><strong>The challenge</strong>: CUDA applications need both:</p>
+<ul>
+<li>CUDA toolkit (development headers, nvcc compiler) from nix store</li>
+<li>Actual GPU drivers from the host system</li>
+</ul>
+<p><strong>The solution</strong>: dynamic library path configuration</p>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(198,120,221);">export</span>&nbsp;<span style="color:rgb(209,154,102);">LD_LIBRARY_PATH</span><span style="color:rgb(171,178,191);">=</span><span style="color:rgb(152,195,121);">"/nix/store/...-cuda/lib:</span><span style="color:rgb(232,102,113);">${</span><span style="color:rgb(209,154,102);">LD_LIBRARY_PATH</span><span style="color:rgb(232,102,113);">}</span><span style="color:rgb(152,195,121);">:/lib/x86_64-linux-gnu"</span><br><span style="color:rgb(97,175,239);">ldconfig</span><br></code></pre>
+<p>This allows nix store CUDA to find host-mounted drivers at runtime.</p>
+<h3 id="cloud-provider-adaptations"><strong>cloud provider adaptations</strong></h3>
+<p><strong>vast.ai</strong>: NVIDIA drivers mounted at <code>/lib/x86_64-linux-gnu</code></p>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;startup.sh&nbsp;detects&nbsp;vast.ai&nbsp;and&nbsp;configures&nbsp;paths</span><br><span style="color:rgb(97,175,239);">patchelf</span>&nbsp;<span style="color:rgb(232,102,113);">--set-rpath</span>&nbsp;<span style="color:rgb(232,102,113);">/lib/x86_64-linux-gnu</span>&nbsp;<span style="color:rgb(232,102,113);">/nix/store/.../nvidia-smi</span><br></code></pre>
+<p><strong>runpod</strong>: Standard nvidia-docker integration</p>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;uses&nbsp;nvidia-container-toolkit&nbsp;mounts</span><br><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;drivers&nbsp;available&nbsp;via&nbsp;standard&nbsp;paths</span><br></code></pre>
+<p><strong>bare-metal</strong>: Host nvidia-docker setup</p>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;relies&nbsp;on&nbsp;proper&nbsp;nvidia-container-toolkit&nbsp;configuration</span><br><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;GPU&nbsp;access&nbsp;via&nbsp;device&nbsp;mounts:&nbsp;--gpus&nbsp;all</span><br></code></pre>
+<hr>
+<h2 id="secret-management">// secret management //</h2>
+<h3 id="security-principles"><strong>security principles</strong></h3>
+<ol>
+<li><strong>Secrets never enter nix store</strong> (nix store is world-readable)</li>
+<li><strong>Runtime-only access</strong> (secrets mounted at container start)</li>
+<li><strong>File-based injection</strong> (not environment variables)</li>
+<li><strong>Minimal exposure</strong> (secrets only accessible to specific processes)</li>
+</ol>
+<h3 id="agenix-integration"><strong>agenix integration</strong></h3>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">nix2gpu</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">my-container</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">age</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">age</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">secrets</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">tailscale-key</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">file</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(232,102,113);">./secrets/ts-key.age</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">path</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">/run/secrets/ts-key</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">tailscale</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">authKeyFile</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">secrets</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">tailscale-auth</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">path</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<p><strong>Flow:</strong></p>
+<ol>
+<li>Host system decrypts secrets to <code>/run/secrets/</code></li>
+<li>Container mounts <code>/run/secrets</code> as volume</li>
+<li>Container references secrets by path, never by value</li>
+</ol>
+<hr>
+<h2 id="caching--amp--performance">// caching &amp; performance //</h2>
+<h3 id="layer-optimization"><strong>layer optimization</strong></h3>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;nix2container&nbsp;creates&nbsp;efficient&nbsp;layers</span><br><span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;<span style="color:rgb(171,178,191);">layer-01-base-system</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;coreutils,&nbsp;bash,&nbsp;etc.</span><br>&nbsp;&nbsp;<span style="color:rgb(171,178,191);">layer-02-cuda-toolkit</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;large&nbsp;but&nbsp;stable</span><br>&nbsp;&nbsp;<span style="color:rgb(171,178,191);">layer-03-python-packages</span>&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;frequently&nbsp;changing&nbsp;&nbsp;</span><br>&nbsp;&nbsp;<span style="color:rgb(171,178,191);">layer-04-app-code</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;most&nbsp;frequently&nbsp;changing</span><br><span style="color:rgb(132,139,152);">]</span><br></code></pre>
+<p>Frequently changing components go in higher layers to maximize cache hits.</p>
+<h3 id="build-caching"><strong>build caching</strong></h3>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;first&nbsp;build:&nbsp;downloads&nbsp;everything</span><br><span style="color:rgb(97,175,239);">nix</span>&nbsp;<span style="color:rgb(232,102,113);">build</span>&nbsp;<span style="color:rgb(232,102,113);">.#my-container</span>&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;~15&nbsp;minutes</span><br><br><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;subsequent&nbsp;builds:&nbsp;only&nbsp;changed&nbsp;layers</span><br><span style="color:rgb(97,175,239);">nix</span>&nbsp;<span style="color:rgb(232,102,113);">build</span>&nbsp;<span style="color:rgb(232,102,113);">.#my-container</span>&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;~30&nbsp;seconds</span><br></code></pre>
+<p>Nix's content-addressed store ensures perfect reproducibility with efficient incremental builds.</p>
+<h3 id="registry-layer-sharing"><strong>registry layer sharing</strong></h3>
+<pre class="highlight"><code class="language-bash"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;multiple&nbsp;containers&nbsp;share&nbsp;base&nbsp;layers</span><br><span style="color:rgb(97,175,239);">my-container:v1</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;2GB&nbsp;total&nbsp;(8&nbsp;layers)</span><br><span style="color:rgb(97,175,239);">my-container:v2</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;+100MB&nbsp;(only&nbsp;top&nbsp;layer&nbsp;changed)</span><br><span style="color:rgb(97,175,239);">other-container:v1</span>&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;+500MB&nbsp;(shares&nbsp;6&nbsp;bottom&nbsp;layers)</span><br></code></pre>
+<p>OCI registries deduplicate shared layers across images.</p>
+<hr>
+<h2 id="extending-the-system">// extending the system //</h2>
+<h3 id="custom-services"><strong>custom services</strong></h3>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;services/my-service.nix</span><br><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">lib</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">pkgs</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span><br><span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">config</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span><br><span style="color:rgb(198,120,221);">let</span><br>&nbsp;&nbsp;<span style="color:rgb(198,120,221);">inherit</span>&nbsp;<span style="color:rgb(132,139,152);">(</span><span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">)</span>&nbsp;mkOption&nbsp;types<span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;cfg&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">myService</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(198,120,221);">in</span><br><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">_class</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">service</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br><br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">options</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">myService</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">port</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(97,175,239);">mkOption</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(86,182,194);">type</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">types</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">port</span><span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(86,182,194);">default</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">8080</span><span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;...&nbsp;other&nbsp;options</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<br>&nbsp;&nbsp;<span style="color:rgb(86,182,194);">config</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">process</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">argv</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">(</span><span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">getExe</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">my-service</span><span style="color:rgb(132,139,152);">)</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">--port</span><span style="color:rgb(152,195,121);">"</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">(</span><span style="color:rgb(86,182,194);">toString</span>&nbsp;<span style="color:rgb(171,178,191);">cfg</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">port</span><span style="color:rgb(132,139,152);">)</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
+<h3 id="custom-cloud-targets"><strong>custom cloud targets</strong></h3>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;modules/container/scripts/copy-to-my-cloud.nix</span><br><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(97,175,239);">perSystem</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">pkgs</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">self'</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(97,175,239);">perContainer</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">container</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">scripts</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">copy-to-my-cloud</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">writeShellApplication</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">name</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">copy-to-my-cloud</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">text</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">''</span><span style="color:rgb(152,195,121);"></span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;implement&nbsp;your&nbsp;cloud's&nbsp;container&nbsp;registry&nbsp;push</span><span style="color:rgb(152,195,121);"></span><br><span style="color:rgb(152,195,121);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:rgb(152,195,121);">''</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br></code></pre>
+<p>The modular architecture makes it straightforward to add new cloud providers or service types.</p>
+</body></html></main>
+      </div>
+
+      <aside class="page-toc">
+        <nav class="page-toc-nav">
+          <h3>On this page</h3>
+          <ul class="page-toc-list">
+            <li><a href="#architecture-overview">// architecture overview //</a>
+<ul><li><a href="#the-big-picture">// the big picture //</a>
+<li><a href="#build-pipeline">// build pipeline //</a>
+<ul><li><a href="#1--nix-evaluation">1. nix evaluation</a>
+<li><a href="#2--dependency-resolution">2. dependency resolution</a>
+<li><a href="#3--image-assembly">3. image assembly</a>
+<li><a href="#4--container-execution">4. container execution</a>
+</ul><li><a href="#filesystem-layout">// filesystem layout //</a>
+<li><a href="#startup-sequence">// startup sequence //</a>
+<ul><li><a href="#1--environment-setup">1. environment setup</a>
+<li><a href="#2--runtime-detection">2. runtime detection</a>
+<li><a href="#3--gpu-initialization">3. GPU initialization</a>
+<li><a href="#4--network-setup">4. network setup</a>
+<li><a href="#5--service-orchestration">5. service orchestration</a>
+</ul><li><a href="#service-management">// service management //</a>
+<ul><li><a href="#nimi">Nimi</a>
+<li><a href="#service-lifecycle">service lifecycle</a>
+</ul><li><a href="#networking-architecture">// networking architecture //</a>
+<ul><li><a href="#standard-mode--docker-podman">standard mode (docker/podman)</a>
+<li><a href="#tailscale-mode--mesh-networking">tailscale mode (mesh networking)</a>
+</ul><li><a href="#gpu-integration">// GPU integration //</a>
+<ul><li><a href="#driver-compatibility">driver compatibility</a>
+<li><a href="#cloud-provider-adaptations">cloud provider adaptations</a>
+</ul><li><a href="#secret-management">// secret management //</a>
+<ul><li><a href="#security-principles">security principles</a>
+<li><a href="#agenix-integration">agenix integration</a>
+</ul><li><a href="#caching---performance">// caching &amp; performance //</a>
+<ul><li><a href="#layer-optimization">layer optimization</a>
+<li><a href="#build-caching">build caching</a>
+<li><a href="#registry-layer-sharing">registry layer sharing</a>
+</ul><li><a href="#extending-the-system">// extending the system //</a>
+<ul><li><a href="#custom-services">custom services</a>
+<li><a href="#custom-cloud-targets">custom cloud targets</a>
+</li></ul></li></ul></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <footer>
+  <p>Generated with ndg</p>
+</footer>
+
+    </div>
+
+    
+  </body>
+</html>
