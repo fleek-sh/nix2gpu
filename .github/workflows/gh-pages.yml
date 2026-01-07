@@ -5,7 +5,7 @@ on:
       - main
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 concurrency:
@@ -19,18 +19,10 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
       - name: Build Docs
-        run: nix build .#docs
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        run: nix build .#docs --accept-flake-config -L
+      - name: Pages deploy
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: result/share/nix2gpu/site/
-  deploy:
-    needs: build-config
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          folder: result/share/nix2gpu/docs
+          clean-exclude: pr-preview/
+          force: false
