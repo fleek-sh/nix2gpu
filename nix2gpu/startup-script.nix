@@ -30,7 +30,6 @@ in
         inputs = config.systemPackages ++ [ extraStartupScript ];
         execer = [
           "cannot:${lib.getExe' pkgs.openssh "ssh-keygen"}"
-          "cannot:${lib.getExe' pkgs.openssh "sshd"}"
           "cannot:${lib.getExe' pkgs.tailscale "tailscaled"}"
           "cannot:${lib.getExe' pkgs.tailscale "tailscale"}"
           "cannot:${lib.getExe' pkgs.glibc "ldd"}"

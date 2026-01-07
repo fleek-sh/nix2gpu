@@ -18,9 +18,7 @@ in
     '';
     example = literalExpression ''
       extraStartupScript = '''
-        echo "Launching custom startup script process..."
-        # Start a background service
-        my-service &
+        echo "Hello world"
       ''';
     '';
     type = mkOptionType {

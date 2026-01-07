@@ -34,4 +34,12 @@ in
       nix2gpu generated sshd config
     '';
   };
+
+  config.services.sshd = {
+    process.argv = [
+      (lib.getExe' pkgs.openssh "sshd")
+      "-D"
+      "-e"
+    ];
+  };
 }
