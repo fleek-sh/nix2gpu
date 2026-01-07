@@ -1,23 +1,13 @@
-_:
+{ lib, ... }:
 {
-  perSystem =
-    _:
+  perSystem = { pkgs, ... }:
     {
-      nix2gpu."nginx-test" = {
-        # services."hello-world-server" = {
-        #   imports = [ (lib.modules.importApply ../../services/nginx.nix { inherit pkgs; }) ];
-        #   nginx.httpConfig = ''
-        #     server {
-        #       listen 8080 default_server;
-        #       server_name _;
-        #
-        #       location / {
-        #         default_type text/plain;
-        #         return 200 "hello world";
-        #       }
-        #     }
-        #   '';
-        # };
+      nix2gpu."http-test" = {
+        services."hello-world-server" = {
+          process.argv = [
+            (lib.getExe pkgs.http-server)
+          ];
+        };
 
         exposedPorts = {
           "8080/tcp" = { };
