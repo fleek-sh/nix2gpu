@@ -1,3 +1,4 @@
+{ lib, ... }:
 {
   # This example shows how one may use
   # NixOS modular services (Nix 25.11)
@@ -7,7 +8,7 @@
     {
       nix2gpu."with-services" = {
         services."ghostunnel-example" = {
-          imports = [ pkgs.ghostunnel.services ];
+          imports = [ pkgs.ghostunnel.services.default ];
           ghostunnel = {
             listen = "0.0.0.0:443";
             cert = "/root/service-cert.pem";
