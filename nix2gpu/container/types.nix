@@ -9,7 +9,7 @@ in
     description = ''
       nix2gpu's custom types for use in describing it's config.
     '';
-    type = types.attrsOf types.optionType;
+    type = types.lazyAttrsOf types.optionType;
     internal = true;
   };
 
