@@ -28,21 +28,18 @@ in
       ''
         set -euo pipefail
 
-        if [ "$#" -lt 1 ]; then
-          echo "Too little arguments provided"
-          echo "Usage: copy-to-github-registries <registries>"
-          exit 1
-        fi
-
-        registries="$1"
-
         if ! gh auth status &>/dev/null; then
           echo "[nix2gpu] please log in to github first"
           gh auth login --scopes write:packages
         fi
 
+        ${lib.optionalString (config.registries == [ ]) ''
+          printf '\n\033[31mError:\033[0m %s.\n' 'In order to use "copyToGithub" the "registries" attribute of your nix2gpu container (${name}) must be set' >&2
+          exit 1
+        ''}
+
         # shellcheck disable=SC2043,SC2016
-        for registry in $registries; do
+        for registry in ${builtins.concatStringsSep " " config.registries}; do
           IMAGE="${name}:${config.tag}"
 
           GITHUB_USER="$(gh api user --jq .login)"
