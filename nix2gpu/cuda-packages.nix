@@ -1,7 +1,11 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkOption literalExpression;
-  inherit (config) rootConfig pkgs;
 in
 {
   _class = "nix2gpu";
@@ -21,7 +25,7 @@ in
     example = literalExpression ''
       cudaPackages = pkgs.cudaPackages_11_8;
     '';
-    type = rootConfig.nix2gpuTypes.cudaPackageSet;
+    type = config.nix2gpuTypes.cudaPackageSet;
     default = pkgs.cudaPackages_13_0;
     defaultText = literalExpression "pkgs.cudaPackages_13_0";
   };

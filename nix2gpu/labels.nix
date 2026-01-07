@@ -1,7 +1,6 @@
 { config, lib, ... }:
 let
   inherit (lib) types mkOption literalExpression;
-  inherit (config) systemConfig name;
 in
 {
   _class = "nix2gpu";
@@ -36,7 +35,7 @@ in
       "ai.vast.gpu" = "required";
       "ai.vast.runtime" = "nix2gpu";
       "com.nvidia.volumes.needed" = "nvidia_driver";
-      "com.nvidia.cuda.version" = systemConfig.nix2gpu.${name}.cudaPackages.cudatoolkit.version;
+      "com.nvidia.cuda.version" = config.cudaPackages.cudatoolkit.version;
       "org.opencontainers.image.source" = "https://github.com/weyl-ai/nix2gpu";
       "org.opencontainers.image.description" = "Nix-based GPU container";
     };

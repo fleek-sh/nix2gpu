@@ -31,7 +31,7 @@
     };
 
     nimi = {
-      url = "git+ssh://git@github.com/weyl-ai/nimi.git?ref=baileylu/nixos-home-modules";
+      url = "git+ssh://git@github.com/weyl-ai/nimi.git";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
       inputs.systems.follows = "systems";

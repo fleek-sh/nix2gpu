@@ -7,7 +7,7 @@ in
     description = ''
       Bindings to `nimi.settings` to provide for this nix2gpu instance
     '';
-    type = types.raw;
+    type = types.deferredModule;
     default = { };
   };
 }
