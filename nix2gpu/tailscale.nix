@@ -32,6 +32,35 @@ let
       };
     };
   };
+
+  wrapper = pkgs.writeShellApplication {
+    name = "tailscale-service";
+    text = ''
+      if [[ -f "${cfg.authKey}" ]]; then
+        export TAILSCALE_AUTHKEY="${cfg.authKey}"
+      else
+        # shellcheck disable=SC2016
+        printf '\033[33m[nix2gpu] warning:\033[0m %s.\n' 'Path "${cfg.authKey}" does not exist (set via "cfg.authKey"), TAILSCALE_AUTHKEY will not be set'
+      fi
+
+      mkdir -p /var/lib/tailscale
+
+      echo "[nix2gpu] Starting Tailscale daemon..."
+      tailscaled --tun=userspace-networking --socket=/var/run/tailscale/tailscaled.sock 2>&1 &
+
+      TAILSCALED_PID=$!
+
+      if [ -n "''${TAILSCALE_AUTHKEY:-}" ]; then
+        echo "[nix2gpu] authenticating tailscale..."
+        sleep 3
+        tailscale up --authkey="$TAILSCALE_AUTHKEY" --ssh &
+      else
+        echo "[nix2gpu] Tailscale running (no authkey provided)"
+      fi
+
+      wait "$TAILSCALED_PID"
+    '';
+  };
 in
 {
   _class = "nix2gpu";
@@ -54,27 +83,8 @@ in
 
   config = mkIf cfg.enable {
     systemPackages = with pkgs; [ tailscale ];
-
-    extraStartupScript = ''
-      if [[ -f "${cfg.authKey}" ]]; then
-        export TAILSCALE_AUTHKEY="${cfg.authKey}"
-      else
-        # shellcheck disable=SC2016
-        printf '\033[33m[nix2gpu] warning:\033[0m %s.\n' 'Path "${cfg.authKey}" does not exist (set via "cfg.authKey"), TAILSCALE_AUTHKEY will not be set'
-      fi
-
-      mkdir -p /var/lib/tailscale
-
-      echo "[nix2gpu] Starting Tailscale daemon..."
-      tailscaled --tun=userspace-networking --socket=/var/run/tailscale/tailscaled.sock 2>&1 &
-
-      if [ -n "''${TAILSCALE_AUTHKEY:-}" ]; then
-        echo "[nix2gpu] authenticating tailscale..."
-        sleep 3
-        tailscale up --authkey="$TAILSCALE_AUTHKEY" --ssh &
-      else
-        echo "[nix2gpu] Tailscale running (no authkey provided)"
-      fi
-    '';
+    services.tailscale = {
+      process.argv = [ (lib.getExe wrapper) ];
+    };
   };
 }

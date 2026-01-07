@@ -171,11 +171,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1767801464,
-        "narHash": "sha256-mWpxrBMCZs4EgrMILVtLoTQREUMy9VoV75Rc7rQFfhY=",
+        "lastModified": 1767805454,
+        "narHash": "sha256-r8upTr5z6RYbgDWaj5m9XgCpzd39RBIs8ncrxq5CCEA=",
         "ref": "baileylu/random-fixes",
-        "rev": "c4c1d0dd46d2861571f598bf28ceed3d97e94d26",
-        "revCount": 110,
+        "rev": "841c3241ca5a4e6173a2799cecdc740f8a6386cd",
+        "revCount": 116,
         "type": "git",
         "url": "ssh://git@github.com/weyl-ai/nimi.git"
       },

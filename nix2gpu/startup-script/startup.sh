@@ -105,12 +105,6 @@ for type in rsa ed25519; do
   [ ! -f "$key" ] && ssh-keygen -t "$type" -f "$key" -N "" >/dev/null 2>&1
 done
 
-# // ssh // daemon
-echo "[nix2gpu] starting ssh daemon..."
-# Gets resholved to the absolute path
-sshd -t || exit 1
-sshd -D -e &
-
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_DATA_DIRS="/usr/local/share:/usr/share"
 export XDG_CONFIG_HOME="$HOME/.config"
