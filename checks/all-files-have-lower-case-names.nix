@@ -6,7 +6,7 @@ in
   perSystem =
     { pkgs, ... }:
     {
-      checks.allFilesHaveLowerCaseNames = pkgs.runCommandLocal "lower-case-name-check" { } ''
+      checks.all-files-have-lower-case-names = pkgs.runCommandLocal "lower-case-name-check" { } ''
         for file in ${lib.concatStringsSep " " nixFiles};
         do
           if basename "$file" | grep -q '[A-Z]'; then

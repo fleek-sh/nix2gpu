@@ -1,0 +1,33 @@
+{ pkgs, ... }:
+{
+  systemPackages = with pkgs; [
+    bashInteractive
+    bzip2
+    cacert
+    coreutils
+    findutils
+    gawk
+    git
+    gnugrep
+    gnused
+    gnutar
+    gzip
+    less
+    man
+    nano
+    nix
+    openssl
+    p7zip
+    pciutils
+    procps
+    shadow
+    sudo
+    tini
+    unzip
+    util-linux
+    neovim
+    which
+    xz
+    su
+  ];
+}

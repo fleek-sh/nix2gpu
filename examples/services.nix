@@ -1,17 +1,26 @@
 {
   # This example shows how one may use
-  # [services-flake](https://github.com/juspay/services-flake)
-  # config options via the `services` attribute
-  perSystem.nix2gpu."with-services-flake" = {
-    services.clickhouse."clickhouse-example" = {
-      enable = true;
-      extraConfig = {
-        http_port = 9050;
+  # NixOS modular services (Nix 25.11)
+  # via the `services` attribute
+  perSystem =
+    { pkgs, ... }:
+    {
+      nix2gpu."with-services" = {
+        services."ghostunnel-example" = {
+          imports = [ pkgs.ghostunnel.services.default ];
+          ghostunnel = {
+            listen = "0.0.0.0:443";
+            cert = "/root/service-cert.pem";
+            key = "/root/service-key.pem";
+            disableAuthentication = true;
+            target = "backend:80";
+            unsafeTarget = true;
+          };
+        };
+
+        exposedPorts = {
+          "9050/tcp" = { };
+        };
       };
     };
-
-    exposedPorts = {
-      "9050/tcp" = { };
-    };
-  };
 }

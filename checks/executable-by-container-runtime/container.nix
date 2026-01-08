@@ -1,22 +1,16 @@
+{ lib, ... }:
 {
-  perSystem.nix2gpu."nginx-test" = {
-    services.nginx."hello-world-server" = {
-      enable = true;
-      httpConfig = ''
-        server {
-          listen 8080 default_server;
-          server_name _;
+  perSystem =
+    { pkgs, ... }:
+    {
+      nix2gpu."http-test" = {
+        services."hello-world-server" = {
+          process.argv = [ (lib.getExe pkgs.http-server) ];
+        };
 
-          location / {
-            default_type text/plain;
-            return 200 "hello world";
-          }
-        }
-      '';
+        exposedPorts = {
+          "8080/tcp" = { };
+        };
+      };
     };
-
-    exposedPorts = {
-      "8080/tcp" = { };
-    };
-  };
 }
