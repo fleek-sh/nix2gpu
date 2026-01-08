@@ -1,0 +1,1194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Documentation - Options</title>
+     
+    <script>
+      // Apply sidebar state immediately to prevent flash
+      (function () {
+        if (localStorage.getItem("sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-collapsed");
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="assets/style.css" />
+    <script defer src="assets/main.js"></script>
+    
+    <script defer src="assets/search.js"></script>
+    
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-left">
+          <h1 class="site-title">
+            <a href="index.html"> Documentation</a>
+          </h1>
+        </div>
+        <nav class="header-nav">
+  <ul>
+    <li class="active">
+      <a href="options.html">Options</a>
+    </li>
+    
+    <li><a href="search.html">Search</a></li>
+    
+  </ul>
+</nav>
+ 
+        <div class="search-container">
+          <input type="text" id="search-input" placeholder="Search..." />
+          <div id="search-results" class="search-results"></div>
+        </div>
+        
+      </header>
+
+      <div class="layout">
+        <div class="sidebar-toggle" aria-label="Toggle sidebar">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+          >
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+          </svg>
+        </div>
+        <nav id="sidebar" class="sidebar">
+          <details class="sidebar-section" data-section="docs" open>
+            <summary>Documents</summary>
+            <div class="sidebar-section-content">
+              <ul>
+                <li><a href="index.html">// index //</a></li>
+<li><a href="getting-started.html">// `ComfyUI` setup guide //</a></li>
+<li><a href="architecture.html">// architecture overview //</a></li>
+<li><a href="custom-service.html">// defining a custom service //</a></li>
+<li><a href="integrations.html">// integrations //</a></li>
+<li><a href="services.html">// services & runtime //</a></li>
+<li><a href="search.html">Search</a></li>
+
+              </ul>
+            </div>
+          </details>
+
+          <details class="sidebar-section" data-section="toc" open>
+            <summary>Contents</summary>
+            <div class="sidebar-section-content">
+              <ul class="toc-list">
+  
+  
+  <li>
+    <a href='#option-_module-args' title="_module.args">
+      _module.args
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-age' title="age">
+      age
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-age-enable' title="age.enable">
+      age.enable
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-age-identityPaths' title="age.identityPaths">
+      age.identityPaths
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-age-package' title="age.package">
+      age.package
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-age-secretsDir' title="age.secretsDir">
+      age.secretsDir
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-age-secretsMountPoint' title="age.secretsMountPoint">
+      age.secretsMountPoint
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-copyToRoot' title="copyToRoot">
+      copyToRoot
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-cudaPackages' title="cudaPackages">
+      cudaPackages
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-env' title="env">
+      env
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-exposedPorts' title="exposedPorts">
+      exposedPorts
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-extraEnv' title="extraEnv">
+      extraEnv
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-extraLabels' title="extraLabels">
+      extraLabels
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-extraStartupScript' title="extraStartupScript">
+      extraStartupScript
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-home' title="home">
+      home
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-labels' title="labels">
+      labels
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-maxLayers' title="maxLayers">
+      maxLayers
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-meta' title="meta">
+      meta
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-nimiSettings' title="nimiSettings">
+      nimiSettings
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-nixConfig' title="nixConfig">
+      nixConfig
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-passthru' title="passthru">
+      passthru
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-registries' title="registries">
+      registries
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-services' title="services">
+      services
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-sshdConfig' title="sshdConfig">
+      sshdConfig
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-systemPackages' title="systemPackages">
+      systemPackages
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-tag' title="tag">
+      tag
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-tailscale' title="tailscale">
+      tailscale
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-tailscale-authKey' title="tailscale.authKey">
+      tailscale.authKey
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-tailscale-enable' title="tailscale.enable">
+      tailscale.enable
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-user' title="user">
+      user
+      
+      
+    </a>
+  </li>
+  
+  <li>
+    <a href='#option-workingDir' title="workingDir">
+      workingDir
+      
+      
+    </a>
+  </li>
+  
+
+  
+  
+  <li>
+    <details class="toc-category">
+      <summary title="age.secrets">
+        <span>age.secrets</span>
+        <span class="toc-count">6</span>
+      </summary>
+      <ul>
+        
+        <li>
+          <a href='#option-age-secrets' class="parent-option" title="age.secrets">
+            age.secrets
+            
+            
+          </a>
+        </li>
+        
+
+        
+        <li>
+          <a href='#option-age-secrets-&lt;name&gt;-file' title="age.secrets.&lt;name&gt;.file">
+            &lt;name&gt;.file
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-age-secrets-&lt;name&gt;-mode' title="age.secrets.&lt;name&gt;.mode">
+            &lt;name&gt;.mode
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-age-secrets-&lt;name&gt;-name' title="age.secrets.&lt;name&gt;.name">
+            &lt;name&gt;.name
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-age-secrets-&lt;name&gt;-path' title="age.secrets.&lt;name&gt;.path">
+            &lt;name&gt;.path
+            
+            
+          </a>
+        </li>
+        
+        <li>
+          <a href='#option-age-secrets-&lt;name&gt;-symlink' title="age.secrets.&lt;name&gt;.symlink">
+            &lt;name&gt;.symlink
+            
+            
+          </a>
+        </li>
+        
+      </ul>
+    </details>
+  </li>
+  
+</ul>
+
+            </div>
+          </details>
+        </nav>
+
+        <main class="content">
+          <h1> Documentation Options</h1>
+
+          
+          <div class="search-form">
+            <input
+              type="text"
+              id="options-filter"
+              placeholder="Filter options..."
+            />
+          </div>
+          
+
+          <div class="options-container"><div class="option" id="option-_module-args">
+  <h3 class="option-name">
+    <a href="#option-_module-args" class="option-anchor">_module.args</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>lazy attribute set of raw value</code></div>
+  <div class="option-description"><html><head></head><body><p>Additional arguments passed to each module in addition to ones
+like <code>lib</code>, <code>config</code>,
+and <code>pkgs</code>, <code>modulesPath</code>.</p>
+<p>This option is also available to all submodules. Submodules do not
+inherit args from their parent module, nor do they provide args to
+their parent module or sibling submodules. The sole exception to
+this is the argument <code>name</code> which is provided by
+parent modules to a submodule and contains the attribute name
+the submodule is bound to, or a unique generated name if it is
+not bound to an attribute.</p>
+<p>Some arguments are already passed by default, of which the
+following <em>cannot</em> be changed with this option:</p>
+<ul>
+<li>
+<p><code class="nix-var">lib</code>: The nixpkgs library.</p>
+</li>
+<li>
+<p><code class="nix-var">config</code>: The results of all options after merging the values from all modules together.</p>
+</li>
+<li>
+<p><code class="nix-var">options</code>: The options declared in all modules.</p>
+</li>
+<li>
+<p><code class="nix-var">specialArgs</code>: The <code>specialArgs</code> argument passed to <code>evalModules</code>.</p>
+</li>
+<li>
+<p>All attributes of <code class="nix-var">specialArgs</code></p>
+<p>Whereas option values can generally depend on other option values
+thanks to laziness, this does not apply to <code>imports</code>, which
+must be computed statically before anything else.</p>
+<p>For this reason, callers of the module system can provide <code>specialArgs</code>
+which are available during import resolution.</p>
+<p>For NixOS, <code>specialArgs</code> includes
+<code class="nix-var">modulesPath</code>, which allows you to import
+extra modules from the nixpkgs package tree without having to
+somehow make the module aware of the location of the
+<code>nixpkgs</code> or NixOS directories.</p>
+<pre><code>{ modulesPath, ... }: {
+  imports = [
+    (modulesPath + "/profiles/minimal.nix")
+  ];
+}
+</code></pre>
+</li>
+</ul>
+<p>For NixOS, the default value for this option includes at least this argument:</p>
+<ul>
+<li><code class="nix-var">pkgs</code>: The nixpkgs package set according to
+the <code class="nixos-option">nixpkgs.pkgs</code> option.</li>
+</ul>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="https://github.com/NixOS/nixpkgs/blob/master/lib/modules.nix" target="_blank"><nixpkgs/lib/modules.nix></a></code></div>
+</div>
+<div class="option" id="option-age">
+  <h3 class="option-name">
+    <a href="#option-age" class="option-anchor">age</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>submodule</code></div>
+  <div class="option-description"><html><head></head><body><p>The <code>agenix</code> configuration for the container's user environment.</p>
+<p>This module is a port of <a href="https://github.com/ryantm/agenix"><code>agenix</code></a> to
+<code>nix2gpu</code>, and allows simplified management of age encrypted secrets in
+nix.</p>
+<p>To use this, you must first enable the optional <code>agenix</code>
+integration:</p>
+<p>Then enable the module with:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">age</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">enable</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(209,154,102);">true</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix</a></code></div>
+</div>
+<div class="option" id="option-age-enable">
+  <h3 class="option-name">
+    <a href="#option-age-enable" class="option-anchor">age.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable enable agenix integration.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-example">Example: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix</a></code></div>
+</div>
+<div class="option" id="option-age-identityPaths">
+  <h3 class="option-name">
+    <a href="#option-age-identityPaths" class="option-anchor">age.identityPaths</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of absolute path</code></div>
+  <div class="option-description"><html><head></head><body><p>Paths to SSH keys to be used as identities in age decryption.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[
+  "/etc/ssh/ssh_host_rsa_key"
+  "/etc/ssh/ssh_host_ed25519_key"
+]</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix</a></code></div>
+</div>
+<div class="option" id="option-age-package">
+  <h3 class="option-name">
+    <a href="#option-age-package" class="option-anchor">age.package</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The rage package to use.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.rage</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix</a></code></div>
+</div>
+<div class="option" id="option-age-secrets">
+  <h3 class="option-name">
+    <a href="#option-age-secrets" class="option-anchor">age.secrets</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of (submodule)</code></div>
+  <div class="option-description"><html><head></head><body><p>Attrset of secrets.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix</a></code></div>
+</div>
+<div class="option" id="option-age-secrets-&lt;name&gt;-file">
+  <h3 class="option-name">
+    <a href="#option-age-secrets-&lt;name&gt;-file" class="option-anchor">age.secrets.&lt;name&gt;.file</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>absolute path</code></div>
+  <div class="option-description"><html><head></head><body><p>Age file the secret is loaded from.</p>
+</body></html></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix</a></code></div>
+</div>
+<div class="option" id="option-age-secrets-&lt;name&gt;-mode">
+  <h3 class="option-name">
+    <a href="#option-age-secrets-&lt;name&gt;-mode" class="option-anchor">age.secrets.&lt;name&gt;.mode</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>Permissions mode of the decrypted secret in a format understood by chmod.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"0400"</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix</a></code></div>
+</div>
+<div class="option" id="option-age-secrets-&lt;name&gt;-name">
+  <h3 class="option-name">
+    <a href="#option-age-secrets-&lt;name&gt;-name" class="option-anchor">age.secrets.&lt;name&gt;.name</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>Name of the file used in ${cfg.secretsDir}</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"‹name›"</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix</a></code></div>
+</div>
+<div class="option" id="option-age-secrets-&lt;name&gt;-path">
+  <h3 class="option-name">
+    <a href="#option-age-secrets-&lt;name&gt;-path" class="option-anchor">age.secrets.&lt;name&gt;.path</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>Path where the decrypted secret is installed.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"\${XDG_RUNTIME_DIR}/agenix/‹name›"</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix</a></code></div>
+</div>
+<div class="option" id="option-age-secrets-&lt;name&gt;-symlink">
+  <h3 class="option-name">
+    <a href="#option-age-secrets-&lt;name&gt;-symlink" class="option-anchor">age.secrets.&lt;name&gt;.symlink</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable symlinking secrets to their destination.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>true</code></div>
+  <div class="option-example">Example: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix</a></code></div>
+</div>
+<div class="option" id="option-age-secretsDir">
+  <h3 class="option-name">
+    <a href="#option-age-secretsDir" class="option-anchor">age.secretsDir</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>Folder where secrets are symlinked to</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"${XDG_RUNTIME_DIR}"/${dir}.
+</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix</a></code></div>
+</div>
+<div class="option" id="option-age-secretsMountPoint">
+  <h3 class="option-name">
+    <a href="#option-age-secretsMountPoint" class="option-anchor">age.secretsMountPoint</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>unspecified value</code></div>
+  <div class="option-description"><html><head></head><body><p>Where secrets are created before they are symlinked to ${cfg.secretsDir}</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"${XDG_RUNTIME_DIR}"/${dir}.
+</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/age.nix</a></code></div>
+</div>
+<div class="option" id="option-copyToRoot">
+  <h3 class="option-name">
+    <a href="#option-copyToRoot" class="option-anchor">copyToRoot</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>A list of packages to be copied to the root of the container.</p>
+<p>This option allows you to specify a list of Nix packages that will be
+symlinked into the root directory of the container. This is useful for
+making essential packages and profiles available at the top level of the
+container's filesystem.</p>
+<p>The default value includes the base system, the container's profile, and the
+Nix store profile, which are essential for the container to function correctly.</p>
+<p>If you want to add extra packages without replacing the default set,
+use the <code>extraCopyToRoot</code> option instead.</p>
+<p>&gt; This is a direct mapping to the
+&gt; <a href="https://github.com/nlewo/nix2container?tab=readme-ov-file#nix2containerbuildimage"><code>copyToRoot</code></a>
+&gt; attribute from <a href="https://github.com/nlewo/nix2container"><code>nix2container</code></a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>The generated base system from the other config options
+</code></div>
+  <div class="option-example">Example: <pre><code>copyToRoot = with pkgs; [
+  coreutils
+  git
+];
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/copy-to-root.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/copy-to-root.nix</a></code></div>
+</div>
+<div class="option" id="option-cudaPackages">
+  <h3 class="option-name">
+    <a href="#option-cudaPackages" class="option-anchor">cudaPackages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>package</code></div>
+  <div class="option-description"><html><head></head><body><p>The set of CUDA packages to be used in the container.</p>
+<p>This option allows you to select a specific version of the CUDA toolkit
+to be installed in the container. This is crucial for ensuring
+compatibility with applications and machine learning frameworks that
+depend on a particular CUDA version.</p>
+<p>The value should be a package set from <code>pkgs.cudaPackages</code>. You can find
+available versions by <a href="https://ryantm.github.io/nixpkgs/languages-frameworks/cuda/">searching for <code>cudaPackages</code> in Nixpkgs</a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>pkgs.cudaPackages_13_0</code></div>
+  <div class="option-example">Example: <pre><code>cudaPackages = pkgs.cudaPackages_11_8;
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/cuda-packages.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/cuda-packages.nix</a></code></div>
+</div>
+<div class="option" id="option-env">
+  <h3 class="option-name">
+    <a href="#option-env" class="option-anchor">env</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of string</code></div>
+  <div class="option-description"><html><head></head><body><p>A list of environment variables to set inside the container.</p>
+<p>This option allows you to define the environment variables that will be
+available within the container.</p>
+<p>The default value provides a comprehensive set of environment variables
+for a typical development environment, including paths for Nix, CUDA,
+and other essential tools.</p>
+<p>If you want to add extra environment variables without replacing the
+default set, use the <code>extraEnv</code> option instead.</p>
+<p>&gt; This is a direct mapping to the <code>Env</code> attribute of the <a href="https://github.com/opencontainers/image-spec/blob/8b9d41f48198a7d6d0a5c1a12dc2d1f7f47fc97f/specs-go/v1/config.go#L23">oci container
+&gt; spec</a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>CUDA_VERSION = "The cuda version from cuda packages";
+CURL_CA_BUNDLE = "/etc/ssl/certs/ca-bundle.crt";
+HOME = "/root";
+LANG = "en_US.UTF-8";
+LC_ALL = "en_US.UTF-8";
+LD_LIBRARY_PATH = "/lib/x86_64-linux-gnu:/usr/lib64:/usr/lib";
+LOCALE_ARCHIVE = "glibc/lib/locale/locale-archive";
+NIXPKGS_ALLOW_UNFREE = "1";
+NIX_PATH = "nixpkgs=/nix/var/nix/profiles/per-user/root/channels";
+NIX_SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle.crt";
+NVIDIA_DISABLE_REQUIRE = "0";
+NVIDIA_DRIVER_CAPABILITIES = "compute,utility,graphics";
+NVIDIA_REQUIRE_CUDA = "cuda>=11.0";
+NVIDIA_VISIBLE_DEVICES = "all";
+PATH = "/root/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle.crt";
+TERM = "xterm-256color";
+USER = "root";
+</code></div>
+  <div class="option-example">Example: <pre><code>env = {
+  MY_CUSTOM_VARIABLE = "hello";
+  ANOTHER_VARIABLE = "world";
+};
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/env.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/env.nix</a></code></div>
+</div>
+<div class="option" id="option-exposedPorts">
+  <h3 class="option-name">
+    <a href="#option-exposedPorts" class="option-anchor">exposedPorts</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of anything</code></div>
+  <div class="option-description"><html><head></head><body><p>A set of ports to expose from the container.</p>
+<p>This option allows you to specify which network ports should be
+exposed by the container. The keys are the port and protocol
+(e.g., "80/tcp"), and the values are empty attribute sets.</p>
+<p>By default, port 22 is exposed for SSH access.</p>
+<p>&gt; This is a direct mapping to the <code>ExposedPorts</code> attribute of the <a href="https://github.com/opencontainers/image-spec/blob/8b9d41f48198a7d6d0a5c1a12dc2d1f7f47fc97f/specs-go/v1/config.go#L23">oci container
+&gt; spec</a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{
+  "22/tcp" = { };
+}</code></div>
+  <div class="option-example">Example: <pre><code>exposedPorts = {
+  "8080/tcp" = {};
+  "443/tcp" = {};
+};
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/exposed-ports.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/exposed-ports.nix</a></code></div>
+</div>
+<div class="option" id="option-extraEnv">
+  <h3 class="option-name">
+    <a href="#option-extraEnv" class="option-anchor">extraEnv</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of string</code></div>
+  <div class="option-description"><html><head></head><body><p>A list of extra environment variables to set inside the container.</p>
+<p>This option allows you to add more environment variables to the <code>env</code>
+option without overriding the default set. The variables listed here
+will be appended to the main <code>env</code> list.</p>
+<p>This is the recommended way to add your own custom environment variables.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>extraEnv = {
+  DATABASE_URL = "postgres://user:password@host:port/db";
+  NIXPKGS_ALLOW_UNFREE = "1";
+};
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/extra-env.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/extra-env.nix</a></code></div>
+</div>
+<div class="option" id="option-extraLabels">
+  <h3 class="option-name">
+    <a href="#option-extraLabels" class="option-anchor">extraLabels</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of string</code></div>
+  <div class="option-description"><html><head></head><body><p>A set of extra labels to apply to the container.</p>
+<p>This option allows you to add custom metadata to the container in the
+form of labels. These labels can be used for organizing and filtering
+containers, or for storing information about the container's contents
+or purpose.</p>
+<p>The labels defined here will be merged with the default <code>labels</code> set.</p>
+<p>This is the recommended way to add more labels to your project
+rather than overriding labels.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>extraLabels = {
+  "com.example.vendor" = "My Company";
+  "com.example.project" = "My Project";
+};
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/extra-labels.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/extra-labels.nix</a></code></div>
+</div>
+<div class="option" id="option-extraStartupScript">
+  <h3 class="option-name">
+    <a href="#option-extraStartupScript" class="option-anchor">extraStartupScript</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string (concatenated when merged)</code></div>
+  <div class="option-description"><html><head></head><body><p>A string of shell commands to be executed at the end of the container's startup script.</p>
+<p>This option provides a way to run custom commands every time the
+container starts. The contents of this option will be appended to the
+main startup script, after the default startup tasks have been completed.</p>
+<p>This is useful for tasks such as starting services, running background
+processes, or printing diagnostic information.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>""</code></div>
+  <div class="option-example">Example: <pre><code>extraStartupScript = ''
+  echo "Hello world"
+'';
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/extra-startup-script.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/extra-startup-script.nix</a></code></div>
+</div>
+<div class="option" id="option-home">
+  <h3 class="option-name">
+    <a href="#option-home" class="option-anchor">home</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>lazy attribute set of raw value</code></div>
+  <div class="option-description"><html><head></head><body><p>The <code>home-manager</code> configuration for the container's user environment.</p>
+<p>This option allows you to define the user's home environment using
+<a href="https://github.com/nix-community/home-manager"><code>home-manager</code></a>.
+You can configure everything from shell aliases and environment
+variables to user services and application settings.</p>
+<p>By default, a minimal set of useful modern shell packages
+is included to provide a comfortable and secure hacking
+environment on your machines.</p>
+<p><code>home-manager</code> is bundled with <code>nix2gpu</code>, so no additional flake inputs
+are required to use this option.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>A sample home manager config with some nice defaults
+from nix2gpu
+</code></div>
+  <div class="option-example">Example: <pre><code>home = home-manager.lib.homeManagerConfiguration {
+  inherit pkgs;
+  extraSpecialArgs = { inherit inputs; };
+  modules = [
+    ./home
+  ];
+};
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/home.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/home.nix</a></code></div>
+</div>
+<div class="option" id="option-labels">
+  <h3 class="option-name">
+    <a href="#option-labels" class="option-anchor">labels</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>attribute set of string</code></div>
+  <div class="option-description"><html><head></head><body><p>A set of labels to apply to the container.</p>
+<p>This option allows you to define metadata for the container in the form
+of labels. These labels can be used for organizing and filtering
+containers, or for storing information about the container's contents
+or purpose.</p>
+<p>The default value includes several labels that provide information
+about the container's origin, runtime, and dependencies.</p>
+<p>If you want to add extra labels without replacing the default set,
+use the <code>extraLabels</code> option instead.</p>
+<p>&gt; This is a direct mapping to the <code>Labels</code> attribute of the <a href="https://github.com/opencontainers/image-spec/blob/8b9d41f48198a7d6d0a5c1a12dc2d1f7f47fc97f/specs-go/v1/config.go#L23">oci container
+&gt; spec</a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"ai.vast.gpu" = "required";
+"ai.vast.runtime" = "nix2gpu";
+"com.nvidia.volumes.needed" = "nvidia_driver";
+"com.nvidia.cuda.version" = systemConfig.nix2gpu.<name>.cudaPackages.cudatoolkit.version;
+"org.opencontainers.image.source" = "https://github.com/weyl-ai/nix2gpu";
+"org.opencontainers.image.description" = "Nix-based GPU container";
+</code></div>
+  <div class="option-example">Example: <pre><code>labels = {
+  "my.custom.label" = "some-value";
+  "another.label" = "another-value";
+};
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/labels.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/labels.nix</a></code></div>
+</div>
+<div class="option" id="option-maxLayers">
+  <h3 class="option-name">
+    <a href="#option-maxLayers" class="option-anchor">maxLayers</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>signed integer</code></div>
+  <div class="option-description"><html><head></head><body><p>The maximum number of layers to use when creating the container image.</p>
+<p>This option sets the upper limit on the number of layers that will be
+used to build the container image. This is an important consideration
+for caching and build time purposes, and can have many benefits.</p>
+<p>See <a href="https://grahamc.com/blog/nix-and-layered-docker-images/">this blog post</a>
+for some nice information on layers in a nix context.</p>
+<p>&gt; This is a direct mapping to the
+&gt; <a href="https://github.com/nlewo/nix2container?tab=readme-ov-file#nix2containerbuildimage"><code>maxLayers</code></a>
+&gt; attribute from <a href="https://github.com/nlewo/nix2container"><code>nix2container</code></a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>50</code></div>
+  <div class="option-example">Example: <pre><code>maxLayers = 100;
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/max-layers.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/max-layers.nix</a></code></div>
+</div>
+<div class="option" id="option-meta">
+  <h3 class="option-name">
+    <a href="#option-meta" class="option-anchor">meta</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>lazy attribute set of raw value</code></div>
+  <div class="option-description"><html><head></head><body><p><a href="https://ryantm.github.io/nixpkgs/stdenv/meta/"><code>meta</code></a> attributes to
+include in the output of generated <code>nix2gpu</code> containers</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  meta = {
+    description = "My cool nimi package";
+  };
+}
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/meta.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/meta.nix</a></code></div>
+</div>
+<div class="option" id="option-nimiSettings">
+  <h3 class="option-name">
+    <a href="#option-nimiSettings" class="option-anchor">nimiSettings</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>module</code></div>
+  <div class="option-description"><html><head></head><body><p>Bindings to <code>nimi.settings</code> for this nix2gpu instance.</p>
+<p>Use this to tune Nimi runtime behavior (restart policy, logging, startup
+hooks, and container build settings) beyond the defaults provided by
+nix2gpu.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/container/nimi-settings.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/container/nimi-settings.nix</a></code></div>
+</div>
+<div class="option" id="option-nixConfig">
+  <h3 class="option-name">
+    <a href="#option-nixConfig" class="option-anchor">nixConfig</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>The content of the <a href="https://nix.dev/manual/nix/2.31/command-ref/conf-file.html"><code>nix.conf</code></a> file to be used inside the container.</p>
+<p>This option allows you to provide a custom <code>nix.conf</code> configuration for
+the Nix daemon running inside the container. This can be used to
+configure things like custom binary caches, experimental features, or
+other Nix-related settings.</p>
+<p>By default, a standard <code>nix.conf</code> is provided which is suitable for most
+use cases.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>```
+sandbox = false
+build-users-group =
+experimental-features = nix-command flakes
+trusted-users = root
+max-jobs = auto
+cores = 0
+trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
+substituters = https://cache.nixos.org https://nix-community.cachix.org https://cuda-maintainers.cachix.org https://cache.garnix.io
+keep-outputs = true
+keep-derivations = true
+accept-flake-config = true
+
+```
+</code></div>
+  <div class="option-example">Example: <pre><code>nixConfig = ''
+  experimental-features = nix-command flakes
+  substituters = https://cache.nixos.org/ https://my-cache.example.org
+  trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= my-cache.example.org-1:abcdef...
+'';
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/nix-config.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/nix-config.nix</a></code></div>
+</div>
+<div class="option" id="option-passthru">
+  <h3 class="option-name">
+    <a href="#option-passthru" class="option-anchor">passthru</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>lazy attribute set of raw value</code></div>
+  <div class="option-description"><html><head></head><body><p><a href="https://ryantm.github.io/nixpkgs/stdenv/stdenv/#var-stdenv-passthru"><code>passthru</code></a> attributes to
+include in the output of generated <code>nix2gpu</code> containers</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>{
+  passthru = {
+    doXYZ = pkgs.writeShellApplication {
+      name = "xyz-doer";
+      text = ''
+        xyz
+      '';
+    };
+  };
+}
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/passthru.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/passthru.nix</a></code></div>
+</div>
+<div class="option" id="option-registries">
+  <h3 class="option-name">
+    <a href="#option-registries" class="option-anchor">registries</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of string</code></div>
+  <div class="option-description"><html><head></head><body><p>The container registries to push your images to.</p>
+<p>This option specifies a list of the full registry paths, including the repository
+and image name, where the container image will be pushed. This is a
+mandatory field if you intend to publish your images via <code>&lt;container&gt;.copyToGithub</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>registries = [ "ghcr.io/my-org/my-image" ];
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/registries.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/registries.nix</a></code></div>
+</div>
+<div class="option" id="option-services">
+  <h3 class="option-name">
+    <a href="#option-services" class="option-anchor">services</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>lazy attribute set of module</code></div>
+  <div class="option-description"><html><head></head><body><p>Services to run inside the <code>nix2gpu</code> container via <code>Nimi</code>.</p>
+<p>Each attribute defines a named NixOS modular service (Nix 25.11): import
+a service module and override its options per instance. This keeps service
+definitions composable and reusable across projects.</p>
+<p>For the upstream model, see the NixOS manual section on
+<a href="https://nixos.org/manual/nixos/unstable/#modular-services">Modular Services</a>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/services.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/services.nix</a></code></div>
+</div>
+<div class="option" id="option-sshdConfig">
+  <h3 class="option-name">
+    <a href="#option-sshdConfig" class="option-anchor">sshdConfig</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>The content of the <code>sshd_config</code> file to be used inside the container.</p>
+<p>This option allows you to provide a custom configuration for the OpenSSH
+daemon (<code>sshd</code>) running inside the container. This can be used to
+customize security settings, authentication methods, and other SSH-related
+options.</p>
+<p>By default, a standard <code>sshd_config</code> is provided that is suitable for most
+use cases, with password authentication disabled in favor of public key
+authentication.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>nix2gpu generated sshd config
+</code></div>
+  <div class="option-example">Example: <pre><code>sshdConfig = builtins.readFile ./my-sshd-config;
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/sshd.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/sshd.nix</a></code></div>
+</div>
+<div class="option" id="option-systemPackages">
+  <h3 class="option-name">
+    <a href="#option-systemPackages" class="option-anchor">systemPackages</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>list of package</code></div>
+  <div class="option-description"><html><head></head><body><p>A list of system packages to be copied into the container.</p>
+<p>This option allows you to specify a list of Nix packages that will be
+added to the container.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>[ ]</code></div>
+  <div class="option-example">Example: <pre><code>systemPackages = with pkgs; [
+  coreutils
+  git
+];
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/system-packages.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/system-packages.nix</a></code></div>
+</div>
+<div class="option" id="option-tag">
+  <h3 class="option-name">
+    <a href="#option-tag" class="option-anchor">tag</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>The tag to use for your container image.</p>
+<p>This option specifies the tag that will be applied to the container
+image when it is built and pushed to a registry. Tags are used to
+version and identify different builds of your image.</p>
+<p>The default value is "latest", which is a common convention for the most
+recent build. However, it is highly recommended to use more descriptive
+tags for production images, such as version numbers or git commit hashes.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>"latest"</code></div>
+  <div class="option-example">Example: <pre><code>tag = "v1.2.3";
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/tag.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/tag.nix</a></code></div>
+</div>
+<div class="option" id="option-tailscale">
+  <h3 class="option-name">
+    <a href="#option-tailscale" class="option-anchor">tailscale</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>submodule</code></div>
+  <div class="option-description"><html><head></head><body><p>The tailscale configuration to use for your <code>nix2gpu</code> container.</p>
+<p>Configure the tailscale daemon to run on your <code>nix2gpu</code> instance,
+giving your instances easy and secure connectivity.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>{ }</code></div>
+  <div class="option-example">Example: <pre><code>tailscale = {
+  enable = true;
+};
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/tailscale.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/tailscale.nix</a></code></div>
+</div>
+<div class="option" id="option-tailscale-authKey">
+  <h3 class="option-name">
+    <a href="#option-tailscale-authKey" class="option-anchor">tailscale.authKey</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>Runtime path to valid tailscale auth key</p>
+</body></html></div>
+  <div class="option-default">Default: <code>""</code></div>
+  <div class="option-example">Example: <pre><code>`/etc/default/tailscaled`
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/tailscale.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/tailscale.nix</a></code></div>
+</div>
+<div class="option" id="option-tailscale-enable">
+  <h3 class="option-name">
+    <a href="#option-tailscale-enable" class="option-anchor">tailscale.enable</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>boolean</code></div>
+  <div class="option-description"><html><head></head><body><p>Whether to enable enable the tailscale daemon.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>false</code></div>
+  <div class="option-example">Example: <code>true</code></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/tailscale.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/tailscale.nix</a></code></div>
+</div>
+<div class="option" id="option-user">
+  <h3 class="option-name">
+    <a href="#option-user" class="option-anchor">user</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>The default user for the container.</p>
+<p>This option specifies the username of the user that will be used by
+default when running commands or starting services in the container.</p>
+<p>The default value is "root". While this is convenient for development,
+it is strongly recommended to create and use a non-root user for
+production environments to improve security. You can create users
+and groups using the <code>users</code> and <code>groups</code> options in your <code>home-manager</code>
+configuration.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>root</code></div>
+  <div class="option-example">Example: <pre><code>user = "appuser";
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/user.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/user.nix</a></code></div>
+</div>
+<div class="option" id="option-workingDir">
+  <h3 class="option-name">
+    <a href="#option-workingDir" class="option-anchor">workingDir</a>
+    <span class="copy-link" title="Copy link to this option"></span>
+    <span class="copy-feedback">Link copied!</span>
+  </h3>
+  <div class="option-type">Type: <code>string</code></div>
+  <div class="option-description"><html><head></head><body><p>The working directory for the container.</p>
+<p>This option specifies the directory that will be used as the current
+working directory when the container starts. It is the directory where
+commands will be executed by default.</p>
+<p>The default value is "/root". You may want to change this to a
+more appropriate directory for your application, such as <code>/app</code> or
+<code>/srv</code>.</p>
+</body></html></div>
+  <div class="option-default">Default: <code>/root</code></div>
+  <div class="option-example">Example: <pre><code>workingDir = "/app";
+</code></pre></div>
+  <div class="option-declared">Declared in: <code><a href="file:///nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/working-dir.nix" target="_blank">/nix/store/6lw33yvwykzkrjdbw4yd14wr1pghsn85-source/nix2gpu/working-dir.nix</a></code></div>
+</div>
+</div>
+
+          <div class="footnotes-container">
+            <!-- Footnotes will be appended here -->
+          </div>
+        </main>
+      </div>
+
+      <footer>
+  <p>Generated with ndg</p>
+</footer>
+
+    </div>
+
+    
+  </body>
+</html>

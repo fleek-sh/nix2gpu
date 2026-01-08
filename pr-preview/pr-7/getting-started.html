@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>// ComfyUI setup guide //</title>
+     
+    <script>
+      // Apply sidebar state immediately to prevent flash
+      (function () {
+        if (localStorage.getItem("sidebar-collapsed") === "true") {
+          document.documentElement.classList.add("sidebar-collapsed");
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="assets/style.css" />
+    <script defer src="assets/main.js"></script>
+    
+    <script>
+      window.searchNamespace = window.searchNamespace || {};
+      window.searchNamespace.rootPath = "";
+    </script>
+    <script defer src="assets/search.js"></script>
+    
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-left">
+          <h1 class="site-title">
+            <a href="index.html"> Documentation</a>
+          </h1>
+
+          <nav class="header-nav">
+  <ul>
+    <li >
+      <a href="options.html">Options</a>
+    </li>
+    
+    <li><a href="search.html">Search</a></li>
+    
+  </ul>
+</nav>
+
+        </div>
+        
+        <div class="search-container">
+          <input type="text" id="search-input" placeholder="Search..." />
+          <div id="search-results" class="search-results"></div>
+        </div>
+        
+      </header>
+
+      <div class="layout">
+        <div class="sidebar-toggle" aria-label="Toggle sidebar">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+          >
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+          </svg>
+        </div>
+        <nav class="sidebar">
+          <details class="sidebar-section" data-section="docs" open>
+            <summary>Documents</summary>
+            <div class="sidebar-section-content">
+              <ul>
+                <li><a href="index.html">// index //</a></li>
+<li><a href="getting-started.html">// `ComfyUI` setup guide //</a></li>
+<li><a href="architecture.html">// architecture overview //</a></li>
+<li><a href="custom-service.html">// defining a custom service //</a></li>
+<li><a href="integrations.html">// integrations //</a></li>
+<li><a href="services.html">// services & runtime //</a></li>
+<li><a href="search.html">Search</a></li>
+
+              </ul>
+            </div>
+          </details>
+
+          <details class="sidebar-section" data-section="toc" open>
+            <summary>Contents</summary>
+            <div class="sidebar-section-content">
+              <ul class="toc-list">
+                <li><a href="#comfyui-setup-guide">// ComfyUI setup guide //</a>
+<li><a href="#installing-nix">Installing Nix</a>
+<li><a href="#creating-a-flake-to-develop-out-of">Creating a flake to develop out of:</a>
+<li><a href="#adding-inputs">Adding Inputs</a>
+<li><a href="#replace-the-outputs-section-with-this">Replace the outputs section with this:</a>
+<li><a href="#select-a-nix2gpu-starter-config-to-use">Select a nix2gpu starter config to use</a>
+<li><a href="#getting-the-comfyui-instance-onto-vast">Getting the ComfyUI instance onto vast</a>
+<li><a href="#other-options">Other options</a>
+</li>
+              </ul>
+            </div>
+          </details>
+        </nav>
+
+        <main class="content"><html><head></head><body><h1 id="comfyui-setup-guide">// <code>ComfyUI</code> setup guide //</h1>
+<p>This guide covers a walk through of setting up <code>ComfyUI</code> inside a <code>nix2gpu</code> container, and then deploying it to <code>vast.ai</code>. It should hopefully also provide useful information to others trying to deploy different pieces of software too.</p>
+<h1 id="installing-nix">Installing Nix</h1>
+<p>First of all, you'll need to install <a href="https://nixos.org/">Nix</a>.</p>
+<p>There are a couple of easy ways to get it:</p>
+<ul>
+<li>
+<p>The <a href="https://github.com/DeterminateSystems/nix-installer">Determinate Nix Installer</a> (Mac, Linux)</p>
+</li>
+<li>
+<p><a href="https://github.com/nix-community/NixOS-WSL">NixOS WSL</a> (Windows subsystem for Linux)</p>
+</li>
+</ul>
+<h1 id="creating-a-flake-to-develop-out-of">Creating a flake to develop out of:</h1>
+<p>With nix installed you can now run:</p>
+<pre class="highlight"><code class="language-sh"><span style="color:rgb(97,175,239);">mkdir</span>&nbsp;<span style="color:rgb(232,102,113);">my-nix2gpu-project</span><br><br><span style="color:rgb(86,182,194);">cd</span>&nbsp;<span style="color:rgb(232,102,113);">my-nix2gpu-project</span><br><br><span style="color:rgb(97,175,239);">git</span>&nbsp;<span style="color:rgb(232,102,113);">init</span><br><br><span style="color:rgb(97,175,239);">nix</span>&nbsp;<span style="color:rgb(232,102,113);">flake</span>&nbsp;<span style="color:rgb(232,102,113);">init</span><br><br><span style="color:rgb(97,175,239);">git</span>&nbsp;<span style="color:rgb(232,102,113);">add</span>&nbsp;<span style="color:rgb(232,102,113);">.</span><br><br><span style="color:rgb(97,175,239);">git</span>&nbsp;<span style="color:rgb(232,102,113);">commit</span>&nbsp;<span style="color:rgb(232,102,113);">-m</span>&nbsp;<span style="color:rgb(152,195,121);">"nix&nbsp;flake&nbsp;init"</span><br></code></pre>
+<h1 id="adding-inputs">Adding Inputs</h1>
+<p>You will now have a new git repository with an empty <code>flake.nix</code>. Edit this to add</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(171,178,191);">nix2gpu</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">url</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">github:weyl-ai/nix2gpu?ref=baileylu/public-api</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(171,178,191);">systems</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">url</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">github:nix-systems/default</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(171,178,191);">flake-parts</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">url</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">github:hercules-ci/flake-parts</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<p>Into the <code>inputs</code> section.</p>
+<p>No additional inputs are required to use services or <code>home-manager</code>; <code>nix2gpu</code>
+bundles <code>Nimi</code> and <code>nix2container</code> internally.</p>
+<h1 id="replace-the-outputs-section-with-this">Replace the outputs section with this:</h1>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(97,175,239);">outputs</span>&nbsp;<span style="color:rgb(171,178,191);">=</span><br>&nbsp;&nbsp;<span style="color:rgb(171,178,191);">inputs</span><span style="color:rgb(171,178,191);">@</span><span style="color:rgb(132,139,152);">{</span>&nbsp;flake-parts<span style="color:rgb(132,139,152);">,</span>&nbsp;self<span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span><br>&nbsp;&nbsp;flake-parts<span style="color:rgb(132,139,152);">.</span>lib<span style="color:rgb(132,139,152);">.</span>mkFlake&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(198,120,221);">inherit</span>&nbsp;inputs<span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(132,139,152);">}</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">imports</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(171,178,191);">inputs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nix2gpu</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">flakeModule</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">systems</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(198,120,221);">import</span>&nbsp;<span style="color:rgb(171,178,191);">inputs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">systems</span><span style="color:rgb(132,139,152);">;</span><br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;This&nbsp;is&nbsp;where&nbsp;nix2gpu&nbsp;config&nbsp;goes</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;More&nbsp;on&nbsp;this&nbsp;later</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">perSystem</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nix2gpu</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br></code></pre>
+<h1 id="select-a-nix2gpu-starter-config-to-use">Select a <code>nix2gpu</code> starter config to use</h1>
+<p>Take a look in the <a href="https://github.com/weyl-ai/nix2gpu/tree/baileylu/public-api/examples">examples folder</a> and pick one which looks useful.</p>
+<p>Going forward, we will use the <code>comfyui.nix</code> example.</p>
+<p>We can run this in <code>nix2gpu</code> like (replacing the <code>perSystem.nix2gpu</code> from earlier:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;<span style="color:rgb(97,175,239);">perSystem</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(232,102,113);">pkgs</span><span style="color:rgb(132,139,152);">,</span>&nbsp;<span style="color:rgb(232,102,113);">...</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">:</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">nix2gpu</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">comfyui-service</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">services</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">comfyui</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">comfyui-example</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">imports</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(132,139,152);">(</span><span style="color:rgb(171,178,191);">lib</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">modules</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(97,175,239);">importApply</span>&nbsp;<span style="color:rgb(232,102,113);">../services/comfyui.nix</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(198,120,221);">inherit</span>&nbsp;pkgs<span style="color:rgb(132,139,152);">;</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">)</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;You'll&nbsp;need&nbsp;to&nbsp;use&nbsp;the&nbsp;nixified-ai&nbsp;overlay&nbsp;for&nbsp;this</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(92,99,112);font-style: italic;">#&nbsp;Check&nbsp;them&nbsp;out&nbsp;-&nbsp;https://github.com/nixified-ai/flake</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">models</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(171,178,191);">pkgs</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">nixified-ai</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">models</span><span style="color:rgb(132,139,152);">.</span><span style="color:rgb(86,182,194);">stable-diffusion-v1-5</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">registries</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">[</span>&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">ghcr.io/weyl-ai</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(132,139,152);">]</span><span style="color:rgb(132,139,152);">;</span><br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(86,182,194);">exposedPorts</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">22/tcp</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">8188/tcp</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(152,195,121);">"</span><span style="color:rgb(152,195,121);">8188/udp</span><span style="color:rgb(152,195,121);">"</span>&nbsp;<span style="color:rgb(171,178,191);">=</span>&nbsp;<span style="color:rgb(132,139,152);">{</span>&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br>&nbsp;&nbsp;<span style="color:rgb(132,139,152);">}</span><span style="color:rgb(132,139,152);">;</span><br><span style="color:rgb(132,139,152);">}</span><br><br></code></pre>
+<h1 id="getting-the-comfyui-instance-onto-vast">Getting the <code>ComfyUI</code> instance onto vast</h1>
+<p>You can now build and copy your service to the GitHub package registry (ghcr.io) with</p>
+<pre class="highlight"><code class="language-sh"><span style="color:rgb(97,175,239);">nix</span>&nbsp;<span style="color:rgb(232,102,113);">run</span>&nbsp;<span style="color:rgb(232,102,113);">.#comfyui-service.copyToGithub</span><br></code></pre>
+<p>Next, go to the vast.ai web UI and create a new template, using the GitHub package we just pushed as the source when prompted.</p>
+<p>Now, reserve a new instance on vast using the template and give it a few minutes to start up (wait for "Running...").</p>
+<p>Now, use the web UI to add an ssh key. You can get/find your public key <a href="https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server">with this guide</a>. Once you have it, use the key shaped button on your running vast instance and paste the key starting with <code>ssh-rsa</code> or <code>ssh-ed</code> into the keys for the instance.</p>
+<p>You can now connect with the command and IP address it gives you. Make sure you use <code>-L 8188: localhost:8188</code> to be able to view comfy UI in your browser.</p>
+<h1 id="other-options">Other options</h1>
+<p>You can also run a <code>nix2gpu</code> image locally if you have docker or <code>podman</code> installed:</p>
+<pre class="highlight"><code class="language-nix"><span style="color:rgb(97,175,239);">nix</span>&nbsp;<span style="color:rgb(171,178,191);">run</span>&nbsp;<span style="color:rgb(132,139,152);">.</span><span style="color:rgb(92,99,112);font-style: italic;">#my-service.copyToDockerDaemon</span><br><span style="color:rgb(86,182,194);">nix</span>&nbsp;<span style="color:rgb(171,178,191);">run</span>&nbsp;<span style="color:rgb(132,139,152);">.</span><span style="color:rgb(92,99,112);font-style: italic;">#shell</span><br></code></pre>
+</body></html></main>
+      </div>
+
+      <aside class="page-toc">
+        <nav class="page-toc-nav">
+          <h3>On this page</h3>
+          <ul class="page-toc-list">
+            <li><a href="#comfyui-setup-guide">// ComfyUI setup guide //</a>
+<li><a href="#installing-nix">Installing Nix</a>
+<li><a href="#creating-a-flake-to-develop-out-of">Creating a flake to develop out of:</a>
+<li><a href="#adding-inputs">Adding Inputs</a>
+<li><a href="#replace-the-outputs-section-with-this">Replace the outputs section with this:</a>
+<li><a href="#select-a-nix2gpu-starter-config-to-use">Select a nix2gpu starter config to use</a>
+<li><a href="#getting-the-comfyui-instance-onto-vast">Getting the ComfyUI instance onto vast</a>
+<li><a href="#other-options">Other options</a>
+</li>
+          </ul>
+        </nav>
+      </aside>
+
+      <footer>
+  <p>Generated with ndg</p>
+</footer>
+
+    </div>
+
+    
+  </body>
+</html>
