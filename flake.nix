@@ -37,6 +37,8 @@
       inputs.systems.follows = "systems";
       inputs.treefmt-nix.follows = "treefmt-nix";
       inputs.ndg.follows = "ndg";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.import-tree.follows = "import-tree";
     };
 
     nix2container.follows = "nimi/nix2container";
