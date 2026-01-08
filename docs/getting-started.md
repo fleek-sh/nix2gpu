@@ -36,20 +36,14 @@ You will now have a new git repository with an empty `flake.nix`. Edit this to a
 
 ```nix
 nix2gpu.url = "github:weyl-ai/nix2gpu?ref=baileylu/public-api";
-
 systems.url = "github:nix-systems/default";
-
 flake-parts.url = "github:hercules-ci/flake-parts";
-
-# Enable services integration
-services-flake.url = "github:juspay/services-flake";
-process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
-
-# Build containers faster
-nix2container.url = "github:nlewo/nix2container";
 ```
 
 Into the `inputs` section.
+
+No additional inputs are required to use services or `home-manager`; `nix2gpu`
+bundles `Nimi` and `nix2container` internally.
 
 # Replace the outputs section with this:
 
@@ -82,7 +76,7 @@ We can run this in `nix2gpu` like (replacing the `perSystem.nix2gpu` from earlie
   perSystem = { pkgs, ... }: {
     nix2gpu."comfyui-service" = {
       services.comfyui."comfyui-example" = {
-        enable = true;
+        imports = [ (lib.modules.importApply ../services/comfyui.nix { inherit pkgs; }) ];
         # You'll need to use the nixified-ai overlay for this
         # Check them out - https://github.com/nixified-ai/flake
         models = [ pkgs.nixified-ai.models.stable-diffusion-v1-5 ];

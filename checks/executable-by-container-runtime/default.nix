@@ -1,6 +1,9 @@
 {
   perSystem =
     { self', pkgs, ... }:
+    let
+      containerName = "http-test";
+    in
     {
       checks.executable-by-container-runtime = pkgs.testers.runNixOSTest {
         name = "executable-by-container-runtime";
@@ -10,7 +13,7 @@
             diskSize = 32000;
           };
 
-          environment.systemPackages = [ self'.packages."nginx-test".copyToContainerRuntime ];
+          environment.systemPackages = [ self'.packages.${containerName}.copyToContainerRuntime ];
 
           system.stateVersion = "25.11";
         };
@@ -19,7 +22,7 @@
           machine.wait_for_unit("default.target")
 
           machine.succeed("copy-to-container-runtime")
-          machine.succeed("podman run -d -p 8080:8080 nginx-test:latest")
+          machine.succeed("podman run -d -p 8080:8080 ${containerName}:latest")
           machine.sleep(2)
 
           machine.wait_for_open_port(8080, timeout=30)

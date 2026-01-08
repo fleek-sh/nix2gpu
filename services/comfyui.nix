@@ -1,23 +1,31 @@
-{
-  lib,
-  name,
-  config,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
+{ lib, config, ... }:
 let
-  inherit (lib) types;
+  inherit (lib) mkOption mkPackageOption types;
 
-  comfyuiPackage = config.package.override {
-    withModels = config.models;
-    withCustomNodes = config.customNodes;
+  cfg = config.comfyui;
+
+  comfyuiPackage = cfg.package.override {
+    withModels = cfg.models;
+    withCustomNodes = cfg.customNodes;
   };
 in
 {
-  options = {
-    package = lib.mkPackageOption pkgs "comfyui" { };
+  _class = "service";
 
-    listen = lib.mkOption {
+  options.comfyui = {
+    package = mkPackageOption pkgs "comfyui" { };
+
+    dataDir = mkOption {
+      type = types.str;
+      default = "/workspace";
+      example = "/workspace/comfyui";
+      description = ''
+        Directory used for ComfyUI outputs and database storage.
+      '';
+    };
+
+    listen = mkOption {
       type = types.nullOr types.str;
       default = "127.0.0.1";
       description = ''
@@ -26,7 +34,7 @@ in
       example = "127.0.0.1";
     };
 
-    port = lib.mkOption {
+    port = mkOption {
       type = types.port;
       default = 8188;
       description = ''
@@ -34,9 +42,9 @@ in
       '';
     };
 
-    databasePath = lib.mkOption {
+    databasePath = mkOption {
       type = types.str;
-      default = "${config.dataDir}/comfyui.db";
+      default = "${cfg.dataDir}/comfyui.db";
       example = "/home/my-user/comfyui/comfyui.db";
       description = ''
         SQL database URL. Passed as --database-url cli flag to comfyui. If it does not start with sqlite:/// it will be prepended automatically.
@@ -44,7 +52,7 @@ in
       apply = x: if (lib.hasPrefix "sqlite:///" x) then x else "sqlite:///${x}";
     };
 
-    extraFlags = lib.mkOption {
+    extraFlags = mkOption {
       type = types.listOf types.str;
       default = [ ];
       example = [
@@ -56,7 +64,7 @@ in
       '';
     };
 
-    models = lib.mkOption {
+    models = mkOption {
       type = types.listOf types.attrs;
       default = [ ];
       defaultText = [ ];
@@ -66,7 +74,7 @@ in
       '';
     };
 
-    customNodes = lib.mkOption {
+    customNodes = mkOption {
       type = types.listOf types.attrs;
       default = [ ];
       defaultText = [ ];
@@ -76,7 +84,7 @@ in
       '';
     };
 
-    environmentVariables = lib.mkOption {
+    environmentVariables = mkOption {
       type = types.attrsOf types.str;
       default = { };
       example = {
@@ -84,46 +92,27 @@ in
       };
       description = ''
         Set arbitrary environment variables for the comfyui service.
-
-        Be aware that these are only seen by the comfyui server (systemd service),
-        not normal invocations like `comfyui run`.
-        Since `comfyui run` is mostly a shell around the comfyui server, this is usually sufficient.
       '';
     };
   };
 
-  config.outputs.settings.processes."${name}" =
+  config =
     let
       wrapper = pkgs.writeShellApplication {
         name = "comfyui";
-        runtimeEnv = config.environmentVariables;
+        runtimeEnv = cfg.environmentVariables;
         text = ''
           ${lib.getExe comfyuiPackage} \
-            --listen ${config.listen} \
-            --port ${toString config.port} \
-            --output-directory ${config.dataDir} \
-            --database-url ${config.databasePath} \
-            ${lib.concatStringsSep " " config.extraFlags} \
+            --listen ${cfg.listen} \
+            --port ${toString cfg.port} \
+            --output-directory ${cfg.dataDir} \
+            --database-url ${cfg.databasePath} \
+            ${lib.concatStringsSep " " cfg.extraFlags} \
             "$@"
         '';
       };
     in
     {
-      command = lib.getExe wrapper;
-      availability = {
-        restart = "on_failure";
-        max_restarts = 5;
-      };
-      readiness_probe = {
-        http_get = {
-          inherit (config) port;
-          host = config.listen;
-        };
-        initial_delay_seconds = 2;
-        period_seconds = 10;
-        timeout_seconds = 4;
-        success_threshold = 1;
-        failure_threshold = 5;
-      };
+      process.argv = [ (lib.getExe wrapper) ];
     };
 }

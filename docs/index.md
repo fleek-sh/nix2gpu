@@ -9,7 +9,7 @@ ______________________________________________________________________
 - **[getting started](getting-started.md)** — build your first container, ssh in
 - **[options reference](options.md)** — all the knobs
 - **[architecture](architecture.md)** — how it works internally
-- **[services & runtime](services.md)** — process-compose, startup sequence
+- **[services & runtime](services.md)** — Nimi, startup sequence
 - **[defining custom services](custom-service.md)** — add your own service
   modules
 - **[secrets & agenix](secrets.md)** — keys never touch the nix store
@@ -24,7 +24,7 @@ ______________________________________________________________________
 1. `nix2gpu` assembles:
    - root filesystem with nix store + your packages
    - startup script for runtime environment
-   - service graph via process-compose
+   - service graph via Nimi
 1. helper commands:
    - `nix build .#<n>` — build image
    - `nix run .#<n>.copy-to-container-runtime` — load into docker/podman
