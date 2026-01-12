@@ -2,8 +2,7 @@
   description = "nix2gpu - nixos containers optimized for vast.ai compute";
 
   inputs = {
-    # TODO: Return to actual nixpkgs once this is merged
-    nixpkgs.url = "github:weyl-ai/nixpkgs?ref=handle-code-nixos-render-doc";
+    nixpkgs.url = "github:NixOS/nixpkgs";
 
     systems.url = "github:nix-systems/x86_64-linux";
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -31,14 +30,8 @@
     };
 
     nimi = {
-      url = "git+ssh://git@github.com/weyl-ai/nimi.git";
+      url = "github:weyl-ai/nimi/baileylu/minimize-flake";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-      inputs.systems.follows = "systems";
-      inputs.treefmt-nix.follows = "treefmt-nix";
-      inputs.ndg.follows = "ndg";
-      inputs.flake-parts.follows = "flake-parts";
-      inputs.import-tree.follows = "import-tree";
     };
 
     nix2container.follows = "nimi/nix2container";
