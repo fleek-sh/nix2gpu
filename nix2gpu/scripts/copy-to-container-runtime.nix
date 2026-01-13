@@ -44,10 +44,11 @@ in
             copyToPodman
             copyToDockerDaemon
           ])
-          ++ [
-            pkgs.which
-            pkgs.coreutils
-          ];
+          ++ (with pkgs; [
+            which
+            coreutils
+            gum
+          ]);
         execer = [
           "cannot:${lib.getExe self'.packages.${name}.copyToPodman}"
           "cannot:${lib.getExe self'.packages.${name}.copyToDockerDaemon}"
@@ -56,17 +57,25 @@ in
       ''
         set -euo pipefail
 
+        gum log --level debug "Locating a container runtime to use"
+
         if which podman &>/dev/null; then
+          gum log --level debug "Running on podman"
           exec copy-to-podman "$@"
         fi
 
         if which docker &>/dev/null; then
+          gum log --level debug "Running with docker daemon"
           exec copy-to-docker-daemon "$@"
         fi
 
-        printf "\n\n\033[31mError:\033[0m %s\n\n\n" "$(cat <<'EOF'
+        error_message="$(cat <<'EOF'
         ${noRuntimeExecutorError}
         EOF
-        )" >&2
+        )"
+
+        gum log \
+          --level error \
+          "$error_message"
       '';
 }

@@ -2,29 +2,34 @@
 
 set -euo pipefail
 
-echo "[nix2gpu] Container initialization starting..."
+gum log --level debug "Container initialization starting..."
 
+gum log --level debug "Writing runtime directories"
 # // critical // runtime directories
 mkdir -p /tmp /var/tmp /run /run/sshd /var/log /var/empty
 chmod 1777 /tmp /var/tmp
 chmod 755 /run/sshd
+
+gum log --level debug "Setting up environment"
 export TMPDIR=/tmp
 export NIX_BUILD_TOP=/tmp
 
+gum log --level debug "Enabling userspace networking"
 # // devices // userspace networking
 mkdir -p /dev/net
 
 if [ -c /dev/net/tun ]; then
   if ! (exec 3<>/dev/net/tun) 2>/dev/null; then
-    echo "[nix2gpu] Warning: /dev/net/tun exists but cannot be opened (missing perms/caps/device policy?)"
+    gum log --level warn "/dev/net/tun exists but cannot be opened (missing perms/caps/device policy?)"
   fi
 else
-  echo "[nix2gpu] Warning: /dev/net/tun not present; TUN-based networking will be unavailable. Try running with --cap-add=MKNOD."
+  gum log --level warn "/dev/net/tun not present; TUN-based networking will be unavailable. Try running with --cap-add=MKNOD."
 fi
 
+gum log --level debug "Generating LD cache..."
 # // ldconfig // regenerate cache with NVIDIA libs
 if [ -d /lib/x86_64-linux-gnu ] && [ "$(ls -A /lib/x86_64-linux-gnu/*.so* 2>/dev/null)" ]; then
-  echo "[nix2gpu] Found NVIDIA libraries, updating ld cache..."
+  gum log --level debug "Found NVIDIA libraries, updating ld cache..."
 
   # Create symlinks for common library names
   for lib in /lib/x86_64-linux-gnu/*.so.*; do
@@ -55,30 +60,22 @@ fi
 
 # // root // password
 if [ -n "${ROOT_PASSWORD:-}" ]; then
-  echo "[nix2gpu] Setting root password..."
+  gum log --level debug "Setting root password..."
   echo "root:$ROOT_PASSWORD" | chpasswd
 else
-  echo "[nix2gpu] Enabling passwordless root..."
+  gum log --level debug "Enabling passwordless root..."
   passwd -d root
 fi
 
 export HOME="/root"
 
-# // ssh // keys
-mkdir -p "$HOME/.ssh"
-chmod 700 "$HOME/.ssh"
-if [ -n "${SSH_PUBLIC_KEYS:-}" ]; then
-  echo "$SSH_PUBLIC_KEYS" >"$HOME/.ssh/authorized_keys"
-  chmod 600 "$HOME/.ssh/authorized_keys"
-fi
-
 # // nvidia-smi // validation
 if [ -e /usr/bin/nvidia-smi ]; then
-  echo "[nix2gpu] Testing nvidia-smi..."
+  gum log --level debug "Testing nvidia-smi..."
 
   # First check if it needs patching
   if ! /usr/bin/nvidia-smi --version &>/dev/null; then
-    echo "[nix2gpu] Patching nvidia-smi..."
+    gum log --level debug "Patching nvidia-smi..."
 
     # Find the correct interpreter
     INTERP=$(find /nix/store -name "ld-linux-x86-64.so.2" -type f | head -1)
@@ -89,15 +86,24 @@ if [ -e /usr/bin/nvidia-smi ]; then
   fi
 
   if /usr/bin/nvidia-smi &>/dev/null; then
-    echo "[nix2gpu] GPU ready: $(/usr/bin/nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | head -1)"
+    gum log --level debug "GPU ready: $(/usr/bin/nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | head -1)"
   else
-    echo "[nix2gpu] Warning: nvidia-smi not functional"
+    gum log --level warn "nvidia-smi not functional"
     # Debug info
-    echo "[nix2gpu] Library dependencies:"
+    gum log --level debug "Library dependencies:"
     ldd /usr/bin/nvidia-smi 2>&1 | head -10 || true
-    echo "[nix2gpu] Available NVIDIA libraries:"
+    gum log --level debug "Available NVIDIA libraries:"
     printf '%s\n' /lib/x86_64-linux-gnu/libnvidia* 2>/dev/null | head -5
   fi
+fi
+
+gum log --level debug "Adding SSH keys..."
+# // ssh // keys
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
+if [ -n "${SSH_PUBLIC_KEYS:-}" ]; then
+  echo "$SSH_PUBLIC_KEYS" >"$HOME/.ssh/authorized_keys"
+  chmod 600 "$HOME/.ssh/authorized_keys"
 fi
 
 for type in rsa ed25519; do
@@ -105,6 +111,7 @@ for type in rsa ed25519; do
   [ ! -f "$key" ] && ssh-keygen -t "$type" -f "$key" -N "" >/dev/null 2>&1
 done
 
+gum log --level debug "Setting XDG dirs"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_DATA_DIRS="/usr/local/share:/usr/share"
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -115,4 +122,4 @@ export XDG_RUNTIME_DIR="/run/user/$UID"
 export XDG_BIN_HOME="$HOME/.local/bin"
 
 # // config // extra startup script
-echo "[nix2gpu] running extra startup script..."
+gum log --level debug "Running extra startup script..."

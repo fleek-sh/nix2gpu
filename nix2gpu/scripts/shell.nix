@@ -49,7 +49,7 @@ let
       ''
         set -euo pipefail
 
-        echo "[nix2gpu] starting ${shell} shell..."
+        gum log --level debug "Starting ${shell} shell..."
 
         exec ${shell} run --rm -it \
           --gpus all \
@@ -76,12 +76,17 @@ in
           inputs = [
             podmanShell
             dockerShell
-            pkgs.which
-            pkgs.coreutils
-          ];
+          ]
+          ++ (with pkgs; [
+            which
+            coreutils
+            gum
+          ]);
         }
         ''
           set -euo pipefail
+
+          gum log --level debug "Locating a container runtime to launch shell with..."
 
           if which podman &>/dev/null; then
             exec podman-shell "$@"
@@ -91,10 +96,14 @@ in
             exec docker-shell "$@"
           fi
 
-          printf "\n\n\033[31mError:\033[0m %s\n\n\n" "$(cat <<'EOF'
+          error_message="$(cat <<'EOF'
           ${noShellExecutorError}
           EOF
-          )" >&2
+          )"
+
+          gum log \
+            --level error
+            "$error_message"
         '';
   };
 }

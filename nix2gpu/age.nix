@@ -228,13 +228,19 @@ in
   };
 
   config = mkIf cfg.enable {
-    systemPackages = [ mountingScript ];
+    systemPackages = [
+      mountingScript
+      pkgs.gum
+    ];
 
     extraStartupScript =
       assert lib.assertMsg (cfg.identityPaths != [ ]) "age.identityPaths must be set.";
       ''
-        echo [nix2gpu] Running agenix mounting script:
-        ${mountingScript.name} || printf '\033[33m[nix2gpu] warning:\033[0m %s.\n' 'Failed to decrypt your agenix secrets, this may cause errors down the line'
+        gum log --level debug "Running agenix mounting script"
+
+        ${mountingScript.name} || gum log \
+          --level warn \
+          "Failed to decrypt your agenix secrets, this may cause errors down the line."
       '';
   };
 }

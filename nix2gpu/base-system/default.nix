@@ -45,6 +45,7 @@ let
         coreutils
         which
         plocate
+        gum
       ]
       ++ [
         (mkFileCreator "write-passwd" "$out/etc/passwd" config.nix2gpuPasswdContents)
