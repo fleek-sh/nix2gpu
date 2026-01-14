@@ -1,5 +1,6 @@
-_:
+{ config, ... }:
 let
+  nix2gpuSourceCfg = config;
 
   flakeModule =
     { lib, flake-parts-lib, ... }:
@@ -32,9 +33,10 @@ let
       };
 
       config.perSystem =
-        { config, ... }:
+        { system, config, ... }:
         let
-          generatedNix2gpuPkgs = lib.mapAttrs config.mkNix2GpuContainer config.nix2gpu;
+          inherit (nix2gpuSourceCfg.allSystems.${system}) mkNix2GpuContainer;
+          generatedNix2gpuPkgs = lib.mapAttrs mkNix2GpuContainer config.nix2gpu;
         in
         {
           packages = generatedNix2gpuPkgs;
