@@ -52,6 +52,7 @@ in
         execer = [
           "cannot:${lib.getExe self'.packages.${name}.copyToPodman}"
           "cannot:${lib.getExe self'.packages.${name}.copyToDockerDaemon}"
+          "cannot:${lib.getExe pkgs.gum}"
         ];
       }
       ''

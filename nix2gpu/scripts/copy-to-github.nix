@@ -15,7 +15,8 @@ in
     pkgs.resholve.writeScriptBin "copy-to-github-registries"
       {
         interpreter = lib.getExe pkgs.bash;
-        inputs = with pkgs;
+        inputs =
+          with pkgs;
           [
             gh
             coreutils
