@@ -1,0 +1,987 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Options Reference - nix2gpu</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Nix module system that generates containers for GPU markets like vast.ai or runpod.io">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "searchindex-60869a12.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-6cbfb091.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">nix2gpu</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/fleek-sh/nix2gpu" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h2 id="_moduleargs"><a class="header" href="#_moduleargs">_module.args</a></h2>
+<p>Additional arguments passed to each module in addition to ones
+like <code>lib</code>, <code>config</code>,
+and <code>pkgs</code>, <code>modulesPath</code>.</p>
+<p>This option is also available to all submodules. Submodules do not
+inherit args from their parent module, nor do they provide args to
+their parent module or sibling submodules. The sole exception to
+this is the argument <code>name</code> which is provided by
+parent modules to a submodule and contains the attribute name
+the submodule is bound to, or a unique generated name if it is
+not bound to an attribute.</p>
+<p>Some arguments are already passed by default, of which the
+following <em>cannot</em> be changed with this option:</p>
+<ul>
+<li>
+<p><code>lib</code>: The nixpkgs library.</p>
+</li>
+<li>
+<p><code>config</code>: The results of all options after merging the values from all modules together.</p>
+</li>
+<li>
+<p><code>options</code>: The options declared in all modules.</p>
+</li>
+<li>
+<p><code>specialArgs</code>: The <code>specialArgs</code> argument passed to <code>evalModules</code>.</p>
+</li>
+<li>
+<p>All attributes of <code>specialArgs</code></p>
+<p>Whereas option values can generally depend on other option values
+thanks to laziness, this does not apply to <code>imports</code>, which
+must be computed statically before anything else.</p>
+<p>For this reason, callers of the module system can provide <code>specialArgs</code>
+which are available during import resolution.</p>
+<p>For NixOS, <code>specialArgs</code> includes
+<code>modulesPath</code>, which allows you to import
+extra modules from the nixpkgs package tree without having to
+somehow make the module aware of the location of the
+<code>nixpkgs</code> or NixOS directories.</p>
+<pre><code>{ modulesPath, ... }: {
+  imports = [
+    (modulesPath + "/profiles/minimal.nix")
+  ];
+}
+</code></pre>
+</li>
+</ul>
+<p>For NixOS, the default value for this option includes at least this argument:</p>
+<ul>
+<li><code>pkgs</code>: The nixpkgs package set according to
+the <code>nixpkgs.pkgs</code> option.</li>
+</ul>
+<p><em>Type:</em>
+lazy attribute set of raw value</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/NixOS/nixpkgs/blob//lib/modules.nix">&lt;nixpkgs/lib/modules.nix&gt;</a></li>
+</ul>
+<h2 id="age"><a class="header" href="#age">age</a></h2>
+<p>The <code>agenix</code> configuration for the container’s user environment.</p>
+<p>This module is a port of <a href="https://github.com/ryantm/agenix"><code>agenix</code></a> to
+<code>nix2gpu</code>, and allows simplified management of age encrypted secrets in
+nix.</p>
+<p>To use this, you must first enable the optional <code>agenix</code>
+integration:</p>
+<p>Then enable the module with:</p>
+<pre><code class="language-nix">age.enable = true;
+</code></pre>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix</a></li>
+</ul>
+<h2 id="ageenable"><a class="header" href="#ageenable">age.enable</a></h2>
+<p>Whether to enable enable agenix integration.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Example:</em>
+<code>true</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix</a></li>
+</ul>
+<h2 id="agepackage"><a class="header" href="#agepackage">age.package</a></h2>
+<p>The rage package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em>
+<code>pkgs.rage</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix</a></li>
+</ul>
+<h2 id="ageidentitypaths"><a class="header" href="#ageidentitypaths">age.identityPaths</a></h2>
+<p>Paths to SSH keys to be used as identities in age decryption.</p>
+<p><em>Type:</em>
+list of absolute path</p>
+<p><em>Default:</em></p>
+<pre><code>[
+  "/etc/ssh/ssh_host_rsa_key"
+  "/etc/ssh/ssh_host_ed25519_key"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix</a></li>
+</ul>
+<h2 id="agesecrets"><a class="header" href="#agesecrets">age.secrets</a></h2>
+<p>Attrset of secrets.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix</a></li>
+</ul>
+<h2 id="agesecretsnamefile"><a class="header" href="#agesecretsnamefile">age.secrets.&lt;name&gt;.file</a></h2>
+<p>Age file the secret is loaded from.</p>
+<p><em>Type:</em>
+absolute path</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix</a></li>
+</ul>
+<h2 id="agesecretsnamemode"><a class="header" href="#agesecretsnamemode">age.secrets.&lt;name&gt;.mode</a></h2>
+<p>Permissions mode of the decrypted secret in a format understood by chmod.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+<code>"0400"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix</a></li>
+</ul>
+<h2 id="agesecretsnamename"><a class="header" href="#agesecretsnamename">age.secrets.&lt;name&gt;.name</a></h2>
+<p>Name of the file used in ${cfg.secretsDir}</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+<code>"‹name›"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix</a></li>
+</ul>
+<h2 id="agesecretsnamepath"><a class="header" href="#agesecretsnamepath">age.secrets.&lt;name&gt;.path</a></h2>
+<p>Path where the decrypted secret is installed.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+<code>"\${XDG_RUNTIME_DIR}/agenix/‹name›"</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix</a></li>
+</ul>
+<h2 id="agesecretsnamesymlink"><a class="header" href="#agesecretsnamesymlink">age.secrets.&lt;name&gt;.symlink</a></h2>
+<p>Whether to enable symlinking secrets to their destination.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>true</code></p>
+<p><em>Example:</em>
+<code>true</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix</a></li>
+</ul>
+<h2 id="agesecretsdir"><a class="header" href="#agesecretsdir">age.secretsDir</a></h2>
+<p>Folder where secrets are symlinked to</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code>"${XDG_RUNTIME_DIR}"/${dir}.
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix</a></li>
+</ul>
+<h2 id="agesecretsmountpoint"><a class="header" href="#agesecretsmountpoint">age.secretsMountPoint</a></h2>
+<p>Where secrets are created before they are symlinked to ${cfg.secretsDir}</p>
+<p><em>Type:</em>
+unspecified value</p>
+<p><em>Default:</em></p>
+<pre><code>"${XDG_RUNTIME_DIR}"/${dir}.
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/age.nix</a></li>
+</ul>
+<h2 id="copytoroot"><a class="header" href="#copytoroot">copyToRoot</a></h2>
+<p>A list of packages to be copied to the root of the container.</p>
+<p>This option allows you to specify a list of Nix packages that will be
+symlinked into the root directory of the container. This is useful for
+making essential packages and profiles available at the top level of the
+container’s filesystem.</p>
+<p>The default value includes the base system, the container’s profile, and the
+Nix store profile, which are essential for the container to function correctly.</p>
+<p>If you want to add extra packages without replacing the default set,
+use the <code>extraCopyToRoot</code> option instead.</p>
+<blockquote>
+<p>This is a direct mapping to the
+<a href="https://github.com/nlewo/nix2container?tab=readme-ov-file#nix2containerbuildimage"><code>copyToRoot</code></a>
+attribute from <a href="https://github.com/nlewo/nix2container"><code>nix2container</code></a>.</p>
+</blockquote>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em>
+The generated base system from the other config options</p>
+<p><em>Example:</em></p>
+<pre><code>copyToRoot = with pkgs; [
+  coreutils
+  git
+];
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/copy-to-root.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/copy-to-root.nix</a></li>
+</ul>
+<h2 id="cudaenable"><a class="header" href="#cudaenable">cuda.enable</a></h2>
+<p>If <code>nix2gpu</code>’s cuda integration should be enabled or not</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>true</code></p>
+<p><em>Example:</em></p>
+<pre><code>cudaPackages = pkgs.cudaPackages_11_8;
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/cuda.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/cuda.nix</a></li>
+</ul>
+<h2 id="cudapackages"><a class="header" href="#cudapackages">cuda.packages</a></h2>
+<p>The set of CUDA packages to be used in the container.</p>
+<p>This option allows you to select a specific version of the CUDA toolkit
+to be installed in the container. This is crucial for ensuring
+compatibility with applications and machine learning frameworks that
+depend on a particular CUDA version.</p>
+<p>The value should be a package set from <code>pkgs.cudaPackages</code>. You can find
+available versions by <a href="https://ryantm.github.io/nixpkgs/languages-frameworks/cuda/">searching for <code>cudaPackages</code> in Nixpkgs</a>.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em>
+<code>pkgs.cudaPackages_13_0</code></p>
+<p><em>Example:</em></p>
+<pre><code>cuda.packages = pkgs.cudaPackages_11_8;
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/cuda.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/cuda.nix</a></li>
+</ul>
+<h2 id="env"><a class="header" href="#env">env</a></h2>
+<p>A list of environment variables to set inside the container.</p>
+<p>This option allows you to define the environment variables that will be
+available within the container.</p>
+<p>The default value provides a comprehensive set of environment variables
+for a typical development environment, including paths for Nix, CUDA,
+and other essential tools.</p>
+<p>If you want to add extra environment variables without replacing the
+default set, use the <code>extraEnv</code> option instead.</p>
+<blockquote>
+<p>This is a direct mapping to the <code>Env</code> attribute of the <a href="https://github.com/opencontainers/image-spec/blob/8b9d41f48198a7d6d0a5c1a12dc2d1f7f47fc97f/specs-go/v1/config.go#L23">oci container
+spec</a>.</p>
+</blockquote>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code>CURL_CA_BUNDLE = "/etc/ssl/certs/ca-bundle.crt";
+HOME = "/root";
+LANG = "en_US.UTF-8";
+LC_ALL = "en_US.UTF-8";
+LD_LIBRARY_PATH = "/lib/x86_64-linux-gnu:/usr/lib64:/usr/lib";
+LOCALE_ARCHIVE = "glibc/lib/locale/locale-archive";
+NIXPKGS_ALLOW_UNFREE = "1";
+NIX_PATH = "nixpkgs=/nix/var/nix/profiles/per-user/root/channels";
+NIX_SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle.crt";
+PATH = "/root/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle.crt";
+TERM = "xterm-256color";
+USER = "root";
+
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code>env = {
+  MY_CUSTOM_VARIABLE = "hello";
+  ANOTHER_VARIABLE = "world";
+};
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/env.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/env.nix</a></li>
+</ul>
+<h2 id="exposedports"><a class="header" href="#exposedports">exposedPorts</a></h2>
+<p>A set of ports to expose from the container.</p>
+<p>This option allows you to specify which network ports should be
+exposed by the container. The keys are the port and protocol
+(e.g., “80/tcp”), and the values are empty attribute sets.</p>
+<p>By default, port 22 is exposed for SSH access.</p>
+<blockquote>
+<p>This is a direct mapping to the <code>ExposedPorts</code> attribute of the <a href="https://github.com/opencontainers/image-spec/blob/8b9d41f48198a7d6d0a5c1a12dc2d1f7f47fc97f/specs-go/v1/config.go#L23">oci container
+spec</a>.</p>
+</blockquote>
+<p><em>Type:</em>
+attribute set of anything</p>
+<p><em>Default:</em></p>
+<pre><code>{
+  "22/tcp" = { };
+}
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code>exposedPorts = {
+  "8080/tcp" = {};
+  "443/tcp" = {};
+};
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/exposed-ports.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/exposed-ports.nix</a></li>
+</ul>
+<h2 id="extraenv"><a class="header" href="#extraenv">extraEnv</a></h2>
+<p>A list of extra environment variables to set inside the container.</p>
+<p>This option allows you to add more environment variables to the <code>env</code>
+option without overriding the default set. The variables listed here
+will be appended to the main <code>env</code> list.</p>
+<p>This is the recommended way to add your own custom environment variables.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Example:</em></p>
+<pre><code>extraEnv = {
+  DATABASE_URL = "postgres://user:password@host:port/db";
+  NIXPKGS_ALLOW_UNFREE = "1";
+};
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/extra-env.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/extra-env.nix</a></li>
+</ul>
+<h2 id="extralabels"><a class="header" href="#extralabels">extraLabels</a></h2>
+<p>A set of extra labels to apply to the container.</p>
+<p>This option allows you to add custom metadata to the container in the
+form of labels. These labels can be used for organizing and filtering
+containers, or for storing information about the container’s contents
+or purpose.</p>
+<p>The labels defined here will be merged with the default <code>labels</code> set.</p>
+<p>This is the recommended way to add more labels to your project
+rather than overriding labels.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Example:</em></p>
+<pre><code>extraLabels = {
+  "com.example.vendor" = "My Company";
+  "com.example.project" = "My Project";
+};
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/extra-labels.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/extra-labels.nix</a></li>
+</ul>
+<h2 id="extrastartupscript"><a class="header" href="#extrastartupscript">extraStartupScript</a></h2>
+<p>A string of shell commands to be executed at the end of the container’s startup script.</p>
+<p>This option provides a way to run custom commands every time the
+container starts. The contents of this option will be appended to the
+main startup script, after the default startup tasks have been completed.</p>
+<p>This is useful for tasks such as starting services, running background
+processes, or printing diagnostic information.</p>
+<p><em>Type:</em>
+string (concatenated when merged)</p>
+<p><em>Default:</em>
+<code>""</code></p>
+<p><em>Example:</em></p>
+<pre><code>extraStartupScript = ''
+  echo "Hello world"
+'';
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/extra-startup-script.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/extra-startup-script.nix</a></li>
+</ul>
+<h2 id="home"><a class="header" href="#home">home</a></h2>
+<p>The <code>home-manager</code> configuration for the container’s user environment.</p>
+<p>This option allows you to define the user’s home environment using
+<a href="https://github.com/nix-community/home-manager"><code>home-manager</code></a>.
+You can configure everything from shell aliases and environment
+variables to user services and application settings.</p>
+<p>By default, a minimal set of useful modern shell packages
+is included to provide a comfortable and secure hacking
+environment on your machines.</p>
+<p><code>home-manager</code> is bundled with <code>nix2gpu</code>, so no additional flake inputs
+are required to use this option.</p>
+<p><em>Type:</em>
+lazy attribute set of raw value</p>
+<p><em>Default:</em>
+A sample home manager config with some nice defaults
+from nix2gpu</p>
+<p><em>Example:</em></p>
+<pre><code>home = home-manager.lib.homeManagerConfiguration {
+  inherit pkgs;
+  extraSpecialArgs = { inherit inputs; };
+  modules = [
+    ./home
+  ];
+};
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/home.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/home.nix</a></li>
+</ul>
+<h2 id="labels"><a class="header" href="#labels">labels</a></h2>
+<p>A set of labels to apply to the container.</p>
+<p>This option allows you to define metadata for the container in the form
+of labels. These labels can be used for organizing and filtering
+containers, or for storing information about the container’s contents
+or purpose.</p>
+<p>The default value includes several labels that provide information
+about the container’s origin, runtime, and dependencies.</p>
+<p>If you want to add extra labels without replacing the default set,
+use the <code>extraLabels</code> option instead.</p>
+<blockquote>
+<p>This is a direct mapping to the <code>Labels</code> attribute of the <a href="https://github.com/opencontainers/image-spec/blob/8b9d41f48198a7d6d0a5c1a12dc2d1f7f47fc97f/specs-go/v1/config.go#L23">oci container
+spec</a>.</p>
+</blockquote>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code>"ai.vast.gpu" = "required";
+"ai.vast.runtime" = "nix2gpu";
+"org.opencontainers.image.source" = "https://github.com/weyl-ai/nix2gpu";
+"org.opencontainers.image.description" = "Nix-based GPU container";
+
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code>labels = {
+  "my.custom.label" = "some-value";
+  "another.label" = "another-value";
+};
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/labels.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/labels.nix</a></li>
+</ul>
+<h2 id="maxlayers"><a class="header" href="#maxlayers">maxLayers</a></h2>
+<p>The maximum number of layers to use when creating the container image.</p>
+<p>This option sets the upper limit on the number of layers that will be
+used to build the container image. This is an important consideration
+for caching and build time purposes, and can have many benefits.</p>
+<p>See <a href="https://grahamc.com/blog/nix-and-layered-docker-images/">this blog post</a>
+for some nice information on layers in a nix context.</p>
+<blockquote>
+<p>This is a direct mapping to the
+<a href="https://github.com/nlewo/nix2container?tab=readme-ov-file#nix2containerbuildimage"><code>maxLayers</code></a>
+attribute from <a href="https://github.com/nlewo/nix2container"><code>nix2container</code></a>.</p>
+</blockquote>
+<p><em>Type:</em>
+signed integer</p>
+<p><em>Default:</em>
+<code>50</code></p>
+<p><em>Example:</em></p>
+<pre><code>maxLayers = 100;
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/max-layers.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/max-layers.nix</a></li>
+</ul>
+<h2 id="meta"><a class="header" href="#meta">meta</a></h2>
+<p><a href="https://ryantm.github.io/nixpkgs/stdenv/meta/"><code>meta</code></a> attributes to
+include in the output of generated <code>nix2gpu</code> containers</p>
+<p><em>Type:</em>
+lazy attribute set of raw value</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Example:</em></p>
+<pre><code>{
+  meta = {
+    description = "My cool nimi package";
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/meta.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/meta.nix</a></li>
+</ul>
+<h2 id="nimisettings"><a class="header" href="#nimisettings">nimiSettings</a></h2>
+<p>Bindings to <code>nimi.settings</code> for this nix2gpu instance.</p>
+<p>Use this to tune Nimi runtime behavior (restart policy, logging, startup
+hooks, and container build settings) beyond the defaults provided by
+nix2gpu.</p>
+<p><em>Type:</em>
+module</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/container/nimi-settings.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/container/nimi-settings.nix</a></li>
+</ul>
+<h2 id="nixconfig"><a class="header" href="#nixconfig">nixConfig</a></h2>
+<p>The content of the <a href="https://nix.dev/manual/nix/2.31/command-ref/conf-file.html"><code>nix.conf</code></a> file to be used inside the container.</p>
+<p>This option allows you to provide a custom <code>nix.conf</code> configuration for
+the Nix daemon running inside the container. This can be used to
+configure things like custom binary caches, experimental features, or
+other Nix-related settings.</p>
+<p>By default, a standard <code>nix.conf</code> is provided which is suitable for most
+use cases.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code>sandbox = false
+build-users-group =
+experimental-features = nix-command flakes
+trusted-users = root
+max-jobs = auto
+cores = 0
+trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
+substituters = https://cache.nixos.org https://nix-community.cachix.org https://cuda-maintainers.cachix.org https://cache.garnix.io
+keep-outputs = true
+keep-derivations = true
+accept-flake-config = true
+
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code>nixConfig = ''
+  experimental-features = nix-command flakes
+  substituters = https://cache.nixos.org/ https://my-cache.example.org
+  trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= my-cache.example.org-1:abcdef...
+'';
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/nix-config.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/nix-config.nix</a></li>
+</ul>
+<h2 id="passthru"><a class="header" href="#passthru">passthru</a></h2>
+<p><a href="https://ryantm.github.io/nixpkgs/stdenv/stdenv/#var-stdenv-passthru"><code>passthru</code></a> attributes to
+include in the output of generated <code>nix2gpu</code> containers</p>
+<p><em>Type:</em>
+lazy attribute set of raw value</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Example:</em></p>
+<pre><code>{
+  passthru = {
+    doXYZ = pkgs.writeShellApplication {
+      name = "xyz-doer";
+      text = ''
+        xyz
+      '';
+    };
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/passthru.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/passthru.nix</a></li>
+</ul>
+<h2 id="registries"><a class="header" href="#registries">registries</a></h2>
+<p>The container registries to push your images to.</p>
+<p>This option specifies a list of the full registry paths, including the repository
+and image name, where the container image will be pushed. This is a
+mandatory field if you intend to publish your images via <code>&lt;container&gt;.copyToGithub</code>.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Example:</em></p>
+<pre><code>registries = [ "ghcr.io/my-org/my-image" ];
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/registries.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/registries.nix</a></li>
+</ul>
+<h2 id="services"><a class="header" href="#services">services</a></h2>
+<p>Services to run inside the <code>nix2gpu</code> container via <code>Nimi</code>.</p>
+<p>Each attribute defines a named NixOS modular service (Nix 25.11): import
+a service module and override its options per instance. This keeps service
+definitions composable and reusable across projects.</p>
+<p>For the upstream model, see the NixOS manual section on
+<a href="https://nixos.org/manual/nixos/unstable/#modular-services">Modular Services</a>.</p>
+<p><em>Type:</em>
+lazy attribute set of module</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/services.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/services.nix</a></li>
+</ul>
+<h2 id="sshdconfig"><a class="header" href="#sshdconfig">sshdConfig</a></h2>
+<p>The content of the <code>sshd_config</code> file to be used inside the container.</p>
+<p>This option allows you to provide a custom configuration for the OpenSSH
+daemon (<code>sshd</code>) running inside the container. This can be used to
+customize security settings, authentication methods, and other SSH-related
+options.</p>
+<p>By default, a standard <code>sshd_config</code> is provided that is suitable for most
+use cases, with password authentication disabled in favor of public key
+authentication.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+nix2gpu generated sshd config</p>
+<p><em>Example:</em></p>
+<pre><code>sshdConfig = builtins.readFile ./my-sshd-config;
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/sshd.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/sshd.nix</a></li>
+</ul>
+<h2 id="systempackages"><a class="header" href="#systempackages">systemPackages</a></h2>
+<p>A list of system packages to be copied into the container.</p>
+<p>This option allows you to specify a list of Nix packages that will be
+added to the container.</p>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em>
+<code>[ ]</code></p>
+<p><em>Example:</em></p>
+<pre><code>systemPackages = with pkgs; [
+  coreutils
+  git
+];
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/system-packages.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/system-packages.nix</a></li>
+</ul>
+<h2 id="tag"><a class="header" href="#tag">tag</a></h2>
+<p>The tag to use for your container image.</p>
+<p>This option specifies the tag that will be applied to the container
+image when it is built and pushed to a registry. Tags are used to
+version and identify different builds of your image.</p>
+<p>The default value is “latest”, which is a common convention for the most
+recent build. However, it is highly recommended to use more descriptive
+tags for production images, such as version numbers or git commit hashes.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+<code>"latest"</code></p>
+<p><em>Example:</em></p>
+<pre><code>tag = "v1.2.3";
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/tag.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/tag.nix</a></li>
+</ul>
+<h2 id="tailscale"><a class="header" href="#tailscale">tailscale</a></h2>
+<p>The tailscale configuration to use for your <code>nix2gpu</code> container.</p>
+<p>Configure the tailscale daemon to run on your <code>nix2gpu</code> instance,
+giving your instances easy and secure connectivity.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em>
+<code>{ }</code></p>
+<p><em>Example:</em></p>
+<pre><code>tailscale = {
+  enable = true;
+};
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/tailscale.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/tailscale.nix</a></li>
+</ul>
+<h2 id="tailscaleenable"><a class="header" href="#tailscaleenable">tailscale.enable</a></h2>
+<p>Whether to enable enable the tailscale daemon.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<code>false</code></p>
+<p><em>Example:</em>
+<code>true</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/tailscale.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/tailscale.nix</a></li>
+</ul>
+<h2 id="tailscaleauthkey"><a class="header" href="#tailscaleauthkey">tailscale.authKey</a></h2>
+<p>Runtime path to valid tailscale auth key</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+<code>""</code></p>
+<p><em>Example:</em>
+<code>/etc/default/tailscaled</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/tailscale.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/tailscale.nix</a></li>
+</ul>
+<h2 id="user"><a class="header" href="#user">user</a></h2>
+<p>The default user for the container.</p>
+<p>This option specifies the username of the user that will be used by
+default when running commands or starting services in the container.</p>
+<p>The default value is “root”. While this is convenient for development,
+it is strongly recommended to create and use a non-root user for
+production environments to improve security. You can create users
+and groups using the <code>users</code> and <code>groups</code> options in your <code>home-manager</code>
+configuration.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+root</p>
+<p><em>Example:</em></p>
+<pre><code>user = "appuser";
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/user.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/user.nix</a></li>
+</ul>
+<h2 id="workingdir"><a class="header" href="#workingdir">workingDir</a></h2>
+<p>The working directory for the container.</p>
+<p>This option specifies the directory that will be used as the current
+working directory when the container starts. It is the directory where
+commands will be executed by default.</p>
+<p>The default value is “/root”. You may want to change this to a
+more appropriate directory for your application, such as <code>/app</code> or
+<code>/srv</code>.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+<code>/root</code></p>
+<p><em>Example:</em></p>
+<pre><code>workingDir = "/app";
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="file:///nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/working-dir.nix">/nix/store/db55ajprk8xwpm4kp1zfbm26mjbvvsq2-source/nix2gpu/working-dir.nix</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="getting-started.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="architecture.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="getting-started.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="architecture.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
