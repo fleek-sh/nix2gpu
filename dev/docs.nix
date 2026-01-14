@@ -32,7 +32,7 @@
           ndg html \
             --input-dir "${self}/docs" \
             --output-dir "$out/share/nix2gpu/docs" \
-            --title "`nix2gpu` Documentation" \
+            --title "nix2gpu Documentation" \
             --module-options ${moduleOptsDoc.optionsJSON}/share/doc/nixos/options.json \
             --jobs $NIX_BUILD_CORES \
             --generate-search \
