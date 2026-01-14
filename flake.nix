@@ -24,11 +24,6 @@
       inputs.flake-parts.follows = "flake-parts";
     };
 
-    ndg = {
-      url = "github:feel-co/ndg";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nimi = {
       url = "github:weyl-ai/nimi/baileylu/minimize-flake";
       inputs.nixpkgs.follows = "nixpkgs";

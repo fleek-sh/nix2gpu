@@ -18,6 +18,5 @@ in
     '';
     type = types.lazyAttrsOf types.deferredModule;
     default = { };
-    visible = "shallow";
   };
 }
