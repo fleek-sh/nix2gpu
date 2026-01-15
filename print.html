@@ -3,7 +3,8 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Options Reference - nix2gpu</title>
+        <title>nix2gpu</title>
+        <meta name="robots" content="noindex">
 
 
         <!-- Custom HTML head -->
@@ -177,7 +178,159 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="_moduleargs"><a class="header" href="#_moduleargs">_module.args</a></h2>
+                        <h1 id="-index-"><a class="header" href="#-index-">// index //</a></h1>
+<p>declarative GPU containers. vast.ai. runpod. bare-metal. zero dockerfile cope.</p>
+<hr>
+<h2 id="-start-here-"><a class="header" href="#-start-here-">// start here //</a></h2>
+<ul>
+<li><strong><a href="#-comfyui-setup-guide-">getting started</a></strong> — build your first container, ssh in</li>
+<li><strong><a href="#options-reference">options reference</a></strong> — all the knobs</li>
+<li><strong><a href="#-architecture-overview-">architecture</a></strong> — how it works internally</li>
+<li><strong><a href="#-services--runtime-">services &amp; runtime</a></strong> — Nimi, startup sequence</li>
+<li><strong><a href="#-defining-a-custom-service-">defining custom services</a></strong> — add your own service
+modules</li>
+<li><strong><a href="secrets.html">secrets &amp; agenix</a></strong> — keys never touch the nix store</li>
+<li><strong><a href="#-integrations-">integrations</a></strong> — integrations with the nix ecosystem</li>
+</ul>
+<hr>
+<h2 id="-high-level-"><a class="header" href="#-high-level-">// high-level //</a></h2>
+<ol>
+<li>declare containers under <code>perSystem.nix2gpu.&lt;n&gt;</code></li>
+<li>each container config is a nix module (like nixos modules)</li>
+<li><code>nix2gpu</code> assembles:
+<ul>
+<li>root filesystem with nix store + your packages</li>
+<li>startup script for runtime environment</li>
+<li>service graph via Nimi</li>
+</ul>
+</li>
+<li>helper commands:
+<ul>
+<li><code>nix build .#&lt;n&gt;</code> — build image</li>
+<li><code>nix run .#&lt;n&gt;.copy-to-container-runtime</code> — load into docker/podman</li>
+<li><code>nix run .#&lt;n&gt;.copy-to-github</code> — push to ghcr</li>
+<li><code>nix run .#&lt;n&gt;.copy-to-runpod</code> — push to runpod</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="-cloud-targets-"><a class="header" href="#-cloud-targets-">// cloud targets //</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>platform</th><th>status</th><th>notes</th></tr>
+</thead>
+<tbody>
+<tr><td>vast.ai</td><td>✅ stable</td><td>nvidia libs at <code>/lib/x86_64-linux-gnu</code></td></tr>
+<tr><td>runpod</td><td>✅ stable</td><td>network volumes, template support</td></tr>
+<tr><td>lambda labs</td><td>✅ works</td><td>standard docker</td></tr>
+<tr><td>bare-metal</td><td>✅ works</td><td>just run the container</td></tr>
+<tr><td>kubernetes</td><td>🚧 wip</td><td>gpu operator integration</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="-where-to-go-"><a class="header" href="#-where-to-go-">// where to go //</a></h2>
+<ul>
+<li><strong>just want something running</strong> → <a href="#-comfyui-setup-guide-">getting started</a></li>
+<li><strong>want all the options</strong> → <a href="#options-reference">options reference</a></li>
+<li><strong>hacking on internals</strong> → <a href="#-architecture-overview-">architecture</a></li>
+<li><strong>secrets and tailscale</strong> → <a href="secrets.html">secrets</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="-comfyui-setup-guide-"><a class="header" href="#-comfyui-setup-guide-">// <code>ComfyUI</code> setup guide //</a></h1>
+<p>This guide covers a walk through of setting up <code>ComfyUI</code> inside a <code>nix2gpu</code> container, and then deploying it to <code>vast.ai</code>. It should hopefully also provide useful information to others trying to deploy different pieces of software too.</p>
+<h1 id="installing-nix"><a class="header" href="#installing-nix">Installing Nix</a></h1>
+<p>First of all, you’ll need to install <a href="https://nixos.org/">Nix</a>.</p>
+<p>There are a couple of easy ways to get it:</p>
+<ul>
+<li>
+<p>The <a href="https://github.com/DeterminateSystems/nix-installer">Determinate Nix Installer</a> (Mac, Linux)</p>
+</li>
+<li>
+<p><a href="https://github.com/nix-community/NixOS-WSL">NixOS WSL</a> (Windows subsystem for Linux)</p>
+</li>
+</ul>
+<h1 id="creating-a-flake-to-develop-out-of"><a class="header" href="#creating-a-flake-to-develop-out-of">Creating a flake to develop out of:</a></h1>
+<p>With nix installed you can now run:</p>
+<pre><code class="language-sh">mkdir my-nix2gpu-project
+
+cd my-nix2gpu-project
+
+git init
+
+nix flake init
+
+git add .
+
+git commit -m "nix flake init"
+</code></pre>
+<h1 id="adding-inputs"><a class="header" href="#adding-inputs">Adding Inputs</a></h1>
+<p>You will now have a new git repository with an empty <code>flake.nix</code>. Edit this to add</p>
+<pre><code class="language-nix">nix2gpu.url = "github:weyl-ai/nix2gpu?ref=baileylu/public-api";
+systems.url = "github:nix-systems/default";
+flake-parts.url = "github:hercules-ci/flake-parts";
+</code></pre>
+<p>Into the <code>inputs</code> section.</p>
+<p>No additional inputs are required to use services or <code>home-manager</code>; <code>nix2gpu</code>
+bundles <code>Nimi</code> and <code>nix2container</code> internally.</p>
+<h1 id="replace-the-outputs-section-with-this"><a class="header" href="#replace-the-outputs-section-with-this">Replace the outputs section with this:</a></h1>
+<pre><code class="language-nix">outputs =
+  inputs@{ flake-parts, self, ... }:
+  flake-parts.lib.mkFlake { inherit inputs; } {
+    imports = [
+      inputs.nix2gpu.flakeModule
+    ];
+
+    systems = import inputs.systems;
+
+    # This is where nix2gpu config goes
+    # More on this later
+    perSystem.nix2gpu = {};
+  };
+</code></pre>
+<h1 id="select-a-nix2gpu-starter-config-to-use"><a class="header" href="#select-a-nix2gpu-starter-config-to-use">Select a <code>nix2gpu</code> starter config to use</a></h1>
+<p>Take a look in the <a href="https://github.com/weyl-ai/nix2gpu/tree/baileylu/public-api/examples">examples folder</a> and pick one which looks useful.</p>
+<p>Going forward, we will use the <code>comfyui.nix</code> example.</p>
+<p>We can run this in <code>nix2gpu</code> like (replacing the <code>perSystem.nix2gpu</code> from earlier:</p>
+<pre><code class="language-nix">{
+  perSystem = { pkgs, ... }: {
+    nix2gpu."comfyui-service" = {
+      services.comfyui."comfyui-example" = {
+        imports = [ (lib.modules.importApply ../services/comfyui.nix { inherit pkgs; }) ];
+        # You'll need to use the nixified-ai overlay for this
+        # Check them out - https://github.com/nixified-ai/flake
+        models = [ pkgs.nixified-ai.models.stable-diffusion-v1-5 ];
+      };
+
+      registries = [ "ghcr.io/weyl-ai" ];
+
+      exposedPorts = {
+        "22/tcp" = { };
+        "8188/tcp" = { };
+        "8188/udp" = { };
+      };
+    };
+  };
+}
+
+</code></pre>
+<h1 id="getting-the-comfyui-instance-onto-vast"><a class="header" href="#getting-the-comfyui-instance-onto-vast">Getting the <code>ComfyUI</code> instance onto vast</a></h1>
+<p>You can now build and copy your service to the GitHub package registry (ghcr.io) with</p>
+<pre><code class="language-sh">nix run .#comfyui-service.copyToGithub
+</code></pre>
+<p>Next, go to the vast.ai web UI and create a new template, using the GitHub package we just pushed as the source when prompted.</p>
+<p>Now, reserve a new instance on vast using the template and give it a few minutes to start up (wait for “Running…”).</p>
+<p>Now, use the web UI to add an ssh key. You can get/find your public key <a href="https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server">with this guide</a>. Once you have it, use the key shaped button on your running vast instance and paste the key starting with <code>ssh-rsa</code> or <code>ssh-ed</code> into the keys for the instance.</p>
+<p>You can now connect with the command and IP address it gives you. Make sure you use <code>-L 8188: localhost:8188</code> to be able to view comfy UI in your browser.</p>
+<h1 id="other-options"><a class="header" href="#other-options">Other options</a></h1>
+<p>You can also run a <code>nix2gpu</code> image locally if you have docker or <code>podman</code> installed:</p>
+<pre><code class="language-nix">nix run .#my-service.copyToDockerDaemon
+nix run .#shell
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="options-reference"><a href="#options-reference" class="header">Options Reference</a></h1>
+<h2 id="_moduleargs"><a class="header" href="#_moduleargs">_module.args</a></h2>
 <p>Additional arguments passed to each module in addition to ones
 like <code>lib</code>, <code>config</code>,
 and <code>pkgs</code>, <code>modulesPath</code>.</p>
@@ -927,18 +1080,504 @@ string</p>
 <ul>
 <li><a href="file:///nix/store/i02w65pzks6l5pcd0gdid1kyx0y28v8l-source/nix2gpu/working-dir.nix">/nix/store/i02w65pzks6l5pcd0gdid1kyx0y28v8l-source/nix2gpu/working-dir.nix</a></li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="-architecture-overview-"><a class="header" href="#-architecture-overview-">// architecture overview //</a></h1>
+<p>how <code>nix2gpu</code> works under the hood.</p>
+<hr>
+<h2 id="-the-big-picture-"><a class="header" href="#-the-big-picture-">// the big picture //</a></h2>
+<pre><code>┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   nix flake     │────│      Nimi       │────│   OCI image     │
+│   definition    │    │ mkContainerImage│    │   (layered)     │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                        │                        │
+         ▼                        ▼                        ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│ container config│    │  startup script │    │ docker/podman   │
+│   (nix modules) │    │ + Nimi runtime  │    │    runtime      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+</code></pre>
+<p><strong>nix2gpu</strong> transforms declarative nix configurations into reproducible GPU containers through a multi-stage build process.</p>
+<hr>
+<h2 id="-build-pipeline-"><a class="header" href="#-build-pipeline-">// build pipeline //</a></h2>
+<h3 id="1-nix-evaluation"><a class="header" href="#1-nix-evaluation">1. <strong>nix evaluation</strong></a></h3>
+<pre><code class="language-nix">perSystem.nix2gpu."my-container" = {
+  cuda.packages = pkgs.cudaPackages_12_8;
+  tailscale.enable = true;
+  services."api" = {
+    process.argv = [ (lib.getExe pkgs.my-api) "--port" "8080" ];
+  };
+};
+</code></pre>
+<p>The nix module system processes your configuration, applying defaults, validating options, and computing the final container specification.</p>
+<h3 id="2-dependency-resolution"><a class="header" href="#2-dependency-resolution">2. <strong>dependency resolution</strong></a></h3>
+<pre><code class="language-bash">nix build .#my-container
+</code></pre>
+<p>Nix builds the entire dependency graph:</p>
+<ul>
+<li>Base system packages (bash, coreutils, etc.)</li>
+<li>CUDA toolkit and drivers</li>
+<li>Your application packages</li>
+<li>Service configurations</li>
+<li>Startup scripts</li>
+</ul>
+<h3 id="3-image-assembly"><a class="header" href="#3-image-assembly">3. <strong>image assembly</strong></a></h3>
+<pre><code class="language-nix">nimi.mkContainerImage {
+  name = "my-container";
+  copyToRoot = [ baseSystem cudaPackages userPackages ];
+}
+</code></pre>
+<p>Nimi builds the OCI image (via <code>nix2container</code>) with:</p>
+<ul>
+<li>Layered filesystem for efficient caching</li>
+<li>Only necessary dependencies included</li>
+<li>Reproducible layer ordering</li>
+</ul>
+<h3 id="4-container-execution"><a class="header" href="#4-container-execution">4. <strong>container execution</strong></a></h3>
+<pre><code class="language-bash">docker run --gpus all my-container:latest
+</code></pre>
+<p>The startup script orchestrates initialization, then Nimi runs services.</p>
+<hr>
+<h2 id="-filesystem-layout-"><a class="header" href="#-filesystem-layout-">// filesystem layout //</a></h2>
+<pre><code>/
+├── nix/
+│   └── store/          # immutable package store
+│       ├── cuda-*      # CUDA toolkit
+│       ├── startup-*   # initialization script  
+│       └── packages-*  # your applications
+├── etc/
+│   ├── ssh/            # SSH daemon config
+│   └── ld.so.conf.d/   # library search paths
+├── run/
+│   └── secrets/        # mounted secret files
+├── workspace/          # default working directory
+└── tmp/                # temporary files
+</code></pre>
+<p><strong>Key principles:</strong></p>
+<ul>
+<li><strong>Immutable system</strong>: <code>/nix/store</code> contains all software, never modified at runtime</li>
+<li><strong>Mutable state</strong>: <code>/workspace</code>, <code>/tmp</code>, <code>/run</code> for runtime data</li>
+<li><strong>Secrets</strong>: mounted at <code>/run/secrets</code> from external sources</li>
+<li><strong>Library paths</strong>: dynamic loader configured for both nix store and host-mounted drivers</li>
+</ul>
+<hr>
+<h2 id="-startup-sequence-"><a class="header" href="#-startup-sequence-">// startup sequence //</a></h2>
+<p>The container initialization follows a precise sequence:</p>
+<h3 id="1-environment-setup"><a class="header" href="#1-environment-setup">1. <strong>environment setup</strong></a></h3>
+<pre><code class="language-bash"># startup.sh
+export PATH="/nix/store/.../bin:$PATH"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/lib/x86_64-linux-gnu"
+export CUDA_PATH="/nix/store/...-cuda-toolkit"
+</code></pre>
+<ul>
+<li>Sets up PATH for nix store binaries</li>
+<li>Configures library search for both nix store and host-mounted NVIDIA drivers</li>
+<li>Establishes CUDA environment</li>
+</ul>
+<h3 id="2-runtime-detection"><a class="header" href="#2-runtime-detection">2. <strong>runtime detection</strong></a></h3>
+<pre><code class="language-bash">if [[ -d "/lib/x86_64-linux-gnu" ]]; then
+  echo "vast.ai runtime detected"
+  # patch nvidia utilities for host drivers
+elif [[ -n "$RUNPOD_POD_ID" ]]; then
+  echo "runpod runtime detected"  
+  # configure network volumes
+else
+  echo "bare-metal/docker runtime detected"
+fi
+</code></pre>
+<p>Adapts configuration based on detected cloud provider or bare-metal environment.</p>
+<h3 id="3-gpu-initialization"><a class="header" href="#3-gpu-initialization">3. <strong>GPU initialization</strong></a></h3>
+<pre><code class="language-bash"># link host drivers to expected locations
+ldconfig
+
+# test GPU access
+nvidia-smi || echo "GPU not available"
+</code></pre>
+<p>Ensures GPU toolchain works with both nix store CUDA and host-mounted drivers.</p>
+<h3 id="4-network-setup"><a class="header" href="#4-network-setup">4. <strong>network setup</strong></a></h3>
+<pre><code class="language-bash"># tailscale daemon (if enabled)
+if [[ -n "$TAILSCALE_AUTHKEY_FILE" ]]; then
+  tailscaled --state-dir=/tmp/tailscale &amp;
+  tailscale up --authkey="$(cat $TAILSCALE_AUTHKEY_FILE)"
+fi
+
+# SSH daemon
+mkdir -p /var/empty /var/log
+sshd
+</code></pre>
+<p>Starts networking services: Tailscale for mesh networking, SSH for remote access.</p>
+<h3 id="5-service-orchestration"><a class="header" href="#5-service-orchestration">5. <strong>service orchestration</strong></a></h3>
+<pre><code class="language-bash"># Nimi is the container entrypoint
+nimi --config /nix/store/.../nimi.json
+</code></pre>
+<p>Nimi runs the startup hook and then launches your modular services.</p>
+<hr>
+<h2 id="-service-management-"><a class="header" href="#-service-management-">// service management //</a></h2>
+<h3 id="nimi"><a class="header" href="#nimi"><strong>Nimi</strong></a></h3>
+<p><code>nix2gpu</code> uses <a href="https://github.com/weyl-ai/nimi">Nimi</a>, a tiny process manager for NixOS modular services (Nix 25.11):</p>
+<pre><code class="language-nix">services."api" = {
+  process.argv = [ (lib.getExe pkgs.my-api) "--port" "8080" ];
+};
+
+nimiSettings.restart.mode = "up-to-count";
+</code></pre>
+<p><strong>Benefits over systemd:</strong></p>
+<ul>
+<li>No init system complexity</li>
+<li>Modular service definitions</li>
+<li>JSON config generated by Nix</li>
+<li>Predictable restart behavior</li>
+</ul>
+<h3 id="service-lifecycle"><a class="header" href="#service-lifecycle"><strong>service lifecycle</strong></a></h3>
+<ol>
+<li><strong>Dependency resolution</strong>: services start in correct order</li>
+<li><strong>Health monitoring</strong>: automatic restart on failure</li>
+<li><strong>Log aggregation</strong>: all service logs to stdout for <code>docker logs</code></li>
+<li><strong>Graceful shutdown</strong>: proper signal handling for container stops</li>
+</ol>
+<hr>
+<h2 id="-networking-architecture-"><a class="header" href="#-networking-architecture-">// networking architecture //</a></h2>
+<h3 id="standard-mode-dockerpodman"><a class="header" href="#standard-mode-dockerpodman"><strong>standard mode</strong> (docker/podman)</a></h3>
+<pre><code>┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│    host     │────│  container  │────│   service   │
+│ localhost:* │    │   bridge    │    │ localhost:* │
+└─────────────┘    └─────────────┘    └─────────────┘
+</code></pre>
+<p>Standard container networking with port forwarding.</p>
+<h3 id="tailscale-mode-mesh-networking"><a class="header" href="#tailscale-mode-mesh-networking"><strong>tailscale mode</strong> (mesh networking)</a></h3>
+<pre><code>┌─────────────┐    ┌─────────────────┐    ┌─────────────┐
+│   host-a    │    │   tailscale     │    │   host-b    │
+│ container-a ├────┤  mesh network   ├────┤ container-b │
+│10.0.0.100:22│    │                 │    │10.0.0.101:22│
+└─────────────┘    └─────────────────┘    └─────────────┘
+</code></pre>
+<p>Direct container-to-container communication across hosts via Tailscale.</p>
+<p><strong>Key advantages:</strong></p>
+<ul>
+<li>No port forwarding needed</li>
+<li>Works across clouds and networks</li>
+<li>End-to-end encryption</li>
+<li>DNS-based service discovery</li>
+<li>ACL-based access control</li>
+</ul>
+<hr>
+<h2 id="-gpu-integration-"><a class="header" href="#-gpu-integration-">// GPU integration //</a></h2>
+<h3 id="driver-compatibility"><a class="header" href="#driver-compatibility"><strong>driver compatibility</strong></a></h3>
+<pre><code class="language-bash"># nix store CUDA toolkit
+/nix/store/...-cuda-toolkit/
+├── bin/nvcc
+├── lib/libcuda.so       # stub library
+└── include/cuda.h
+
+# host-mounted real drivers  
+/lib/x86_64-linux-gnu/
+├── libcuda.so.1         # actual GPU driver
+├── libnvidia-ml.so.1
+└── libnvidia-encode.so.1
+</code></pre>
+<p><strong>The challenge</strong>: CUDA applications need both:</p>
+<ul>
+<li>CUDA toolkit (development headers, nvcc compiler) from nix store</li>
+<li>Actual GPU drivers from the host system</li>
+</ul>
+<p><strong>The solution</strong>: dynamic library path configuration</p>
+<pre><code class="language-bash">export LD_LIBRARY_PATH="/nix/store/...-cuda/lib:${LD_LIBRARY_PATH}:/lib/x86_64-linux-gnu"
+ldconfig
+</code></pre>
+<p>This allows nix store CUDA to find host-mounted drivers at runtime.</p>
+<h3 id="cloud-provider-adaptations"><a class="header" href="#cloud-provider-adaptations"><strong>cloud provider adaptations</strong></a></h3>
+<p><strong>vast.ai</strong>: NVIDIA drivers mounted at <code>/lib/x86_64-linux-gnu</code></p>
+<pre><code class="language-bash"># startup.sh detects vast.ai and configures paths
+patchelf --set-rpath /lib/x86_64-linux-gnu /nix/store/.../nvidia-smi
+</code></pre>
+<p><strong>runpod</strong>: Standard nvidia-docker integration</p>
+<pre><code class="language-bash"># uses nvidia-container-toolkit mounts
+# drivers available via standard paths
+</code></pre>
+<p><strong>bare-metal</strong>: Host nvidia-docker setup</p>
+<pre><code class="language-bash"># relies on proper nvidia-container-toolkit configuration
+# GPU access via device mounts: --gpus all
+</code></pre>
+<hr>
+<h2 id="-secret-management-"><a class="header" href="#-secret-management-">// secret management //</a></h2>
+<h3 id="security-principles"><a class="header" href="#security-principles"><strong>security principles</strong></a></h3>
+<ol>
+<li><strong>Secrets never enter nix store</strong> (nix store is world-readable)</li>
+<li><strong>Runtime-only access</strong> (secrets mounted at container start)</li>
+<li><strong>File-based injection</strong> (not environment variables)</li>
+<li><strong>Minimal exposure</strong> (secrets only accessible to specific processes)</li>
+</ol>
+<h3 id="agenix-integration"><a class="header" href="#agenix-integration"><strong>agenix integration</strong></a></h3>
+<pre><code class="language-nix">nix2gpu."my-container" = {
+  age.enable = true;
+  age.secrets.tailscale-key = {
+    file = ./secrets/ts-key.age;
+    path = "/run/secrets/ts-key";
+  };
+
+  tailscale.authKeyFile = config.secrets.tailscale-auth.path;
+};
+</code></pre>
+<p><strong>Flow:</strong></p>
+<ol>
+<li>Host system decrypts secrets to <code>/run/secrets/</code></li>
+<li>Container mounts <code>/run/secrets</code> as volume</li>
+<li>Container references secrets by path, never by value</li>
+</ol>
+<hr>
+<h2 id="-caching--performance-"><a class="header" href="#-caching--performance-">// caching &amp; performance //</a></h2>
+<h3 id="layer-optimization"><a class="header" href="#layer-optimization"><strong>layer optimization</strong></a></h3>
+<pre><code class="language-nix"># nix2container creates efficient layers
+[
+  layer-01-base-system     # coreutils, bash, etc.
+  layer-02-cuda-toolkit    # large but stable
+  layer-03-python-packages # frequently changing  
+  layer-04-app-code        # most frequently changing
+]
+</code></pre>
+<p>Frequently changing components go in higher layers to maximize cache hits.</p>
+<h3 id="build-caching"><a class="header" href="#build-caching"><strong>build caching</strong></a></h3>
+<pre><code class="language-bash"># first build: downloads everything
+nix build .#my-container  # ~15 minutes
+
+# subsequent builds: only changed layers
+nix build .#my-container  # ~30 seconds
+</code></pre>
+<p>Nix’s content-addressed store ensures perfect reproducibility with efficient incremental builds.</p>
+<h3 id="registry-layer-sharing"><a class="header" href="#registry-layer-sharing"><strong>registry layer sharing</strong></a></h3>
+<pre><code class="language-bash"># multiple containers share base layers
+my-container:v1    # 2GB total (8 layers)
+my-container:v2    # +100MB (only top layer changed)
+other-container:v1 # +500MB (shares 6 bottom layers)
+</code></pre>
+<p>OCI registries deduplicate shared layers across images.</p>
+<hr>
+<h2 id="-extending-the-system-"><a class="header" href="#-extending-the-system-">// extending the system //</a></h2>
+<h3 id="custom-services"><a class="header" href="#custom-services"><strong>custom services</strong></a></h3>
+<pre><code class="language-nix"># services/my-service.nix
+{ lib, pkgs, ... }:
+{ config, ... }:
+let
+  inherit (lib) mkOption types;
+  cfg = config.myService;
+in
+{
+  _class = "service";
+
+  options.myService = {
+    port = mkOption { type = types.port; default = 8080; };
+    # ... other options
+  };
+  
+  config.process.argv = [
+    (lib.getExe pkgs.my-service)
+    "--port"
+    (toString cfg.port)
+  ];
+}
+</code></pre>
+<h3 id="custom-cloud-targets"><a class="header" href="#custom-cloud-targets"><strong>custom cloud targets</strong></a></h3>
+<pre><code class="language-nix"># modules/container/scripts/copy-to-my-cloud.nix
+{
+  perSystem = { pkgs, self', ... }: {
+    perContainer = { container, ... }: {
+      scripts.copy-to-my-cloud = pkgs.writeShellApplication {
+        name = "copy-to-my-cloud";
+        text = ''
+          # implement your cloud's container registry push
+        '';
+      };
+    };
+  };
+}
+</code></pre>
+<p>The modular architecture makes it straightforward to add new cloud providers or service types.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="-services--runtime-"><a class="header" href="#-services--runtime-">// services &amp; runtime //</a></h1>
+<p>managing long-running processes inside <code>nix2gpu</code> containers.</p>
+<hr>
+<h2 id="-overview-"><a class="header" href="#-overview-">// overview //</a></h2>
+<p><code>nix2gpu</code> uses <a href="https://github.com/weyl-ai/nimi"><code>Nimi</code></a>, a tiny process manager
+for <a href="https://nixos.org/manual/nixos/unstable/#modular-services">NixOS modular services</a>
+(Nix 25.11). Define services under <code>services.&lt;name&gt;</code> and <code>nix2gpu</code> will build an
+OCI image with Nimi as the entrypoint.</p>
+<p>No extra flake inputs are required to enable services.</p>
+<hr>
+<h2 id="-defining-services-"><a class="header" href="#-defining-services-">// defining services //</a></h2>
+<h3 id="using-existing-modular-services"><a class="header" href="#using-existing-modular-services"><strong>using existing modular services</strong></a></h3>
+<pre><code class="language-nix">services."ghostunnel" = {
+  imports = [ pkgs.ghostunnel.services ];
+  ghostunnel = {
+    listen = "0.0.0.0:443";
+    cert = "/root/service-cert.pem";
+    key = "/root/service-key.pem";
+    disableAuthentication = true;
+    target = "backend:80";
+    unsafeTarget = true;
+  };
+};
+</code></pre>
+<h3 id="a-minimal-custom-service"><a class="header" href="#a-minimal-custom-service"><strong>a minimal custom service</strong></a></h3>
+<pre><code class="language-nix">services."hello" = {
+  process.argv = [
+    (lib.getExe pkgs.bash)
+    "-lc"
+    "echo hello from Nimi"
+  ];
+};
+</code></pre>
+<p>For a full custom module example, see <a href="#-defining-a-custom-service-">defining custom services</a>.</p>
+<hr>
+<h2 id="-runtime-behavior-"><a class="header" href="#-runtime-behavior-">// runtime behavior //</a></h2>
+<p>When the container starts, Nimi runs the <code>nix2gpu</code> startup hook and then launches
+all configured services. You can still drop into a shell for debugging with:</p>
+<pre><code class="language-bash">$ docker run -it --entrypoint bash my-container:latest
+</code></pre>
+<hr>
+<h2 id="-restart-policies-"><a class="header" href="#-restart-policies-">// restart policies //</a></h2>
+<p><code>Nimi</code> controls service restarts. Tune it with <code>nimiSettings.restart</code>:</p>
+<pre><code class="language-nix">nimiSettings.restart = {
+  mode = "up-to-count"; # never | up-to-count | always
+  time = 2000;           # delay in ms
+  count = 3;             # max restarts when using up-to-count
+};
+</code></pre>
+<hr>
+<h2 id="-logging-"><a class="header" href="#-logging-">// logging //</a></h2>
+<p>Logs always stream to stdout/stderr for <code>docker logs</code>. You can also enable
+per-service log files:</p>
+<pre><code class="language-nix">nimiSettings.logging = {
+  enable = true;
+  logsDir = "nimi_logs";
+};
+</code></pre>
+<p>At runtime, Nimi creates a <code>logs-&lt;n&gt;</code> directory under <code>logsDir</code> and writes one
+file per service.</p>
+<hr>
+<h2 id="-config-data-"><a class="header" href="#-config-data-">// config data //</a></h2>
+<p>Modular services can provide config files via <code>configData</code>. Nimi exposes these
+files under a temporary directory and sets <code>XDG_CONFIG_HOME</code> for the service.
+This lets services read configs from <code>$XDG_CONFIG_HOME/&lt;path&gt;</code> without writing to
+the Nix store.</p>
+<p>See <code>nix2gpu</code> service modules like <code>services/comfyui.nix</code> for real-world usage.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="-defining-a-custom-service-"><a class="header" href="#-defining-a-custom-service-">// defining a custom service //</a></h1>
+<p>Use NixOS modular services (Nix 25.11) to describe long-running processes.
+<code>nix2gpu</code> runs them through <code>Nimi</code>, so there is no extra flake input to enable.</p>
+<hr>
+<h1 id="-example-a-simple-http-server-"><a class="header" href="#-example-a-simple-http-server-">// example: a simple HTTP server //</a></h1>
+<p>This example defines a tiny service module that runs <code>python -m http.server</code>.</p>
+<h3 id="simple-httpnix"><a class="header" href="#simple-httpnix"><code>simple-http.nix</code></a></h3>
+<pre><code class="language-nix">{ lib, pkgs, ... }:
+{ config, ... }:
+let
+  inherit (lib) mkOption types;
+  cfg = config.simpleHttp;
+in
+{
+  _class = "service";
+
+  options.simpleHttp = {
+    port = mkOption {
+      type = types.port;
+      default = 8080;
+    };
+    bind = mkOption {
+      type = types.str;
+      default = "0.0.0.0";
+    };
+    directory = mkOption {
+      type = types.str;
+      default = "/workspace";
+    };
+  };
+
+  config.process.argv = [
+    (lib.getExe pkgs.python3)
+    "-m"
+    "http.server"
+    "--bind"
+    cfg.bind
+    "--directory"
+    cfg.directory
+    (toString cfg.port)
+  ];
+}
+</code></pre>
+<h3 id="servernix"><a class="header" href="#servernix"><code>server.nix</code></a></h3>
+<pre><code class="language-nix">{ lib, ... }:
+{
+  perSystem = { pkgs, ... }: {
+    nix2gpu."simple-http" = {
+      services."web" = {
+        imports = [ (lib.modules.importApply ./simple-http.nix { inherit pkgs; }) ];
+        simpleHttp = {
+          port = 8080;
+          directory = "/workspace/public";
+        };
+      };
+
+      exposedPorts = {
+        "8080/tcp" = {};
+        "22/tcp" = {};
+      };
+    };
+  };
+}
+</code></pre>
+<hr>
+<h1 id="-using-existing-modular-services-"><a class="header" href="#-using-existing-modular-services-">// using existing modular services //</a></h1>
+<p>If a package ships a modular service module, you can import it directly. For
+example, <code>ghostunnel</code> from <code>nixpkgs</code>:</p>
+<pre><code class="language-nix">services."ghostunnel" = {
+  imports = [ pkgs.ghostunnel.services ];
+  ghostunnel = {
+    listen = "0.0.0.0:443";
+    cert = "/root/service-cert.pem";
+    key = "/root/service-key.pem";
+    disableAuthentication = true;
+    target = "backend:80";
+    unsafeTarget = true;
+  };
+};
+</code></pre>
+<p>Need a fuller reference? See <code>services/comfyui.nix</code> for a real-world service
+module.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="-integrations-"><a class="header" href="#-integrations-">// integrations //</a></h1>
+<p><code>nix2gpu</code> ships its integrations as part of the flake. You do not enable them by
+adding extra inputs upstream; if you are using the <code>nix2gpu</code> flake, they are
+already available.</p>
+<hr>
+<h2 id="-nimi-modular-services-"><a class="header" href="#-nimi-modular-services-">// <code>Nimi</code> (modular services) //</a></h2>
+<p><a href="https://github.com/weyl-ai/nimi"><code>Nimi</code></a> is the runtime that powers services in
+<code>nix2gpu</code>. It runs <a href="https://nixos.org/manual/nixos/unstable/#modular-services">NixOS modular services</a>
+(Nix 25.11) without requiring a full init system.</p>
+<ul>
+<li>Define services under <code>services.&lt;name&gt;</code> using modular service modules.</li>
+<li>Tune runtime behavior with <code>nimiSettings</code> (restart, logging, startup).</li>
+</ul>
+<p>See <a href="#-services--runtime-">services &amp; runtime</a> for the workflow and examples.</p>
+<hr>
+<h2 id="-nix2container-"><a class="header" href="#-nix2container-">// <code>nix2container</code> //</a></h2>
+<p><code>nix2gpu</code> builds OCI images through <code>Nimi</code>’s <code>mkContainerImage</code>, which uses
+<a href="https://github.com/nlewo/nix2container"><code>nix2container</code></a> under the hood. You do
+not need to add a separate <code>nix2container</code> input to use <code>nix2gpu</code> containers.</p>
+<hr>
+<h2 id="-home-manager-"><a class="header" href="#-home-manager-">// <code>home-manager</code> //</a></h2>
+<p><a href="https://github.com/nix-community/home-manager"><code>home-manager</code></a> is integrated
+for user environment configuration. Use the <code>home</code> option to describe shell
+configuration, tools, and dotfiles in a modular way.</p>
+<p>If you are porting an existing home-manager config that targets a non-root user,
+<code>nix2gpu</code> includes a convenience module:</p>
+<pre><code class="language-nix">inputs.nix2gpu.homeModules.force-root-user
+</code></pre>
+<p>See the <a href="#persystemnix2gpucontainerhome">home option</a> for details.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="getting-started.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
-                            </a>
 
-                            <a rel="next prefetch" href="architecture.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -946,13 +1585,7 @@ string</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="getting-started.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
-                    </a>
 
-                    <a rel="next prefetch" href="architecture.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                    </a>
             </nav>
 
         </div>
@@ -980,6 +1613,11 @@ string</p>
 
         <!-- Custom JS scripts -->
 
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
 
 
     </div>

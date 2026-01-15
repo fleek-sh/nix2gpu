@@ -3,7 +3,8 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Getting Started - nix2gpu</title>
+        <title>Page not found - nix2gpu</title>
+        <base href="/">
 
 
         <!-- Custom HTML head -->
@@ -177,108 +178,14 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="-comfyui-setup-guide-"><a class="header" href="#-comfyui-setup-guide-">// <code>ComfyUI</code> setup guide //</a></h1>
-<p>This guide covers a walk through of setting up <code>ComfyUI</code> inside a <code>nix2gpu</code> container, and then deploying it to <code>vast.ai</code>. It should hopefully also provide useful information to others trying to deploy different pieces of software too.</p>
-<h1 id="installing-nix"><a class="header" href="#installing-nix">Installing Nix</a></h1>
-<p>First of all, you’ll need to install <a href="https://nixos.org/">Nix</a>.</p>
-<p>There are a couple of easy ways to get it:</p>
-<ul>
-<li>
-<p>The <a href="https://github.com/DeterminateSystems/nix-installer">Determinate Nix Installer</a> (Mac, Linux)</p>
-</li>
-<li>
-<p><a href="https://github.com/nix-community/NixOS-WSL">NixOS WSL</a> (Windows subsystem for Linux)</p>
-</li>
-</ul>
-<h1 id="creating-a-flake-to-develop-out-of"><a class="header" href="#creating-a-flake-to-develop-out-of">Creating a flake to develop out of:</a></h1>
-<p>With nix installed you can now run:</p>
-<pre><code class="language-sh">mkdir my-nix2gpu-project
-
-cd my-nix2gpu-project
-
-git init
-
-nix flake init
-
-git add .
-
-git commit -m "nix flake init"
-</code></pre>
-<h1 id="adding-inputs"><a class="header" href="#adding-inputs">Adding Inputs</a></h1>
-<p>You will now have a new git repository with an empty <code>flake.nix</code>. Edit this to add</p>
-<pre><code class="language-nix">nix2gpu.url = "github:weyl-ai/nix2gpu?ref=baileylu/public-api";
-systems.url = "github:nix-systems/default";
-flake-parts.url = "github:hercules-ci/flake-parts";
-</code></pre>
-<p>Into the <code>inputs</code> section.</p>
-<p>No additional inputs are required to use services or <code>home-manager</code>; <code>nix2gpu</code>
-bundles <code>Nimi</code> and <code>nix2container</code> internally.</p>
-<h1 id="replace-the-outputs-section-with-this"><a class="header" href="#replace-the-outputs-section-with-this">Replace the outputs section with this:</a></h1>
-<pre><code class="language-nix">outputs =
-  inputs@{ flake-parts, self, ... }:
-  flake-parts.lib.mkFlake { inherit inputs; } {
-    imports = [
-      inputs.nix2gpu.flakeModule
-    ];
-
-    systems = import inputs.systems;
-
-    # This is where nix2gpu config goes
-    # More on this later
-    perSystem.nix2gpu = {};
-  };
-</code></pre>
-<h1 id="select-a-nix2gpu-starter-config-to-use"><a class="header" href="#select-a-nix2gpu-starter-config-to-use">Select a <code>nix2gpu</code> starter config to use</a></h1>
-<p>Take a look in the <a href="https://github.com/weyl-ai/nix2gpu/tree/baileylu/public-api/examples">examples folder</a> and pick one which looks useful.</p>
-<p>Going forward, we will use the <code>comfyui.nix</code> example.</p>
-<p>We can run this in <code>nix2gpu</code> like (replacing the <code>perSystem.nix2gpu</code> from earlier:</p>
-<pre><code class="language-nix">{
-  perSystem = { pkgs, ... }: {
-    nix2gpu."comfyui-service" = {
-      services.comfyui."comfyui-example" = {
-        imports = [ (lib.modules.importApply ../services/comfyui.nix { inherit pkgs; }) ];
-        # You'll need to use the nixified-ai overlay for this
-        # Check them out - https://github.com/nixified-ai/flake
-        models = [ pkgs.nixified-ai.models.stable-diffusion-v1-5 ];
-      };
-
-      registries = [ "ghcr.io/weyl-ai" ];
-
-      exposedPorts = {
-        "22/tcp" = { };
-        "8188/tcp" = { };
-        "8188/udp" = { };
-      };
-    };
-  };
-}
-
-</code></pre>
-<h1 id="getting-the-comfyui-instance-onto-vast"><a class="header" href="#getting-the-comfyui-instance-onto-vast">Getting the <code>ComfyUI</code> instance onto vast</a></h1>
-<p>You can now build and copy your service to the GitHub package registry (ghcr.io) with</p>
-<pre><code class="language-sh">nix run .#comfyui-service.copyToGithub
-</code></pre>
-<p>Next, go to the vast.ai web UI and create a new template, using the GitHub package we just pushed as the source when prompted.</p>
-<p>Now, reserve a new instance on vast using the template and give it a few minutes to start up (wait for “Running…”).</p>
-<p>Now, use the web UI to add an ssh key. You can get/find your public key <a href="https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server">with this guide</a>. Once you have it, use the key shaped button on your running vast instance and paste the key starting with <code>ssh-rsa</code> or <code>ssh-ed</code> into the keys for the instance.</p>
-<p>You can now connect with the command and IP address it gives you. Make sure you use <code>-L 8188: localhost:8188</code> to be able to view comfy UI in your browser.</p>
-<h1 id="other-options"><a class="header" href="#other-options">Other options</a></h1>
-<p>You can also run a <code>nix2gpu</code> image locally if you have docker or <code>podman</code> installed:</p>
-<pre><code class="language-nix">nix run .#my-service.copyToDockerDaemon
-nix run .#shell
-</code></pre>
+                        <h1 id="document-not-found-404"><a class="header" href="#document-not-found-404">Document not found (404)</a></h1>
+<p>This URL is invalid, sorry. Please use the navigation bar or search to continue.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
-                            </a>
 
-                            <a rel="next prefetch" href="options.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -286,13 +193,7 @@ nix run .#shell
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
-                    </a>
 
-                    <a rel="next prefetch" href="options.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                    </a>
             </nav>
 
         </div>
