@@ -29,7 +29,7 @@ ______________________________________________________________________
 
 ```nix
 perSystem.nix2gpu."my-container" = {
-  cudaPackages = pkgs.cudaPackages_12_8;
+  cuda.packages = pkgs.cudaPackages_12_8;
   tailscale.enable = true;
   services."api" = {
     process.argv = [ (lib.getExe pkgs.my-api) "--port" "8080" ];

@@ -69,7 +69,7 @@ in
     ];
 
     extraStartupScript = ''
-      echo "[nix2gpu] activating home-manager..."
+      gum log --level debug "Activating home-manager..."
       home-manager-generation
     '';
   };

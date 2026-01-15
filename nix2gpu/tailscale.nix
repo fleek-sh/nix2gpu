@@ -35,27 +35,28 @@ let
 
   wrapper = pkgs.writeShellApplication {
     name = "tailscale-service";
+    runtimeInputs = [ pkgs.gum ];
     text = ''
       if [[ -f "${cfg.authKey}" ]]; then
         export TAILSCALE_AUTHKEY="${cfg.authKey}"
       else
-        # shellcheck disable=SC2016
-        printf '\033[33m[nix2gpu] warning:\033[0m %s.\n' 'Path "${cfg.authKey}" does not exist (set via "cfg.authKey"), TAILSCALE_AUTHKEY will not be set'
+        ${lib.getExe pkgs.gum} style --foreground 214 --bold "[nix2gpu] warning: Path \"${cfg.authKey}\" does not exist (set via \"cfg.authKey\"), TAILSCALE_AUTHKEY will not be set."
       fi
 
       mkdir -p /var/lib/tailscale
 
-      echo "[nix2gpu] Starting Tailscale daemon..."
+
+      gum log --level debug "Starting Tailscale daemon..."
       tailscaled --tun=userspace-networking --socket=/var/run/tailscale/tailscaled.sock 2>&1 &
 
       TAILSCALED_PID=$!
 
       if [ -n "''${TAILSCALE_AUTHKEY:-}" ]; then
-        echo "[nix2gpu] authenticating tailscale..."
+        gum log --level debug "Authenticating tailscale..."
         sleep 3
         tailscale up --authkey="$TAILSCALE_AUTHKEY" --ssh &
       else
-        echo "[nix2gpu] Tailscale running (no authkey provided)"
+        gum log --level debug "Tailscale running (no authkey provided)"
       fi
 
       wait "$TAILSCALED_PID"

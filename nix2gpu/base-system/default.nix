@@ -45,6 +45,7 @@ let
         coreutils
         which
         plocate
+        gum
       ]
       ++ [
         (mkFileCreator "write-passwd" "$out/etc/passwd" config.nix2gpuPasswdContents)
@@ -54,6 +55,7 @@ let
         (mkFileCreator "write-sshd" "$out/etc/ssh/sshd_config" config.sshdConfig)
         writeLd
       ];
+    execer = [ "cannot:${lib.getExe pkgs.gum}" ];
     prologue =
       (pkgs.writeText "setup-glibc" ''
         export PATH="${pkgs.glibc.bin}/bin:$PATH"

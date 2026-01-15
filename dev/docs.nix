@@ -1,42 +1,35 @@
-{ self, inputs, ... }:
+{ lib, self, ... }:
 {
   perSystem =
-    {
-      inputs',
-      self',
-      pkgs,
-      ...
-    }:
+    { pkgs, ... }:
     {
       packages.docs =
         let
-          moduleOpts = pkgs.lib.evalModules {
+          moduleEval = lib.evalModules {
             modules = [ self.modules.nix2gpu.default ];
-            specialArgs = {
-              inherit
-                pkgs
-                self'
-                inputs
-                inputs'
-                ;
-
-              name = "docs";
-            };
+            class = "nix2gpu";
+            specialArgs = { inherit pkgs; };
           };
 
-          moduleOptsDoc = pkgs.nixosOptionsDoc { inherit (moduleOpts) options; };
+          moduleOptsDoc = pkgs.nixosOptionsDoc { inherit (moduleEval) options; };
         in
-        pkgs.runCommandLocal "nix2gpu-docs" { nativeBuildInputs = [ inputs'.ndg.packages.default ]; } ''
-          mkdir -p "$out/share/nix2gpu/docs"
+        pkgs.stdenvNoCC.mkDerivation {
+          name = "options-doc-html";
+          src = ../.;
 
-          ndg html \
-            --input-dir "${self}/docs" \
-            --output-dir "$out/share/nix2gpu/docs" \
-            --title "`nix2gpu` Documentation" \
-            --module-options ${moduleOptsDoc.optionsJSON}/share/doc/nixos/options.json \
-            --jobs $NIX_BUILD_CORES \
-            --generate-search \
-            --highlight-code
-        '';
+          nativeBuildInputs = with pkgs; [
+            mdbook
+            nixdoc
+          ];
+
+          dontBuild = true;
+          installPhase = ''
+            mkdir -p "$out/share/nix2gpu/docs"
+
+            ln -sf "${moduleOptsDoc.optionsCommonMark}" docs/options.md
+
+            mdbook build --dest-dir "$out/share/nix2gpu/docs"
+          '';
+        };
     };
 }

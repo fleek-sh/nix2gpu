@@ -1,0 +1,14 @@
+[book]
+title = "nix2gpu"
+authors = ["Luke Bailey"]
+description = "Nix module system that generates containers for GPU markets like vast.ai or runpod.io"
+language = "en"
+src = "docs"
+
+[build]
+build-dir = "target/book"
+create-missing = true
+
+[output.html]
+git-repository-url = "https://github.com/fleek-sh/nix2gpu"
+preferred-dark-theme = "ayu"

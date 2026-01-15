@@ -2,10 +2,11 @@
 set -euo pipefail
 
 if ! [ -v out ]; then
-  printf '\033[31mError:\033[0m %s.\n' "'out' was not defined, please make sure you are running this in a nix build script"
+  gum log --level error "'out' was not defined, please make sure you are running this in a nix build script."
   exit 1
 fi
 
+gum log --level debug "Creating FHS Directories"
 # // FHS // directories
 mkdir -p \
   "$out"/{bin,sbin,lib,lib64,usr,var,run,tmp,home,root,proc,sys,dev,etc} \
@@ -15,6 +16,7 @@ mkdir -p \
   "$out"/run/lock \
   "$out"/dev/dri
 
+gum log --level debug "Writing generated config files"
 write-passwd
 write-group
 write-shadow
@@ -31,6 +33,7 @@ cat >"$out/root/.config/nixpkgs/config.nix" <<'EOF'
 }
 EOF
 
+gum log --level debug "Creating nvidia-container-toolkit paths"
 # // nvidia-container-toolkit // paths
 mkdir -p \
   "$out/lib/x86_64-linux-gnu" \
@@ -64,11 +67,13 @@ cat >"$out/etc/ld.so.conf.d/nvidia.conf" <<'EOF'
 /usr/lib
 EOF
 
+gum log --level debug "Creating SSL certificates"
 # // ssl // certificates
 mkdir -p "$out/etc/ssl/certs"
 ln -s cacert/etc/ssl/certs/ca-bundle.crt "$out/etc/ssl/certs/ca-bundle.crt"
 ln -s cacert/etc/ssl/certs/ca-bundle.crt "$out/etc/ssl/certs/ca-certificates.crt"
 
+gum log --level debug "Adding os descriptor files"
 cat >"$out/etc/nsswitch.conf" <<'EOF'
 passwd:    files
 group:     files
@@ -89,6 +94,7 @@ VERSION="1.0"
 PRETTY_NAME="nix2gpu GPU container"
 EOF
 
+gum log --level debug "Adding shell stubs"
 # // shell // compatibility
 bash_path="$(which bash)"
 ln -s "$bash_path" "$out/bin/bash"

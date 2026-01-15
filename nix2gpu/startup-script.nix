@@ -23,32 +23,36 @@ in
     internal = true;
   };
 
-  config.nimiSettings.startup.runOnStartup = lib.getExe (
-    pkgs.resholve.writeScriptBin "${name}-startup.sh"
-      {
-        interpreter = lib.getExe pkgs.bash;
-        inputs = config.systemPackages ++ [ extraStartupScript ];
-        execer = [
-          "cannot:${lib.getExe' pkgs.openssh "ssh-keygen"}"
-          "cannot:${lib.getExe' pkgs.tailscale "tailscaled"}"
-          "cannot:${lib.getExe' pkgs.tailscale "tailscale"}"
-          "cannot:${lib.getExe' pkgs.glibc "ldd"}"
-        ];
-        keep = {
-          "/usr/bin/nvidia-smi" = true;
-        };
-        fake = {
-          external = [ "passwd" ];
-        };
-        prologue =
-          (pkgs.writeText "setup-passwd" ''
-            export PATH="${pkgs.shadow}/bin:$PATH"
-          '').outPath;
-      }
-      ''
-        ${builtins.readFile ./startup-script/startup.sh}
+  config = {
+    systemPackages = with pkgs; [ gum ];
+    nimiSettings.startup.runOnStartup = lib.getExe (
+      pkgs.resholve.writeScriptBin "${name}-startup.sh"
+        {
+          interpreter = lib.getExe pkgs.bash;
+          inputs = config.systemPackages ++ [ extraStartupScript ];
+          execer = [
+            "cannot:${lib.getExe' pkgs.openssh "ssh-keygen"}"
+            "cannot:${lib.getExe' pkgs.tailscale "tailscaled"}"
+            "cannot:${lib.getExe' pkgs.tailscale "tailscale"}"
+            "cannot:${lib.getExe' pkgs.glibc "ldd"}"
+            "cannot:${lib.getExe pkgs.gum}"
+          ];
+          keep = {
+            "/usr/bin/nvidia-smi" = true;
+          };
+          fake = {
+            external = [ "passwd" ];
+          };
+          prologue =
+            (pkgs.writeText "setup-passwd" ''
+              export PATH="${pkgs.shadow}/bin:$PATH"
+            '').outPath;
+        }
+        ''
+          ${builtins.readFile ./startup-script/startup.sh}
 
-        extra-startup-script
-      ''
-  );
+          extra-startup-script
+        ''
+    );
+  };
 }
