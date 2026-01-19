@@ -7,7 +7,12 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    nix2gpu.url = "path:../..";
+    nix2gpu = {
+      url = "github:fleek-sh/nix2gpu";
+      inputs.flake-parts.url = "flake-parts";
+      inputs.systems.url = "systems";
+      inputs.nixpkgs.url = "nixpkgs";
+    };
   };
 
   outputs =
