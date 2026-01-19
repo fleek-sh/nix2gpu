@@ -26,6 +26,7 @@ in
         execer = [
           "cannot:${lib.getExe pkgs.gh}"
           "cannot:${lib.getExe skopeo}"
+          "cannot:${lib.getExe pkgs.gum}"
         ];
       }
       ''
