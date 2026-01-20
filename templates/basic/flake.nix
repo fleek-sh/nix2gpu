@@ -9,9 +9,9 @@
 
     nix2gpu = {
       url = "github:fleek-sh/nix2gpu";
-      inputs.flake-parts.url = "flake-parts";
-      inputs.systems.url = "systems";
-      inputs.nixpkgs.url = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.systems.follows = "systems";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
