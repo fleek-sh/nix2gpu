@@ -38,7 +38,8 @@ let
     pkgs.resholve.writeScriptBin "${shell}-shell"
       {
         interpreter = lib.getExe pkgs.bash;
-        inputs = [ inputs'.nix2container.packages.skopeo-nix2container ];
+        inputs = [ inputs'.nix2container.packages.skopeo-nix2container ]
+        ++ (with pkgs; [ gum coreutils ]);
         fake = {
           external = [
             "docker"
