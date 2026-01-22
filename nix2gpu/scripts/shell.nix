@@ -30,7 +30,7 @@ let
 
     For other systems please consult your own documentation.
 
-    Source: `${./_shell.nix}`
+    Source: `${./shell.nix}`
   '';
 
   mkShell =
