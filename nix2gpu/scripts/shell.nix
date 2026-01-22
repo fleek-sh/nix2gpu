@@ -73,6 +73,7 @@ in
           execer = [
             "cannot:${lib.getExe podmanShell}"
             "cannot:${lib.getExe dockerShell}"
+            "cannot:${lib.getExe pkgs.gum}"
           ];
           inputs = [
             podmanShell
