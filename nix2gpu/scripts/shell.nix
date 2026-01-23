@@ -6,7 +6,7 @@
   ...
 }:
 let
-  noShellExecutorError = ''
+  noShellExecutorError = pkgs.writeText "shell-exec-err.txt" ''
     Neither `docker` or `podman` could be found on path.
 
     Please install (and setup) one of them in order to run the shell locally.
@@ -30,7 +30,7 @@ let
 
     For other systems please consult your own documentation.
 
-    Source: `${./_shell.nix}`
+    Source: `${./shell.nix}`
   '';
 
   mkShell =
@@ -38,7 +38,14 @@ let
     pkgs.resholve.writeScriptBin "${shell}-shell"
       {
         interpreter = lib.getExe pkgs.bash;
-        inputs = [ inputs'.nix2container.packages.skopeo-nix2container ];
+        inputs = [
+          inputs'.nix2container.packages.skopeo-nix2container
+        ]
+        ++ (with pkgs; [
+          gum
+          coreutils
+        ]);
+        execer = [ "cannot:${lib.getExe pkgs.gum}" ];
         fake = {
           external = [
             "docker"
@@ -97,14 +104,9 @@ in
             exec docker-shell "$@"
           fi
 
-          error_message="$(cat <<'EOF'
-          ${noShellExecutorError}
-          EOF
-          )"
-
           gum log \
             --level error
-            "$error_message"
+            "$(cat ${noShellExecutorError})"
         '';
   };
 }
