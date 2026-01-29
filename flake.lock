@@ -104,11 +104,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769704430,
-        "narHash": "sha256-k9ucmnXe/UGjQYnSkXmNARYt4LRxjLDC7wuLQEPrk2M=",
+        "lastModified": 1769713140,
+        "narHash": "sha256-vfwz/D1ggRJdny/XaL62Mx2t8VIyaA1YtLuRZ7wjnrg=",
         "owner": "weyl-ai",
         "repo": "nimi",
-        "rev": "727e7d6913969288daeba567e55fbd90992aad02",
+        "rev": "8073c24a1cffb9e18a164fbb2c94422597083dc0",
         "type": "github"
       },
       "original": {
