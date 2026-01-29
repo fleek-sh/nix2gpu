@@ -35,12 +35,20 @@ in
         git
       ];
     '';
-    type = types.listOf types.package;
+    type = types.coercedTo types.pathInStore (p: [ p ]) (types.listOf types.pathInStore);
     default = [ ];
     defaultText = literalMD ''
       The generated base system from the other config options
     '';
   };
 
-  config.nimiSettings.container.copyToRoot = config.copyToRoot;
+  config.nimiSettings = {
+    container.copyToRoot = config.copyToRoot;
+    bubblewrap.tryRoBinds = lib.mkAfter (
+      map (pkg: {
+        src = toString pkg;
+        dest = "/";
+      }) config.copyToRoot
+    );
+  };
 }

@@ -63,7 +63,5 @@ let
   } (builtins.readFile ./create-base-system.sh);
 in
 {
-  config.nimiSettings.container.copyToRoot = pkgs.runCommandLocal "base-system" { } (
-    lib.getExe script
-  );
+  config.copyToRoot = pkgs.runCommandLocal "base-system" { } (lib.getExe script);
 }

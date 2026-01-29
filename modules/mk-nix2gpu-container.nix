@@ -27,10 +27,11 @@ in
             inherit (nix2gpuCfg) services meta;
             imports = [
               # TODO[baileylu] Find a way to do this transformation less manually
+              (lib.mkAliasOptionModule [ "bubblewrap" ] [ "settings" "bubblewrap" ])
               (lib.mkAliasOptionModule [ "container" ] [ "settings" "container" ])
-              (lib.mkAliasOptionModule [ "startup" ] [ "settings" "startup" ])
               (lib.mkAliasOptionModule [ "logging" ] [ "settings" "logging" ])
               (lib.mkAliasOptionModule [ "restart" ] [ "settings" "restart" ])
+              (lib.mkAliasOptionModule [ "startup" ] [ "settings" "startup" ])
               nix2gpuCfg.nimiSettings
             ];
           };

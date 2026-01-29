@@ -31,5 +31,19 @@ in
     defaultText = literalMD "root";
   };
 
-  config.nimiSettings.container.imageConfig.User = config.user;
+  config.nimiSettings = {
+    container.imageConfig.User = config.user;
+    bubblewrap.uid =
+      assert lib.assertMsg (config.nix2gpuUsers ? ${config.user}) ''
+        `${config.user}` is not a valid user name as per your
+        `nix2gpu` config.
+
+        The current set of valid users (config.nix2gpuUsers) is:
+        ```nix
+        ${lib.generators.toPretty { } config.nix2gpuUsers}
+        ```
+      '';
+
+      config.nix2gpuUsers.${config.user}.uid;
+  };
 }
