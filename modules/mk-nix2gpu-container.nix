@@ -23,7 +23,7 @@ in
 
           nix2gpuCfg = (config.evalNix2GpuModule name module).config;
 
-          image = nimi.mkContainerImage {
+          nimiCfg = nimi.evalNimiModule {
             inherit (nix2gpuCfg) services meta;
             imports = [
               # TODO[baileylu] Find a way to do this transformation less manually
@@ -35,9 +35,12 @@ in
               nix2gpuCfg.nimiSettings
             ];
           };
+
+          image = nimi.mkContainerImageWithConfig nimiCfg;
+          bubblewrap = nimi.mkBwrapWithConfig nimiCfg;
         in
         image.overrideAttrs (old: {
-          passthru = (old.passthru or { }) // nix2gpuCfg.passthru;
+          passthru = (old.passthru or { }) // nix2gpuCfg.passthru // { runInBubblewrap = bubblewrap; };
         });
     };
 }
