@@ -15,12 +15,23 @@ let
   };
 in
 {
-  options.startupScript = mkOption {
-    description = ''
-      nix2gpu container ${name} startup script.
-    '';
-    type = types.package;
-    internal = true;
+  options = {
+    startupScript = mkOption {
+      description = ''
+        nix2gpu container ${name} startup script.
+      '';
+      type = types.package;
+      internal = true;
+    };
+
+    copyToRootEnv = mkOption {
+      description = ''
+        Path to the merged copyToRoot environment used for populating
+        /etc and /root in bubblewrap mode.
+      '';
+      type = types.path;
+      default = "";
+    };
   };
 
   config = {
@@ -44,8 +55,9 @@ in
             external = [ "passwd" ];
           };
           prologue =
-            (pkgs.writeText "setup-passwd" ''
+            (pkgs.writeText "setup-env" ''
               export PATH="${pkgs.shadow}/bin:$PATH"
+              export NIX2GPU_COPY_TO_ROOT="${config.copyToRootEnv}"
             '').outPath;
         }
         ''
