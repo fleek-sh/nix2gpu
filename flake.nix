@@ -44,5 +44,6 @@
       ./dev
       ./checks
       ./modules
+      ./templates
     ]);
 }
