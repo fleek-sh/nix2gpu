@@ -22,7 +22,6 @@
     procps
     shadow
     sudo
-    tini
     unzip
     util-linux
     neovim
