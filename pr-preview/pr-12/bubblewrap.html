@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Defining Custom Services - nix2gpu</title>
+        <title>Bubblewrap Mode - nix2gpu</title>
 
 
         <!-- Custom HTML head -->
@@ -177,100 +177,199 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="-defining-a-custom-service-"><a class="header" href="#-defining-a-custom-service-">// defining a custom service //</a></h1>
-<p>Use NixOS modular services (Nix 25.11) to describe long-running processes.
-<code>nix2gpu</code> runs them through <code>Nimi</code>, so there is no extra flake input to enable.</p>
+                        <h1 id="-bubblewrap-mode-"><a class="header" href="#-bubblewrap-mode-">// bubblewrap mode //</a></h1>
+<p>run <code>nix2gpu</code> containers without docker, podman, or any container runtime. just bubblewrap + nix.</p>
 <hr>
-<h1 id="-example-a-simple-http-server-"><a class="header" href="#-example-a-simple-http-server-">// example: a simple HTTP server //</a></h1>
-<p>This example defines a tiny service module that runs <code>python -m http.server</code>.</p>
-<h3 id="simple-httpnix"><a class="header" href="#simple-httpnix"><code>simple-http.nix</code></a></h3>
-<pre><code class="language-nix">{ lib, pkgs, ... }:
-{ config, ... }:
-let
-  inherit (lib) mkOption types;
-  cfg = config.simpleHttp;
-in
-{
-  _class = "service";
-
-  options.simpleHttp = {
-    port = mkOption {
-      type = types.port;
-      default = 8080;
-    };
-    bind = mkOption {
-      type = types.str;
-      default = "0.0.0.0";
-    };
-    directory = mkOption {
-      type = types.str;
-      default = "/workspace";
-    };
-  };
-
-  config.process.argv = [
-    (lib.getExe pkgs.python3)
-    "-m"
-    "http.server"
-    "--bind"
-    cfg.bind
-    "--directory"
-    cfg.directory
-    (toString cfg.port)
-  ];
-}
-</code></pre>
-<h3 id="servernix"><a class="header" href="#servernix"><code>server.nix</code></a></h3>
-<pre><code class="language-nix">{ lib, ... }:
-{
-  perSystem = { pkgs, ... }: {
-    nix2gpu."simple-http" = {
-      services."web" = {
-        imports = [ (lib.modules.importApply ./simple-http.nix { inherit pkgs; }) ];
-        simpleHttp = {
-          port = 8080;
-          directory = "/workspace/public";
-        };
-      };
-
-      exposedPorts = {
-        "8080/tcp" = {};
-        "22/tcp" = {};
-      };
-    };
-  };
-}
+<h2 id="-why-bubblewrap-"><a class="header" href="#-why-bubblewrap-">// why bubblewrap //</a></h2>
+<p><strong>bubblewrap</strong> (<code>bwrap</code>) is a lightweight sandboxing tool that uses Linux namespaces to create isolated environments. Unlike docker/podman:</p>
+<ul>
+<li><strong>no daemon</strong> required</li>
+<li><strong>startup in milliseconds</strong> instead of seconds</li>
+<li><strong>works on systems without container runtimes</strong></li>
+<li><strong>simpler architecture</strong> - just a binary that execs into your process</li>
+<li><strong>no copy out of the nix store</strong> - nix built containers must be copied out of the nix store contents into the container runtime. bubblewrap mounts the nix store directly.</li>
+</ul>
+<p>Useful when you want to run GPU workloads on a host that has nix but no container infrastructure, or for iterating faster.</p>
+<hr>
+<h2 id="-how-it-works-"><a class="header" href="#-how-it-works-">// how it works //</a></h2>
+<p><code>nix2gpu</code> leverages Nimi’s built-in bubblewrap support. When you build a container with bubblewrap enabled, Nimi generates a wrapper script that:</p>
+<ol>
+<li><strong>bind mounts</strong> the nix store and container filesystem into a new namespace</li>
+<li><strong>binds GPU devices</strong> (<code>/dev/nvidia*</code>, <code>/dev/dri</code>) from the host</li>
+<li><strong>sets up a minimal <code>/proc</code></strong> with NVIDIA driver visibility</li>
+<li><strong>executes the startup script</strong> in the sandboxed environment</li>
+<li><strong>runs Nimi</strong> to manage your services</li>
+</ol>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│                         host system                                     │
+│  ┌──────────────┐    ┌─────────────────────────────────────────────┐    │
+│  │   nix store  │────│  bubblewrap sandbox (new user namespace)    │    │
+│  │  /nix/store  │    │                                             │    │
+│  └──────────────┘    │  ┌──────────┐  ┌─────────┐  ┌───────────┐   │    │
+│                      │  │/bin, /lib│  │/dev/nv* │  │ /proc     │   │    │
+│  ┌──────────────┐    │  │(ro bind) │  │(dev bind│  │(ro bind)  │   │    │
+│  │   GPU devs   │────│  └──────────┘  └─────────┘  └───────────┘   │    │
+│  │  /dev/nvidia*│    │                                             │    │
+│  └──────────────┘    │         Nimi + your services                │    │
+│                      │                                             │    │
+│  ┌──────────────┐    │  ┌─────────────────────────────────────┐    │    │
+│  │ NVIDIA libs  │────│  │     nix2gpu startup.sh              │    │    │
+│  │/lib/x86_64.. │    │  │  (sets up /etc, GPU libs, SSH...)   │    │    │
+│  └──────────────┘    │  └─────────────────────────────────────┘    │    │
+│                      └─────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────────────┘
 </code></pre>
 <hr>
-<h1 id="-using-existing-modular-services-"><a class="header" href="#-using-existing-modular-services-">// using existing modular services //</a></h1>
-<p>If a package ships a modular service module, you can import it directly. For
-example, <code>ghostunnel</code> from <code>nixpkgs</code>:</p>
-<pre><code class="language-nix">services."ghostunnel" = {
-  imports = [ pkgs.ghostunnel.services ];
-  ghostunnel = {
-    listen = "0.0.0.0:443";
-    cert = "/root/service-cert.pem";
-    key = "/root/service-key.pem";
-    disableAuthentication = true;
-    target = "backend:80";
-    unsafeTarget = true;
+<h2 id="-key-differences-from-containers-"><a class="header" href="#-key-differences-from-containers-">// key differences from containers //</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>aspect</th><th>container mode</th><th>bubblewrap mode</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>runtime</strong></td><td>docker/podman</td><td>bubblewrap binary</td></tr>
+<tr><td><strong>isolation</strong></td><td>full container</td><td>user namespace only</td></tr>
+<tr><td><strong>startup time</strong></td><td>~1-5 seconds</td><td>~50-200ms</td></tr>
+<tr><td><strong>image format</strong></td><td>OCI tarball</td><td>nix store paths directly</td></tr>
+<tr><td><strong>GPU access</strong></td><td><code>--gpus all</code> flag</td><td>bind mounts from host</td></tr>
+<tr><td><strong>networking</strong></td><td>container bridge</td><td>host network (by default)</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="-filesystem-setup-"><a class="header" href="#-filesystem-setup-">// filesystem setup //</a></h2>
+<p>Unlike container layers which overlay on top of each other, bubblewrap uses bind mounts. This requires different handling:</p>
+<h3 id="read-only-binds"><a class="header" href="#read-only-binds"><strong>read-only binds</strong></a></h3>
+<p>Each subdirectory from your container’s <code>copyToRoot</code> is individually bound:</p>
+<pre><code>/nix/store/xxx-base-system/bin   → /bin
+/nix/store/xxx-base-system/lib   → /lib
+/nix/store/xxx-base-system/usr   → /usr
+</code></pre>
+<p>This gives the same view as a container, but via bind mounts instead of overlayfs.</p>
+<h3 id="gpu-library-binds"><a class="header" href="#gpu-library-binds"><strong>GPU library binds</strong></a></h3>
+<p>Host NVIDIA libraries are bound into the sandbox:</p>
+<pre><code>/lib/x86_64-linux-gnu       → /lib/x86_64-linux-gnu
+/usr/lib/x86_64-linux-gnu   → /usr/lib/x86_64-linux-gnu
+/usr/bin/nvidia-smi         → /usr/bin/nvidia-smi
+</code></pre>
+<h3 id="device-binds"><a class="header" href="#device-binds"><strong>device binds</strong></a></h3>
+<p>GPU devices from the host are made available:</p>
+<pre><code>/dev/nvidiactl
+/dev/nvidia-modeset
+/dev/nvidia-uvm
+/dev/nvidia0 through /dev/nvidia7
+/dev/dri
+</code></pre>
+<h3 id="procfs-handling"><a class="header" href="#procfs-handling"><strong>procfs handling</strong></a></h3>
+<p>The container gets the <strong>host’s <code>/proc</code></strong> instead of a private one. This is required because NVIDIA drivers expose GPU state through <code>/proc/driver/nvidia</code>, which only exists in the host’s procfs.</p>
+<hr>
+<h2 id="-runtime-directories-"><a class="header" href="#-runtime-directories-">// runtime directories //</a></h2>
+<p>Directories that need to be mutable are set up as tmpfs mounts:</p>
+<ul>
+<li><code>/tmp</code> - temporary files</li>
+<li><code>/run</code> - runtime state</li>
+<li><code>/var</code> - variable data</li>
+<li><code>/root</code> - root’s home directory</li>
+<li><code>/home</code> - user home directories</li>
+</ul>
+<p>The startup script (<code>startup.sh</code>) populates <code>/etc</code> and <code>/root</code> from the nix store on first run since these start empty in bubblewrap mode.</p>
+<hr>
+<h2 id="-usage-"><a class="header" href="#-usage-">// usage //</a></h2>
+<h3 id="basic-setup"><a class="header" href="#basic-setup"><strong>basic setup</strong></a></h3>
+<p>Bubblewrap mode is already configured through Nimi settings. No additional flake inputs needed:</p>
+<pre><code class="language-nix">perSystem.nix2gpu."my-gpu-app" = {
+  # Your normal nix2gpu config
+  services.myapp = {
+    process.argv = [ (lib.getExe pkgs.myapp) ];
   };
 };
 </code></pre>
-<p>Need a fuller reference? See <code>services/comfyui.nix</code> for a real-world service
-module.</p>
+<h3 id="running"><a class="header" href="#running"><strong>running</strong></a></h3>
+<p>Build the bubblewrap wrapper instead of the OCI image:</p>
+<pre><code class="language-bash"># Run your `nix2gpu` instance in bubblewrap
+nix run .#my-gpu-app.runInBubblewrap
+</code></pre>
+<hr>
+<h2 id="-configuration-options-"><a class="header" href="#-configuration-options-">// configuration options //</a></h2>
+<p><code>nix2gpu</code> automatically translates your container config to bubblewrap equivalents:</p>
+<h3 id="environment-variables"><a class="header" href="#environment-variables"><strong>environment variables</strong></a></h3>
+<pre><code class="language-nix">nix2gpu."my-app" = {
+  env = {
+    MY_VAR = "value";
+    CUDA_PATH = "${pkgs.cudaPackages_12_8.cudatoolkit}";
+  };
+};
+</code></pre>
+<p>These are passed to bubblewrap’s <code>--setenv</code> flags.</p>
+<h3 id="useruid"><a class="header" href="#useruid"><strong>user/uid</strong></a></h3>
+<pre><code class="language-nix">nix2gpu."my-app" = {
+  user = "root";  # Must exist in nix2gpuUsers
+};
+</code></pre>
+<p>The UID is resolved from <code>nix2gpuUsers</code> and passed to bubblewrap’s <code>--uid</code>.</p>
+<h3 id="working-directory"><a class="header" href="#working-directory"><strong>working directory</strong></a></h3>
+<pre><code class="language-nix">nix2gpu."my-app" = {
+  workingDir = "/workspace";
+};
+</code></pre>
+<p>Translated to bubblewrap’s <code>--chdir</code>.</p>
+<h3 id="custom-bubblewrap-flags"><a class="header" href="#custom-bubblewrap-flags"><strong>custom bubblewrap flags</strong></a></h3>
+<p>You can add additional bubblewrap options through Nimi:</p>
+<pre><code class="language-nix">nix2gpu."my-app".nimiSettings.bubblewrap = {
+  # Additional read-only binds
+  tryRoBinds = [
+    { src = "/host/data"; dest = "/data"; }
+  ];
+
+  # Additional device binds
+  tryDevBinds = [
+    { src = "/dev/custom"; dest = "/dev/custom"; }
+  ];
+
+  # Share a network namespace
+  shareNet = true;
+};
+</code></pre>
+<hr>
+<h2 id="-when-to-use-bubblewrap-"><a class="header" href="#-when-to-use-bubblewrap-">// when to use bubblewrap //</a></h2>
+<p><strong>good for:</strong></p>
+<ul>
+<li>Development environments where you want fast iteration</li>
+<li>Systems without docker/podman (e.g., some HPC clusters)</li>
+<li>CI/CD pipelines where container runtimes aren’t available</li>
+<li>Debugging - easier to inspect the sandbox from outside</li>
+</ul>
+<p><strong>not ideal for:</strong></p>
+<ul>
+<li>Production multi-tenant isolation (user namespaces are weaker than containers)</li>
+<li>Scenarios requiring complex network setups (no built-in container networking)</li>
+<li>When you need to distribute the runtime to machines without nix</li>
+</ul>
+<hr>
+<h2 id="-debugging-"><a class="header" href="#-debugging-">// debugging //</a></h2>
+<p>Since bubblewrap doesn’t hide the process in a container runtime, debugging is easier:</p>
+<pre><code class="language-bash"># Monitor from host with standard tools
+ps aux | grep bwrap
+</code></pre>
+<p>The startup script logs everything via <code>gum</code>, so you can see exactly what initialization steps are running.</p>
+<hr>
+<h2 id="-security-notes-"><a class="header" href="#-security-notes-">// security notes //</a></h2>
+<p>Bubblewrap uses <strong>user namespaces</strong>, which provide less isolation than containers:</p>
+<ul>
+<li><strong>Root in the sandbox is not real root</strong> - it’s mapped to your host UID</li>
+<li><strong>Kernel attack surface</strong> is larger than containers (no seccomp/apparmor by default)</li>
+<li><strong>Host filesystem</strong> is still accessible outside bind mounts (though protected by permissions)</li>
+</ul>
+<p>For untrusted workloads, prefer container runtimes with stronger isolation.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="services.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="integrations.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="integrations.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -278,13 +377,10 @@ module.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="services.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="integrations.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="integrations.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                    </a>
             </nav>
 
         </div>
