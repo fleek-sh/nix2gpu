@@ -17,22 +17,9 @@ let
     paths = config.copyToRoot;
   };
 
-  tmpfsDirs = [
-    "tmp"
-    "run"
-    "var"
-    "etc"
-    "root"
-    "home"
-    "proc"
-    "dev"
-    "nix"
-    "sys"
-  ];
-
   copyToRootBinds = lib.pipe (builtins.readDir copyToRootEnv) [
     builtins.attrNames
-    (lib.filter (e: !builtins.elem e tmpfsDirs))
+    (lib.filter (e: !builtins.elem e config.bubblewrapTmpfsDirs))
     (map (entry: {
       src = "${copyToRootEnv}/${entry}";
       dest = "/${entry}";
@@ -79,108 +66,7 @@ in
 
     nimiSettings = {
       container.copyToRoot = config.copyToRoot;
-      bubblewrap.tryRoBinds = lib.mkAfter (
-        copyToRootBinds
-        ++ [
-          {
-            src = "/nix/var/nix/daemon-socket";
-            dest = "/nix/var/nix/daemon-socket";
-          }
-          {
-            src = "/lib/x86_64-linux-gnu";
-            dest = "/lib/x86_64-linux-gnu";
-          }
-          {
-            src = "/usr/lib/x86_64-linux-gnu";
-            dest = "/usr/lib/x86_64-linux-gnu";
-          }
-          {
-            src = "/usr/bin/nvidia-smi";
-            dest = "/usr/bin/nvidia-smi";
-          }
-        ]
-      );
-      bubblewrap.extraTmpfs = [
-        "/tmp"
-        "/run"
-        "/var"
-        "/root"
-        "/home"
-        "/etc/ssh"
-        "/etc/ld.so.conf.d"
-      ];
-      bubblewrap.environment = {
-        NIX_REMOTE = "daemon";
-        NIX2GPU_BUBBLEWRAP_MODE = "1";
-      };
-      bubblewrap.bind.proc = false;
-      bubblewrap.prependFlags = [
-        "--ro-bind"
-        "/proc"
-        "/proc"
-      ];
-      bubblewrap.tryDevBinds = [
-        {
-          src = "/dev/net/tun";
-          dest = "/dev/net/tun";
-        }
-        {
-          src = "/dev/nvidiactl";
-          dest = "/dev/nvidiactl";
-        }
-        {
-          src = "/dev/nvidia-modeset";
-          dest = "/dev/nvidia-modeset";
-        }
-        {
-          src = "/dev/nvidia-uvm";
-          dest = "/dev/nvidia-uvm";
-        }
-        {
-          src = "/dev/nvidia-uvm-tools";
-          dest = "/dev/nvidia-uvm-tools";
-        }
-        {
-          src = "/dev/nvidia0";
-          dest = "/dev/nvidia0";
-        }
-        {
-          src = "/dev/nvidia1";
-          dest = "/dev/nvidia1";
-        }
-        {
-          src = "/dev/nvidia2";
-          dest = "/dev/nvidia2";
-        }
-        {
-          src = "/dev/nvidia3";
-          dest = "/dev/nvidia3";
-        }
-        {
-          src = "/dev/nvidia4";
-          dest = "/dev/nvidia4";
-        }
-        {
-          src = "/dev/nvidia5";
-          dest = "/dev/nvidia5";
-        }
-        {
-          src = "/dev/nvidia6";
-          dest = "/dev/nvidia6";
-        }
-        {
-          src = "/dev/nvidia7";
-          dest = "/dev/nvidia7";
-        }
-        {
-          src = "/dev/nvidia-caps";
-          dest = "/dev/nvidia-caps";
-        }
-        {
-          src = "/dev/dri";
-          dest = "/dev/dri";
-        }
-      ];
+      bubblewrap.tryRoBinds = lib.mkAfter copyToRootBinds;
     };
   };
 }
