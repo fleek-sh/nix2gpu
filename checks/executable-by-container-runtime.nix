@@ -22,10 +22,11 @@
           machine.wait_for_unit("default.target")
 
           machine.succeed("copy-to-container-runtime")
-          machine.succeed("podman run -d -p 8080:8080 ${containerName}:latest")
-          machine.sleep(2)
+          machine.succeed("podman run -d -p 8080:8080 -p 22:22 ${containerName}:latest")
 
-          machine.wait_for_open_port(8080, timeout=30)
+          machine.wait_for_open_port(8080, timeout=60)
+
+          machine.wait_for_open_port(22, timeout=60)
         '';
       };
     };
