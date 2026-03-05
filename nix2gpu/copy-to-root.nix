@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   inherit (lib)
     types
@@ -6,6 +11,20 @@ let
     literalExpression
     literalMD
     ;
+
+  copyToRootEnv = pkgs.buildEnv {
+    name = "nix2gpu-copy-to-root";
+    paths = config.copyToRoot;
+  };
+
+  copyToRootBinds = lib.pipe (builtins.readDir copyToRootEnv) [
+    builtins.attrNames
+    (lib.filter (e: !builtins.elem e config.bubblewrapTmpfsDirs))
+    (map (entry: {
+      src = "${copyToRootEnv}/${entry}";
+      dest = "/${entry}";
+    }))
+  ];
 in
 {
   _class = "nix2gpu";
@@ -35,12 +54,19 @@ in
         git
       ];
     '';
-    type = types.listOf types.package;
+    type = types.coercedTo types.pathInStore (p: [ p ]) (types.listOf types.pathInStore);
     default = [ ];
     defaultText = literalMD ''
       The generated base system from the other config options
     '';
   };
 
-  config.nimiSettings.container.copyToRoot = config.copyToRoot;
+  config = {
+    inherit copyToRootEnv;
+
+    nimiSettings = {
+      container.copyToRoot = config.copyToRoot;
+      bubblewrap.tryRoBinds = lib.mkAfter copyToRootBinds;
+    };
+  };
 }

@@ -7,3 +7,4 @@
 - [Services & Runtime](services.md)
 - [Defining Custom Services](custom-service.md)
 - [Integrations](integrations.md)
+- [Bubblewrap Mode](bubblewrap.md)

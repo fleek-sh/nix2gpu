@@ -11,6 +11,8 @@
         exposedPorts = {
           "8080/tcp" = { };
         };
+
+        nimiSettings.restart.mode = "up-to-count";
       };
     };
 }

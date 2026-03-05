@@ -25,7 +25,7 @@
     };
 
     nimi = {
-      url = "github:weyl-ai/nimi/baileylu/minimize-flake";
+      url = "github:weyl-ai/nimi";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

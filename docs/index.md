@@ -14,6 +14,7 @@ ______________________________________________________________________
   modules
 - **[secrets & agenix](secrets.md)** — keys never touch the nix store
 - **[integrations](integrations.md)** — integrations with the nix ecosystem
+- **[bubblewrap mode](bubblewrap.md)** — run without docker/podman
 
 ______________________________________________________________________
 

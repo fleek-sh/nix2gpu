@@ -28,5 +28,5 @@ in
     ];
   };
 
-  config.nimiSettings.container.copyToRoot = config.profile;
+  config.copyToRoot = config.profile;
 }

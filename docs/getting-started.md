@@ -69,7 +69,7 @@ Take a look in the [examples folder](https://github.com/weyl-ai/nix2gpu/tree/bai
 
 Going forward, we will use the `comfyui.nix` example.
 
-We can run this in `nix2gpu` like (replacing the `perSystem.nix2gpu` from earlier:
+We can run this in `nix2gpu` like (replacing the `perSystem.nix2gpu` from earlier):
 
 ```nix
 {

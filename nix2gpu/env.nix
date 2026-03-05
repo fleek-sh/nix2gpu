@@ -66,21 +66,24 @@ in
     '';
   };
 
-  config.nimiSettings.container.imageConfig.Env =
-    let
-      translateToGoEnvString =
-        var: value:
+  config.nimiSettings = {
+    container.imageConfig.Env =
+      let
+        translateToGoEnvString =
+          var: value:
 
-        assert lib.assertMsg (lib.toUpper var == var) ''
-          `nix2gpu` env var names should be uppercase 
-          in order to be properly recognized.
+          assert lib.assertMsg (lib.toUpper var == var) ''
+            `nix2gpu` env var names should be uppercase 
+            in order to be properly recognized.
 
-          The failing attribute name is `${var}`.
-        '';
+            The failing attribute name is `${var}`.
+          '';
 
-        "${var}=${value}";
+          "${var}=${value}";
 
-      totalEnv = config.env // config.extraEnv;
-    in
-    lib.mapAttrsToList translateToGoEnvString totalEnv;
+        totalEnv = config.env // config.extraEnv;
+      in
+      lib.mapAttrsToList translateToGoEnvString totalEnv;
+    bubblewrap.environment = config.env // config.extraEnv;
+  };
 }

@@ -23,20 +23,24 @@ in
 
           nix2gpuCfg = (config.evalNix2GpuModule name module).config;
 
-          image = nimi.mkContainerImage {
+          nimiCfg = nimi.evalNimiModule {
             inherit (nix2gpuCfg) services meta;
             imports = [
               # TODO[baileylu] Find a way to do this transformation less manually
+              (lib.mkAliasOptionModule [ "bubblewrap" ] [ "settings" "bubblewrap" ])
               (lib.mkAliasOptionModule [ "container" ] [ "settings" "container" ])
-              (lib.mkAliasOptionModule [ "startup" ] [ "settings" "startup" ])
               (lib.mkAliasOptionModule [ "logging" ] [ "settings" "logging" ])
               (lib.mkAliasOptionModule [ "restart" ] [ "settings" "restart" ])
+              (lib.mkAliasOptionModule [ "startup" ] [ "settings" "startup" ])
               nix2gpuCfg.nimiSettings
             ];
           };
+
+          image = nimi.mkContainerImageWithConfig nimiCfg;
+          bubblewrap = nimi.mkBwrapWithConfig nimiCfg;
         in
         image.overrideAttrs (old: {
-          passthru = (old.passthru or { }) // nix2gpuCfg.passthru;
+          passthru = (old.passthru or { }) // nix2gpuCfg.passthru // { runInBubblewrap = bubblewrap; };
         });
     };
 }
