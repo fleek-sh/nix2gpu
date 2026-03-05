@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "ayu";
-            window.path_to_searchindex_js = "searchindex-f06b5793.js";
+            window.path_to_searchindex_js = "searchindex-83aa9ee0.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-6cbfb091.js"></script>
+        <script src="toc-4095fb21.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -231,7 +231,7 @@ bundles <code>Nimi</code> and <code>nix2container</code> internally.</p>
 <h1 id="select-a-nix2gpu-starter-config-to-use"><a class="header" href="#select-a-nix2gpu-starter-config-to-use">Select a <code>nix2gpu</code> starter config to use</a></h1>
 <p>Take a look in the <a href="https://github.com/weyl-ai/nix2gpu/tree/baileylu/public-api/examples">examples folder</a> and pick one which looks useful.</p>
 <p>Going forward, we will use the <code>comfyui.nix</code> example.</p>
-<p>We can run this in <code>nix2gpu</code> like (replacing the <code>perSystem.nix2gpu</code> from earlier:</p>
+<p>We can run this in <code>nix2gpu</code> like (replacing the <code>perSystem.nix2gpu</code> from earlier):</p>
 <pre><code class="language-nix">{
   perSystem = { pkgs, ... }: {
     nix2gpu."comfyui-service" = {
