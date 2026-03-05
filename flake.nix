@@ -25,7 +25,7 @@
     };
 
     nimi = {
-      url = "github:weyl-ai/nimi/baileylu/bubblewrap";
+      url = "github:weyl-ai/nimi";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
