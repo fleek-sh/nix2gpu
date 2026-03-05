@@ -84,6 +84,6 @@ in
         totalEnv = config.env // config.extraEnv;
       in
       lib.mapAttrsToList translateToGoEnvString totalEnv;
-    bubblewrap.environment = config.env // config.extraEnv;
+    bubblewrap.environment = builtins.deepSeq (lib.mapAttrsToList translateToGoEnvString totalEnv) totalEnv;
   };
 }
